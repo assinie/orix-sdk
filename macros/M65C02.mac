@@ -1,0 +1,279 @@
+;----------------------------------------------------------------------
+; Pseudo instructions 65c02
+;----------------------------------------------------------------------
+.IFP02
+	.scope M65C02
+		;----------------------------------------------------------
+		;		   Pour les pseudo instructions 65c02
+		;----------------------------------------------------------
+		bra_use_clv .set $ff
+
+
+		;----------------------------------------------------------
+		; stz_mode:
+		;		- 00: Kepp all registers (8 bytes)
+		;		- 01: Use acc		(4 bytes)
+		;		- 02: Use X		 "
+		;		- 03: Use Y		 "
+		;----------------------------------------------------------
+		stz_mode .set $00
+
+		;----------------------------------------------------------
+		; Used to do some code optimization (only if stz_mode > 0)
+		;----------------------------------------------------------
+		last_stz .set $00
+
+		;----------------------------------------------------------
+		;		   Instruction: bra
+		; Use JMP
+		;----------------------------------------------------------
+		.macro M65C02_bra_jmp target
+			.if .match(target, 0)
+				; On a mis une adresse à la place du label
+				; .out "target = 0"
+
+				jmp target
+
+			.elseif .not .def(target)
+				; .out "Forward"
+
+				jmp target
+
+			.elseif .const((*-2)-(target)) .and ((*+2)-(target) <= 127)
+				; .out "Target OK"
+				; .out .sprintf("%s: %d", .string(target), ((*+2)-target))
+
+				jmp target
+
+			.else
+				.error .sprintf("%s: out of range (%d)", .string(target), ((*+2)-target))
+
+				jmp target
+
+			.endif
+
+		.endmacro
+
+		;----------------------------------------------------------
+		;		   Instruction: bra
+		; Use CLV/BVC
+		;----------------------------------------------------------
+		.macro M65C02_bra_clv target
+			clv
+			bvc target
+		.endmacro
+
+		;----------------------------------------------------------
+		;		   Instruction stz
+		; Use ACC -> /!\ ACC := 0
+		;
+		; Note:
+		;	Only zp mode
+		;----------------------------------------------------------
+		.macro M65C02_stz_use_acc address, index
+			.if (.not .blank({index})) .and (.not .xmatch({index}, X))
+				.error "stz: syntax error"
+
+			.else
+				.if .xmatch({index}, X)
+					.if (M65C02::last_stz) = 0
+						lda #$00
+						sta address,x
+
+					.elseif (* - M65C02::last_stz) = 0
+						sta address,x
+
+					.else
+						lda #$00
+						sta address,x
+
+					.endif
+
+					M65C02::last_stz .set *
+
+				.else
+					.if (M65C02::last_stz) = 0
+						lda #$00
+						sta address
+
+					.elseif (* - M65C02::last_stz) = 0
+						sta address
+
+					.else
+						lda #$00
+						sta address
+
+					.endif
+
+					M65C02::last_stz .set *
+
+				.endif
+			.endif
+		.endmacro
+
+		;----------------------------------------------------------
+		;		   Instruction stz
+		; Use X -> /!\ X := 0
+		;
+		; Note:
+		;	Only absolute mode
+		;	No indexed X mode
+		;----------------------------------------------------------
+		.macro M65C02_stz_use_x address, index
+			.if (.not .blank({index}))
+				.error .sprintf("stz: syntax error (no index allowed, stz_mode = %d", M65C02::stz_mode)
+
+			.else
+				.if (M65C02::last_stz) = 0
+					ldx #$00
+					stx address
+
+				.elseif (* - M65C02::last_stz) = 0
+					stx address
+
+				.else
+					ldx #$00
+					stx address
+
+				.endif
+
+				M65C02::last_stz .set *
+
+			.endif
+		.endmacro
+
+		;----------------------------------------------------------
+		;		   Instruction stz
+		; Use Y -> /!\ Y := 0
+		;
+		; Note:
+		;	No absolute,X mode allowed
+		;----------------------------------------------------------
+		.macro M65C02_stz_use_y address, index
+			.if (.not .blank({index})) .and (.not .xmatch({index}, X))
+				.error "stz: syntax error"
+			.else
+				.if .xmatch({index}, X)
+					.if (address > $ff)
+						.error .sprintf("%s: out of range ($%04x) not in [0...FF] (stz_mode = %d)", .string(address), address, M65C02::stz_mode)
+
+					.else
+						.if (M65C02::last_stz) = 0
+							ldy #$00
+							sty address,x
+
+						.elseif (* - M65C02::last_stz) = 0
+							sty address,x
+
+						.else
+							ldy #$00
+							sty address,x
+						.endif
+
+						M65C02::last_stz .set *
+					.endif
+				.else
+					.if (M65C02::last_stz) = 0
+						ldy #$00
+						sty address
+
+					.elseif (* - M65C02::last_stz) = 0
+						sty address
+
+					.else
+						ldy #$00
+						sty address
+					.endif
+
+					M65C02::last_stz .set *
+				.endif
+			.endif
+		.endmacro
+
+		;----------------------------------------------------------
+		;		   Instruction stz
+		;
+		; Preserve registers (like 65c02)
+		;----------------------------------------------------------
+		.macro M65C02_stz_keep_regs address, index
+			.if (.not .blank({index})) .and (.not .xmatch({index}, X))
+				.error "stz: syntax error"
+
+			.else
+				.if .xmatch({index}, X)
+					php
+					pha
+					lda #$00
+					sta address, x
+					pla
+					plp
+				.else
+					php
+					pha
+					lda #$00
+					sta address
+					pla
+					plp
+				.endif
+			.endif
+		.endmacro
+
+	.endscope
+
+
+	;----------------------------------------------------------
+	;		   Instruction: bra
+	;----------------------------------------------------------
+	.macro bra target
+		.if M65C02::bra_use_clv
+			M65C02_bra_clv target
+
+		.else
+			M65C02_bra_jmp target
+
+		.endif
+	.endmacro
+
+
+
+	;----------------------------------------------------------
+	;		   Instruction stz
+	;
+	; Note:
+	;	addressing mode allowed depends on stz_mode
+	;
+	;----------------------------------------------------------
+	.macro stz address, index
+		.if M65C02::stz_mode = $00
+			; stz addr
+			; stz zp
+			; stz addr,x
+			; stz zp,x
+			M65C02_stz_keep_regs address, index
+
+		.elseif M65C02::stz_mode = $01
+			; stz addr
+			; stz zp
+			; stz addr,x
+			; stz zp,x
+			M65C02_stz_use_acc address, index
+
+		.elseif M65C02::stz_mode = $02
+			; stz addr
+			; stz zp
+			M65C02_stz_use_x address, index
+
+		.elseif M65C02::stz_mode = $03
+			; stz addr
+			; stz zp
+			; stz zp,x
+			M65C02_stz_use_y address, index
+
+		.else
+			.error "Bad value for stz_mode, not in  [0...3]"
+
+		.endif
+	.endmacro
+.endif
+
+

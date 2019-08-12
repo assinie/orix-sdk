@@ -1,0 +1,195 @@
+.include "macros/sdk.mac"
+
+.macro lday operand
+	; SDK_get_AY operand
+	lda address
+	ldy address+1
+.endmacro
+
+.macro stay address
+	sta address
+	sty address+1
+.endmacro
+
+.macro exg r1, r2
+	; Exchange register r1 and register r2
+	;
+	; P is preserved
+	;
+	; May use TR0->TR3
+
+	.if .xmatch({r1},{r2})
+		.error "exg: dest = src"
+	.endif
+
+	.if .not( (.xmatch({r1},A) .or .xmatch({r1},X) .or .xmatch({r1},Y) .or .xmatch({r1},S)) .and (.xmatch({r2},A) .or .xmatch({r2},X) .or .xmatch({r2},Y) .or .xmatch({r1},S)) )
+		.error .sprintf("exg: unknown register '%s' or '%s'",r1, r2)
+	.endif
+
+
+	; A <=> X
+	.if ( .xmatch({r1}, A) .and .xmatch({r2},X) ) .or ( .xmatch({r1}, X) .and .xmatch({r2},A) )
+		php	; Sauvegarde P
+		stx TR0
+		tax
+		lda TR0
+		plp	; Restaure P
+
+	; A <=> Y
+	.elseif ( .xmatch({r1}, A) .and .xmatch({r2},Y) ) .or ( .xmatch({r1}, Y) .and .xmatch({r2},A) )
+		php	; Sauvegarde P
+		sty TR0
+		tay
+		lda TR0
+		plp	; Restaure P
+
+	; A <=> S
+	.elseif ( .xmatch({r1}, A) .and .xmatch({r2},S) ) .or ( .xmatch({r1}, S) .and .xmatch({r2},A) )
+		sta TR0	; A -> TR0
+
+		php		; P -> TR1
+		pla
+		sta TR1
+
+		stx TR2	; X -> TR2
+
+		tsx		; S -> TR3
+		stx TR3
+
+		ldx TR0	; A -> S
+		txs
+
+		ldx TR2	; Restaure X
+
+		lda TR0	; P -> Stack
+		pha
+
+		lda TR3	; S -> A
+
+		plp		; Restaure P
+
+	; X <=> Y
+	.elseif ( .xmatch({r1}, X) .and .xmatch({r2},Y) ) .or ( .xmatch({r1}, Y) .and .xmatch({r2},X) )
+		php	; Sauvegarde P
+		stx TR0
+		sty TR1
+		ldx TR0
+		ldy TR1
+		plp	; Restaure P
+
+		; Ou
+		;pha
+		;tya
+		;pha
+		;txa
+		;tay
+		;pla
+		;tax
+		;pla
+
+	; X <=> S
+	.elseif ( .xmatch({r1}, X) .and .xmatch({r2},S) ) .or ( .xmatch({r1}, S) .and .xmatch({r2},X) )
+		sta TR0	; Sauvegarde A
+
+		php
+		pla
+		sta TR1	; Sauvegarde P
+
+		stx TR2	; X -> TR2
+		tsx
+		stx TR3	; S -> TR3
+
+		ldx TR2	; X -> S
+		txs
+
+		ldx TR3	; S -> X
+
+		lda TR1	; P -> Stack
+		pha
+
+		lda TR0	; Restaure A
+		plp		; Restaure P
+
+	; Y <=> S
+	.elseif ( .xmatch({r1}, X) .and .xmatch({r2},S) ) .or ( .xmatch({r1}, S) .and .xmatch({r2},X) )
+		sta TR0	; Sauvegarde A
+
+		php
+		pla
+		sta TR1	; Sauvegarde P
+
+		stx TR2	; Sauvegarde X
+
+		sty TR3	; Y -> TR2
+
+
+		tsx		; S -> Y
+		txa
+		tay
+
+		ldx TR3	; Y -> S
+		txs
+
+		lda TR1	; P -> Stack
+		pha
+
+		lda TR0	; Resature A
+		ldx TR2	; Restaure X
+		plp		; Restaure P
+	.endif
+
+
+.endmacro
+
+.macro move_w dest, src
+	;php		; Sauvegarde de A & P
+	;pha
+	lda src
+	sta dest
+	lda src+1
+	sta dest+1
+	;pla		; Restaure A & P
+	;plp
+.endmacro
+
+	.code
+	MODULE _start, _end_module, _start
+
+_start:
+	lda #<BUFEDT
+	ldy #>BUFEDT
+	stay userzp+2
+	;sty userzp+3
+
+	; Cherche la fin de la ligne de commande
+	ldy #$ff
+@loop:
+	iny				; Suppose que le ligne n'est par >255
+	lda (userzp+2),y
+	bne @loop
+
+	; Alloue de la mémoire pour y copier la ligne de commande
+	tya
+	ldy #$00
+	malloc AY
+	TEST_OOM_AND_MAX_MALLOC
+	stay userzp
+	;sty userzp+1
+
+	strcpy AY, (userzp+2)		; Copie la ligne de commande dans le buffer
+
+	lday userzp
+	;ldy userzp+1
+	jsr get_args			; Renseigne le tableau ARGV (au retour RES contient l'adresse de ARGV, Y=0, A=nb args+1)
+
+;	pha				; Sauvegarde l'adresse de ARGV
+;	lda RES
+;	sta userzp+2
+;	lda RES+1
+;	sta userzp+3
+;	pla
+	move_w RES, userzp+2
+
+	free (userzp+2)			; Libère ARGV
+	free (userzp)			; Libère BUFEDT
+	rts

@@ -1,0 +1,390 @@
+.include "SDK_utils.mac"
+
+;======================================================================
+;			String functions
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strcpy dest, src
+;
+; Call _strcpy function
+;
+; note:
+;	dest: may be nothing, AY, (ptr), address
+;	src : may be nothing, AY, (ptr), address
+;----------------------------------------------------------------------
+.macro strcpy dest, src
+	SDK_call_function _strcpy, {dest}, {src}
+.endmacro
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strcat dest, src
+;
+; Call _strcat function
+;
+; note:
+;	dest: may be nothing, AY, (ptr), address
+;	src : may be nothing, AY, (ptr), address
+;----------------------------------------------------------------------
+.macro strcat dest, src
+	SDK_call_function _strcat, {src}, {dest}
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strlen str
+;	strlen (ptr)
+;
+; Call _strlen function
+;
+;----------------------------------------------------------------------
+.macro strlen str
+	; TODO: Reject immediate mode
+	SDK_get_AY str
+
+
+	sta RES
+	sty RES+1
+	jsr _strlen
+.endmacro
+
+;======================================================================
+;				Print
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	print #byte [,TELEMON|NOSAVE]
+;	print (pointer) [,TELEMON|NOSAVE]
+;	print address [,TELEMON|NOSAVE]
+;
+; Option:
+;	- TELEMON: when used within TELEMON bank
+;	- NOSAVE : does not preserve A,X,Y registers
+;
+; Call XWSTR0 function
+;
+;----------------------------------------------------------------------
+.macro print str, option
+
+	.if (.not .blank({option})) .and (.not .xmatch({option}, NOSAVE)) .and (.not .xmatch({option}, TELEMON) )
+		.error .sprintf("Unknown option: '%s' (not in [NOSAVE,TELEMON])", .string(option))
+	.endif
+
+	;.if (.not .blank({option})) .and .xmatch({option}, NOSAVE)
+	;	.out "Don't save regs values"
+	;.endif
+
+	.if .blank({option})
+		pha
+		txa
+		pha
+		tya
+		pha
+	.endif
+
+	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		pha
+		txa
+		pha
+		tya
+		pha
+
+		lda RES
+		pha
+		lda RES+1
+		pha
+	.endif
+
+
+	SDK_imm_or_ind_or_abs str
+	;SDK::inst_mode .set $01
+
+	.if SDK::inst_mode = 1
+		;.out "Mode: immediat"
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XWR0_ROUTINE
+		.else
+			.byte $00, XWR0
+		.endif
+
+	.elseif SDK::inst_mode = 2
+		;.out "Mode: indirect"
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XWSTR0_ROUTINE
+		.else
+			.byte $00, XWSTR0
+		.endif
+
+	.elseif SDK::inst_mode = 3
+		;.out "Mode:absolu"
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XWSTR0_ROUTINE
+		.else
+			.byte $00, XWSTR0
+		.endif
+
+	.else
+		.error .sprintf("Incorrect mode: %s", .string(str))
+	.endif
+
+
+	.if .blank({option})
+		pla
+		tay
+		pla
+		txa
+		pla
+	.endif
+
+	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		pla
+		sta RES+1
+		pla
+		sta RES
+
+		pla
+		tay
+		pla
+		txa
+		pla
+	.endif
+
+.endmacro
+
+;======================================================================
+;			Memory functions
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	malloc #$0100
+;	malloc (ptr)
+;	malloc value
+;
+; Call XMALLOC function
+;
+;----------------------------------------------------------------------
+.macro malloc size
+
+	SDK_imm_or_ind_or_abs size
+
+
+	;----------------------------------------------------------
+	;		   Le mode immediat n'accepte qu'une valeur
+	;		   sur 1 octet.
+	;----------------------------------------------------------
+	.if SDK::inst_mode = $01
+		ldy #$00
+	.endif
+
+	.if SDK::inst_mode != $ff
+		.byte $00, XMALLOC
+	.endif
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	mfree (ptr)
+;
+; Call XFREE function
+;----------------------------------------------------------------------
+.macro mfree addr
+	.if (.match(.left(1, {addr}), {(}) )
+		; Indirect
+
+		.if (.match(.right(1,{addr}), {)}))
+			; .out"Indirect mode"
+
+			lda .mid (1,.tcount ({addr})-2, {addr})
+			ldy 1+(.mid (1,.tcount ({addr})-2, {addr}))
+
+		.else
+			.error "error: ')' missing"
+		.endif
+
+	.else
+		; assume absolute
+		; .out "Aboslute mode"
+		.error "error: indirect mode only"
+	.endif
+
+	.byte $00, XFREE
+.endmacro
+
+;======================================================================
+;				File
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fopen file, mode [,TELEMON]
+;
+; note:
+;	file may be: (ptr), address
+;
+; Call XOPEN function
+;----------------------------------------------------------------------
+.macro fopen file, mode, option
+
+	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+	.endif
+
+	; TODO: Reject immediate mode
+	SDK_get_AX file
+
+	; TODO: Accept absolute & indirect mode
+	ldy #(mode)
+
+	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		jsr XOPEN_ROUTINE
+	.else
+		.byte $00, XOPEN
+	.endif
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fread ptr, size, count, fp
+;
+; note:
+;	ptr may be : (ptr), address
+;	size may be: (ptr), address
+;
+; Call XFREAD function
+;----------------------------------------------------------------------
+.macro fread ptr, size, count, fp
+
+	; TODO:Reject immediate mode for ptr
+	SDK_get_AY ptr
+	sta PTR_READ_DEST
+	sty PTR_READ_DEST
+
+	SDK_get_AY size
+
+	.byte $00, XFREAD
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fclose fp [,TELEMON]
+;
+; note:
+;	fp may be: #value, (ptr), address
+;
+; Call XCLOSE function
+;----------------------------------------------------------------------
+.macro fclose fp, option
+
+	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+	.endif
+
+	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		jsr XCLOSE_ROUTINE
+
+	.else
+		.byte $00, XCLOSE
+
+	.endif
+
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	mkdir ptr
+;
+; note:
+;	str may be: (ptr), address
+;
+; Call XMKDIR function
+;----------------------------------------------------------------------
+.macro mkdir ptr
+
+	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+	.endif
+
+	; TODO:Reject immediate mode for ptr
+	SDK_get_AX ptr
+
+	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		jsr XMKDIR_ROUTINE
+
+	.else
+		.byte $00, XMKDIR
+
+	.endif
+
+.endmacro
+
+;======================================================================
+;				Misc
+;======================================================================
+;----------------------------------------------------------------------
+;
+; usage:
+;	cursor ON|OFF
+;
+; Call XCSSCR/XCOSCR functions
+;----------------------------------------------------------------------
+.macro cursor mode
+	.if (.xmatch(.string(mode), .string(ON)) .or .xmatch(.string(mode), .string(on)))
+		.out "Mode = on"
+		ldx #$00
+		.byte $00, XCSSCR
+
+	.elseif (.xmatch(.string(mode), .string(OFF)) .or .xmatch(.string(mode), .string(off)))
+		.out "Mode = off"
+		ldx #$00
+		.byte $00, XCOSCR
+
+	.else
+		.error .sprintf("Unknown parameter value: %s (must be on or off)", .string(mode))
+	.endif
+.endmacro
+
+;----------------------------------------------------------------------
+;
+; usage:
+;----------------------------------------------------------------------
+.macro MODULE start, end, exec
+	.org $0000
+	.code
+	;.segment "ORIXHDR"
+	;__ORIXHDR__:
+	;.export __ORIXHDR__
+		.byte $01,$00		; non-C64 marker like o65 format
+		.byte "o", "r", "i"	; "ori" MAGIC number :$6f, $36, $35 like o65 format
+		.byte $01		; version of this header
+	cpu_mode:
+		.byte $00		; CPU see below for description
+	language_type:
+		.byte $00		; reserved in the future, it will define if it's a Hyperbasic file, teleass file, forth file
+		.byte $00		; reserved
+		.byte $00		; reserved
+		.byte $00
+		.byte $00		; reserved
+		.byte $00		; reserved
+	type_of_file:
+		.byte $00
+		.word start		; loading adress
+		.word end		; end of loading adress
+		.word exec		; starting adress
+.endmacro
+
+
