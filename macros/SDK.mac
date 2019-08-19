@@ -140,7 +140,7 @@
 		pla
 		tay
 		pla
-		txa
+		tax
 		pla
 	.endif
 
@@ -153,7 +153,7 @@
 		pla
 		tay
 		pla
-		txa
+		tax
 		pla
 	.endif
 
@@ -175,8 +175,8 @@
 ;----------------------------------------------------------------------
 .macro malloc size
 
-	SDK_imm_or_ind_or_abs size
-
+	;SDK_imm_or_ind_or_abs size
+	SDK_get_AY size
 
 	;----------------------------------------------------------
 	;		   Le mode immediat n'accepte qu'une valeur
@@ -186,7 +186,7 @@
 		ldy #$00
 	.endif
 
-	.if SDK::inst_mode != $ff
+	.if SDK::inst_mode <> $ff
 		.byte $00, XMALLOC
 	.endif
 .endmacro
@@ -363,11 +363,13 @@
 ; usage:
 ;----------------------------------------------------------------------
 .macro MODULE start, end, exec
-	.org $0000
-	.code
-	;.segment "ORIXHDR"
-	;__ORIXHDR__:
-	;.export __ORIXHDR__
+	;.org $0000
+	;.code
+	.import __MAIN_START__
+	.import __MAIN_LAST__
+
+	.export __ORIXHDR__:abs = 1
+	.segment "ORIXHDR"
 		.byte $01,$00		; non-C64 marker like o65 format
 		.byte "o", "r", "i"	; "ori" MAGIC number :$6f, $36, $35 like o65 format
 		.byte $01		; version of this header
@@ -382,9 +384,12 @@
 		.byte $00		; reserved
 	type_of_file:
 		.byte $00
-		.word start		; loading adress
-		.word end		; end of loading adress
-		.word exec		; starting adress
+;		.word start		; loading adress
+;		.word end		; end of loading adress
+;		.word exec		; starting adress
+		.word __MAIN_START__
+		.word __MAIN_LAST__
+		.word __MAIN_START__	; starting adress
 .endmacro
 
 
