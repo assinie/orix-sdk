@@ -68,14 +68,9 @@ _main:
 	; --------------------------------------------------------------------
 	;			Calcule la longueur de BUFEDT
 	; --------------------------------------------------------------------
-	;lda #<BUFEDT
-	;ldy #>BUFEDT
 	strlen BUFEDT
 	iny				; Longueur de BUFEDT +1 pour le \0 final
 	tya
-
-;	jsr PrintRegs
-;	print CRLF
 
 	; --------------------------------------------------------------------
 	;		Alloue un tampon pour BUFEDT+ARGV
@@ -88,16 +83,10 @@ _main:
 	sta userzp+4
 	sty userzp+5
 
-	jsr PrintRegs
-	print CRLF
-
 	malloc (userzp+4)
 
 	sta _argv			; Sauvegarde le pointeur malloc
 	sty _argv+1
-
-	jsr PrintRegs
-	print CRLF
 
 	; --------------------------------------------------------------------
 	;		Copie de BUFEDT dans le tampon
@@ -114,32 +103,15 @@ _main:
 	; --------------------------------------------------------------------
 	;		Initialise la structure ARGV
 	; --------------------------------------------------------------------
-;	lda userzp
-;	ldy userzp+1
-;	sta RES
-;	sty RES+1
-
-;	lda userzp+2
-;	ldy userzp+3
-;	sta RESB
-;	sty RESB+1
-
-;	jsr _init_argv
 	init_argv (_argv), (userzp+2)
 
-	; --------------------------------------------------------------------
-	;			Initialise AY et X
-	; --------------------------------------------------------------------
-;	tax				; Nombre d'arguments
-;	lda RES			; Adresse ARGV[]
-;	ldy RES+1
 
-	; --------------------------------------------------------------------
+	; ====================================================================
 	;			Programme de test
-	; --------------------------------------------------------------------
+	; ====================================================================
 
-	jsr PrintRegs
-	print CRLF
+	;jsr PrintRegs
+	;print CRLF
 
 	ldx _argc
 
@@ -149,13 +121,14 @@ _main:
 	jsr PrintHexByte
 	print #' '
 
-;	lda userzp
-;	ldy userzp+1
 	get_argv
 	; bcc @end
+
 	stx userzp+4
+
 	.byte $00, XWSTR0
 	print CRLF
+
 	ldx userzp+4
 	dex
 	bpl @loop

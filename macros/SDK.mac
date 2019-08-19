@@ -353,7 +353,9 @@
 	SDK_call_function _init_argv, {bufedt}, {argv}
 
 	; A intégrer dans _init_argv
+	tax
 	sta _argc
+
 	lda RES
 	ldy RES+1
 	sta _argv
