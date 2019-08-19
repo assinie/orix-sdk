@@ -1,5 +1,13 @@
 .include "macros/sdk.mac"
 
+.macro bge label
+	bcs label
+.endmacro
+
+.macro blt label
+	bcc label
+.endmcaro
+
 .macro lday operand
 	; SDK_get_AY operand
 	lda address
