@@ -333,6 +333,53 @@
 .endmacro
 
 ;======================================================================
+;			ARGV/ARGC
+;======================================================================
+
+;----------------------------------------------------------------------
+; init_argv
+;
+; usage:
+;	init_argv argv, cmdline
+;
+; Note:
+;	argv must the address of a buffer
+;	argv may be   : address, (ptr), #value
+;	cmdline may be: address, (ptr), #value
+;
+; Initialize _argv array & _argc, must be called before get_argv
+;----------------------------------------------------------------------
+.macro init_argv argv, bufedt
+	SDK_call_function _init_argv, {bufedt}, {argv}
+
+	; A intégrer dans _init_argv
+	sta _argc
+	lda RES
+	ldy RES+1
+	sta _argv
+	sty _argv+1
+.endmacro
+
+;----------------------------------------------------------------------
+; get_argv
+;
+; usage:
+;	ldx index
+;	get_argv
+;
+; Note:
+;	Use _argv
+;
+; Get the argument N° X from _argv
+;----------------------------------------------------------------------
+.macro get_argv
+	; X doit contenir l'index
+	; _argv et _argc doivent être initialisés
+	jsr _get_argv
+.endmacro
+
+
+;======================================================================
 ;				Misc
 ;======================================================================
 ;----------------------------------------------------------------------
@@ -363,8 +410,6 @@
 ; usage:
 ;----------------------------------------------------------------------
 .macro MODULE start, end, exec
-	;.org $0000
-	;.code
 	.import __MAIN_START__
 	.import __MAIN_LAST__
 
@@ -389,7 +434,8 @@
 ;		.word exec		; starting adress
 		.word __MAIN_START__
 		.word __MAIN_LAST__
-		.word __MAIN_START__	; starting adress
+;		.word __MAIN_START__	; starting adress
+		.word exec
 .endmacro
 
 
