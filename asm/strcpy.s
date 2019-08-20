@@ -2,7 +2,6 @@
 
 .export _strcpy
 
-;.org $0801
 .segment "CODE"
 
 
@@ -14,13 +13,8 @@ loop:
 	beq end
 	sta (RESB),y
 	iny
-.IFPC02
-.pc02
-	bra loop
-.p02  
-.else
-	jmp loop
-.endif
+	bne loop
+	tya	; <=> lda #$00
 end:
 	sta (RESB),y
 	; y return the length

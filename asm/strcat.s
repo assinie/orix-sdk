@@ -12,14 +12,9 @@ loop:
     lda (RES),y
     beq end_string_found
     iny
+    bne loop
     beq end ; prevent BOF
-.IFPC02
-.pc02
-    bra loop
-.p02
-.else
-    jmp loop
-.endif
+
 end_string_found:
     tya
     clc
@@ -35,14 +30,9 @@ loopcopy:
     beq end
     sta (RES),y
     iny
-    beq end
-.IFPC02
-.pc02
-    bra loopcopy
-.p02
-.else
-    jmp loopcopy
-.endif
+    bne loopcopy
+;    beq end
+
 end:
     lda #$00
     sta (RES),y
