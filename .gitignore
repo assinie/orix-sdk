@@ -4,3 +4,4 @@
 *.map
 *.dep
 *.sym
+build/

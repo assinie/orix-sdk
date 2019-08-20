@@ -1,23 +1,32 @@
+;----------------------------------------------------------------------
+;			cc6 includes
+;----------------------------------------------------------------------
 .include "telestrat.inc"
 
+;----------------------------------------------------------------------
+;			Orix Kernel includes
+;----------------------------------------------------------------------
 .include "kernel/src/include/kernel.inc"
 .include "kernel/src/include/memory.inc"
 .include "kernel/src/include/process.inc"
 ;
 
+;----------------------------------------------------------------------
+;			Orix Shell includes
+;----------------------------------------------------------------------
 .include "shell/src/include/bash.inc"
 .include "shell/src/include/orix.inc"
 
-; .reloc nécessaire parce que le dernier segment de orix.inc est .bss et qu'il
-; y a des .org xxxx dans les fichiers .inc...
-.reloc
 
 ;----------------------------------------------------------------------
-;
+;			Orix SDK includes
 ;----------------------------------------------------------------------
 .include "macros/SDK.mac"
 .include "include/SDK.inc"
 
+; .reloc nécessaire parce que le dernier segment de orix.inc est .bss et qu'il
+; y a des .org xxxx dans les fichiers .inc...
+.reloc
 
 ;----------------------------------------------------------------------
 ;				Imports
@@ -36,13 +45,14 @@
 ;----------------------------------------------------------------------
 ;				Exports
 ;----------------------------------------------------------------------
+.export _main
 .export _argc
 .export _argv
 
 ;----------------------------------------------------------------------
 ;				ORIXHDR
 ;----------------------------------------------------------------------
-MODULE __MAIN_START__, __MAIN_LAST__, _main
+; MODULE __MAIN_START__, __MAIN_LAST__, _main
 
 ;----------------------------------------------------------------------
 ;			Segments vides

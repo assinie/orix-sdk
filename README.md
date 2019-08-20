@@ -4,5 +4,5 @@ Tools & Macros for Orix devs
 ## Directories
 - asm: Assembly sources
 - include:
-- macros:
-- tests: examples
+- macros: SDK Macros
+- examples: examples
