@@ -60,15 +60,15 @@
         ;
         ldy #$00
         lda (src),y
-        beq *+$3b         ; beq @end          ; Chaine source vide
+        beq *+$37         ; beq @end          ; Chaine source vide
 
         strlen src
-        bcs *+$2e         ; bcs @end          ; Overflow
+        bcs *+$2a         ; bcs @end          ; Overflow
         tya               ; X :=len(src)
         tax
 
         strlen dest
-        bcs *+$1f         ; bcs @end          ; Overflow
+        bcs *+$1b         ; bcs @end          ; Overflow
 
         ; lda dest+1      ; Sauvegarde de dest
         ; pha             ; ATTENTION: recalculer les destinations des beq/bcs/...
@@ -78,10 +78,8 @@
         tya               ; Calcul de l'adresse de fin de dest
         adc dest
         sta dest
-        lda dest+1        ; Suppose que (dest) peut être modifier
-        sta dest+1
         bcc *+4
-        inc dest+1
+        inc dest+1        ; Suppose que (dest) peut être modifié
 
         ldy #$00          ; Concatenation
     ; @loop:
@@ -100,6 +98,7 @@
         ; sta dest        ; ATTENTION: recalculer les destinations des beq/bcs/...
         ; pla             ; si on active cette option
         ; sta dest+1
+        ; txa             ; <=> lda #$00
     ; @end:
 .endmacro
 
