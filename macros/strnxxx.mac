@@ -1,0 +1,133 @@
+;======================================================================
+;			String functions
+;
+; Inline version
+;======================================================================
+
+;----------------------------------------------------------------------
+; strncpy(src, dest, n)
+;
+; Sortie:
+;        A: 0 et Z=1 si copie effectuée, inchangé si non
+;        X: 0
+;        Y: Longueur réellement copiée
+;----------------------------------------------------------------------
+
+.macro strncpy src, dest, n
+
+        ldy #$00
+        ldx n
+	beq *+12          ; beq @eos
+
+    ;@loop:
+        lda (src),y
+        sta (dest),y
+        beq *+9           ; beq @end
+        iny
+        dex
+        bne *-8           ; bne @loop
+
+    ;@eos:
+        txa
+        sta (dest),y
+
+    ;@end:
+
+.endmacro
+
+
+;----------------------------------------------------------------------
+; strncat(src, dest, n)
+;
+; Sortie:
+;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine src ou dest si erreur)
+;        X: 0 si OK
+;        Y: Longueur de la chaine réellement concaténée (src)
+;
+;        C: 0 si OK, 1 si src ou dest fait plus de 255 caractères
+;
+;     dest: Adresse de début de la concaténation (fin de dest initial)
+;
+; ATTENTION:
+;        Aucun test n'est effectué pour savoir si strlen(dest)+strlen(src) > 255
+;        Peut donc produire une chaîne non utilisable par strnxxx()
+;----------------------------------------------------------------------
+.macro strncat src, dest, n
+        clc               ; Indique aucune erreur (au cas ou strlen(src) == 0)
+
+        ;
+        ; Recalculer les sauts si strlen est modifié
+        ;
+        ldy #$00
+        lda (src),y
+        beq *+$3b         ; beq @end          ; Chaine source vide
+
+        strlen src
+        bcs *+$2e         ; bcs @end          ; Overflow
+        tya               ; X :=len(src)
+        tax
+
+        strlen dest
+        bcs *+$1f         ; bcs @end          ; Overflow
+
+        ; lda dest+1      ; Sauvegarde de dest
+        ; pha             ; ATTENTION: recalculer les destinations des beq/bcs/...
+        ; lda dest        ; si on active cette option
+        ; pha
+
+        tya               ; Calcul de l'adresse de fin de dest
+        adc dest
+        sta dest
+        lda dest+1        ; Suppose que (dest) peut être modifier
+        sta dest+1
+        bcc *+4
+        inc dest+1
+
+        ldy #$00          ; Concatenation
+    ; @loop:
+        lda (src),y
+        sta (dest),y
+        beq *+10           ; beq @end
+        iny
+        dex
+        bne *-8           ; bne @loop
+        txa
+        sta (dest),y
+
+        clc               ; Pas d'erreur
+
+        ; pla             ; Restaure dest
+        ; sta dest        ; ATTENTION: recalculer les destinations des beq/bcs/...
+        ; pla             ; si on active cette option
+        ; sta dest+1
+    ; @end:
+.endmacro
+
+
+;----------------------------------------------------------------------
+; strlen(str)
+;
+; Sortie:
+;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine si erreur)
+;        X: Inchangé
+;        Y: Longueur de la chaine
+;
+;        C: 0 si OK, 1 si la chaine fait plus de 255 caractères
+;----------------------------------------------------------------------
+.macro strlen str
+        clc
+
+        ldy #$00
+    ; @loop:
+        lda (str),y
+        beq *+6           ; beq @end
+        iny
+        bne *-5           ; @loop
+        sec               ; Overflow
+    ; @end:
+
+.endmacro
+
+;----------------------------------------------------------------------
+;
+;----------------------------------------------------------------------
