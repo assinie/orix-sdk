@@ -44,7 +44,7 @@
 ;        X: 0 si OK
 ;        Y: Longueur de la chaine réellement concaténée (src)
 ;
-;        C: 0 si OK, 1 si src ou dest fait plus de 255 caractères
+;        C: 0 si OK, 1 si dest fait plus de 255 caractères
 ;
 ;     dest: Adresse de début de la concaténation (fin de dest initial)
 ;
@@ -60,15 +60,16 @@
         ;
         ldy #$00
         lda (src),y
-        beq *+$37         ; beq @end          ; Chaine source vide
+        beq *+$2a         ; beq @end          ; Chaine source vide
 
-        strlen src
-        bcs *+$2a         ; bcs @end          ; Overflow
-        tya               ; X :=len(src)
-        tax
+; strcat
+;        strlen src
+;        bcs *+$2a         ; bcs @end          ; Overflow
+;        tya               ; X :=len(src)
+;        tax
 
         strlen dest
-        bcs *+$1b         ; bcs @end          ; Overflow
+        bcs *+$1f         ; bcs @end          ; Overflow
 
         ; lda dest+1      ; Sauvegarde de dest
         ; pha             ; ATTENTION: recalculer les destinations des beq/bcs/...
@@ -80,6 +81,8 @@
         sta dest
         bcc *+4
         inc dest+1        ; Suppose que (dest) peut être modifié
+
+	ldx n
 
         ldy #$00          ; Concatenation
     ; @loop:
