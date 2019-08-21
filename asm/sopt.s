@@ -6,16 +6,11 @@
 ;----------------------------------------------------------------------
 ;			Orix Kernel includes
 ;----------------------------------------------------------------------
-;.include "kernel/src/include/kernel.inc"
-;.include "kernel/src/include/memory.inc"
-;.include "kernel/src/include/process.inc"
 
 
 ;----------------------------------------------------------------------
 ;			Orix Shell includes
 ;----------------------------------------------------------------------
-;.include "shell/src/include/bash.inc"
-;.include "shell/src/include/orix.inc"
 
 
 ;----------------------------------------------------------------------
@@ -31,19 +26,15 @@
 ;**********************************************************************
 ;               page 0 used by command interpreter
 ;**********************************************************************
-;        .org     $f0
 .zeropage
 ;t1:     .res     2               ;parameters
 ;t2:     .res     2
 ;t3:     .res     2
 ;t4:     .res     2
 
-tepo:                           ;opt/param, text output (saved)
-rbg:    .res     2              ;start mem. r/w, mode seek
-opp:                            ;option param. pointer
-rln:    .res     2              ;no. of bytes
-cbp:                            ;command buffer pointer
-tcn:    .res     2              ;temp use (count)
+tepo:   .res     2              ;opt/param, text output (saved)
+opp:    .res     2              ;option param. pointer
+cbp:    .res     2              ;command buffer pointer
 
 opt:    .res     1              ;options mask
 mode:   .res     1              ;param. mask
@@ -51,70 +42,17 @@ mode:   .res     1              ;param. mask
 ;**********************************************************************
 ;               DOS65 errors values
 ;**********************************************************************
-;e1      equ     1               mem. full (command LOAD RUN)
-;e2      equ     2               disk full (write create)
-;e3      equ     3               begin of file (seek)
-;e4      equ     4               end of file (read)
-;e10     equ     $10             file spec. (more then 14 char.)
-;e11     equ     $11             device - directory select
-;e12     equ     $12             no filename (open)
-;e13     equ     $13             file not found (open)
 e15      =      $15             ;option
 e16      =      $16             ;hex/dec data
-;e20     equ     $20             no entry to open a file
-;e21     equ     $21             try to open opened file
-;e25     equ     $25             delete prot. (delete)
-;e26     equ     $26             write prot. (open w, w+)
-;e27     equ     $27             read prot. (open r, r+)
-;e28     equ     $28             permission (open ext. bits)
-;e29     equ     $29             format file
-;e30     equ     $30             file not opened
-;e31     equ     $31             non existing fd
-;e35     equ     $35             no delete allowed (delete)
-;e36     equ     $36             not write opened (write)
-;e37     equ     $37             not read, seek opened (read seek)
-;e38     equ     $38             no seek r/w
-;e39     equ     $39             seek function
-;e41     equ     $41             existing file (rename)
-;e42     equ     $42             not the same drive
-;e46     equ     $46             status function
-;               $80             read error
-;               $90             write error
-;               $b0             invalid drive/track/sector address
-;               $c0             drive not ready
-;               $d0             disk protected
-;                               add $01 for system, $02 for directory
 
 ;**********************************************************************
 ;               DOS65 work memory
 ;**********************************************************************
-wmem     =      $aa00
-;        .org     wmem
 .bss
 inbuf:  .res     80             ;command input buffer (max 80 char)
-;50
-;ifd:    .res     1              ;char input fd.
-;ofd:    .res     1              ;char output fd.
-;iocfl:  .res     1              ;flag not close i/o redirect
-;lffl:   .res     1              ;line feed and terminal flags
-;doser:  .res     1              ;error flag
-;aio:    .res     1              ;A io save
-;xio:    .res     1              ;X io save
-;yio:    .res     1              ;Y io save
 
-;ipoin:  .res     2              ;input
-;opoin:  .res     1              ;output
 hdx:    .res     1              ;save X hex <> dec conv.
 
-;cjmp:   .res     2              ;start address
-;cmdvec: .res     2              ;command line input and execute
-
-;60
-;eopt:   .res     1              ;command/@ flags
-;efd:    .res     1              ;command/@ fds
-;efd2:   .res     1
-;eclm     =      wmem+$80-*
-;ecml:   .res     eclm           ;execute command line
 
 
 ;**********************************************************************
