@@ -1,21 +1,34 @@
 ;----------------------------------------------------------------------
-;			cc6 includes
+;			cc65 includes
 ;----------------------------------------------------------------------
 .include "telestrat.inc"
 
 ;----------------------------------------------------------------------
 ;			Orix Kernel includes
 ;----------------------------------------------------------------------
+; nécessaire pour KERNEL_MAX_PATH_LENGTH dans process.inc
 .include "kernel/src/include/kernel.inc"
-.include "kernel/src/include/memory.inc"
+
+; nécessaire pour kernel_process_struct dans orix.inc
 .include "kernel/src/include/process.inc"
-;
+
+; nécessaire pour ORIX_MALLOC_FREE_FRAGMENT_MAX dans orix.inc
+.include "kernel/src/include/memory.inc"
+
+; nécessaire pour kernel/src/orix.inc (certains labels sans ':')
+.feature labels_without_colons
+
+; nécessaire pour userzp
+.include "kernel/src/orix.inc"
+
 
 ;----------------------------------------------------------------------
 ;			Orix Shell includes
 ;----------------------------------------------------------------------
-.include "shell/src/include/bash.inc"
-.include "shell/src/include/orix.inc"
+; nécessaire pour BASH_MAX_BUFEDT_LENGTH dans shell/src/include/orix.inc
+;.include "shell/src/include/bash.inc"
+; nécessaire pour userzp
+;.include "shell/src/include/orix.inc"
 
 
 ;----------------------------------------------------------------------
