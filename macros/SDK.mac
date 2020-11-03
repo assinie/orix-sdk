@@ -325,9 +325,15 @@
 	.endif
 
 	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		lda fp
+		ldy fp+1
+		jsr XFREE_ROUTINE
 		jsr XCLOSE_ROUTINE
 
 	.else
+		lda fp
+		ldy fp+1
+		.byte $00, XFREE
 		.byte $00, XCLOSE
 
 	.endif
@@ -487,34 +493,35 @@
 ; Check regs pair and display oom_msg_ptr and return if regs pairs is null
 ;----------------------------------------------------------------------
 .macro check_regs_ptr regs, oom_msg_ptr
+	.local exit
 
 	.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
 		cpy #$00
-		bne @exit
+		bne exit
 		cmp #$00
-		bne @exit
+		bne exit
 
 	.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
 		cpx #$00
-		bne @exit
+		bne exit
 		cmp #$00
-		bne @exit
+		bne exit
 
 	.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
 		cpx #$00
-		bne @exit
+		bne exit
 		cpy #$00
-		bne @exit
+		bne exit
 
 	.else
 		.error .sprintf("Unknown registers: %s (must be 'AX', 'XA', 'AY', 'YA', 'XY', 'YX')", .string(regs))
 	.endif
 
-	.if (.not .blank({oom_msg_ptr}))
-		print oom_msg_ptr
-	.endif
 
+	.if (.not .blank({oom_msg_ptr}))
+		print oom_msg_ptr, NOSAVE
+	.endif
 		rts
-	@exit:
+	exit:
 .endmacro
 
