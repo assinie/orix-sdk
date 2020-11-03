@@ -344,7 +344,7 @@
 ;
 ; Call XMKDIR function
 ;----------------------------------------------------------------------
-.macro mkdir ptr
+.macro mkdir ptr, option
 
 	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
 		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
@@ -484,40 +484,37 @@
 ; Note:
 ;	regs is one of: AX, AY, XY, XA, YA, YX
 ;
-; Check display oom_msg_ptr and return if regs pairs is null
+; Check regs pair and display oom_msg_ptr and return if regs pairs is null
 ;----------------------------------------------------------------------
 .macro check_regs_ptr regs, oom_msg_ptr
 
-	.if (.not .blank({oom_msg_ptr}))
-		.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
-			cpy #$00
-			bne @exit
-			cmp #$00
-			bne @exit
-			print oom_msg_ptr
-			rts
-			@exit:
+	.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
+		cpy #$00
+		bne @exit
+		cmp #$00
+		bne @exit
 
-		.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
-			cpx #$00
-			bne @exit
-			cmp #$00
-			bne @exit
-			print oom_msg_ptr
-			rts
-			@exit:
+	.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
+		cpx #$00
+		bne @exit
+		cmp #$00
+		bne @exit
 
-		.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
-			cpx #$00
-			bne @exit
-			cpy #$00
-			bne @exit
-			print oom_msg_ptr
-			rts
-			@exit:
-		.else
-			.error .sprintf("Unknown registers: %s (must be 'AX', 'XA', 'AY', 'YA', 'XY', 'YX')", .string(regs))
-		.endif
+	.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
+		cpx #$00
+		bne @exit
+		cpy #$00
+		bne @exit
+
+	.else
+		.error .sprintf("Unknown registers: %s (must be 'AX', 'XA', 'AY', 'YA', 'XY', 'YX')", .string(regs))
 	.endif
+
+	.if (.not .blank({oom_msg_ptr}))
+		print oom_msg_ptr
+	.endif
+
+		rts
+	@exit:
 .endmacro
 
