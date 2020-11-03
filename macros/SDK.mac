@@ -166,14 +166,21 @@
 ;----------------------------------------------------------------------
 ;
 ; usage:
+;	malloc size [,ptr] [,oom_msg_ptr]
+;
 ;	malloc #$0100
 ;	malloc (ptr)
 ;	malloc value
 ;
+; Note:
+;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
+;		'oom_msg_ptr' and return if AY is null (ie malloc error)
+;
 ; Call XMALLOC function
 ;
 ;----------------------------------------------------------------------
-.macro malloc size
+.macro malloc size, ptr, oom_msg_ptr
 
 	;SDK_imm_or_ind_or_abs size
 	SDK_get_AY size
@@ -189,6 +196,16 @@
 	.if SDK::inst_mode <> $ff
 		.byte $00, XMALLOC
 	.endif
+
+	.if (.not .blank({oom_msg_ptr}))
+		check_regs_ptr AY, oom_msg_ptr
+	.endif
+
+	.if (.not .blank({ptr}))
+		sta ptr
+		sty ptr+1
+	.endif
+
 .endmacro
 
 ;----------------------------------------------------------------------
@@ -228,14 +245,17 @@
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	fopen file, mode [,TELEMON]
+;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr]
 ;
 ; note:
-;	file may be: (ptr), address
+;	- file may be: (ptr), address
+;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
+;		'oom_msg_ptr' and return if AY is null (ie malloc error)
 ;
 ; Call XOPEN function
 ;----------------------------------------------------------------------
-.macro fopen file, mode, option
+.macro fopen file, mode, option, ptr, oom_msg_ptr
 
 	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
 		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
@@ -252,6 +272,17 @@
 	.else
 		.byte $00, XOPEN
 	.endif
+
+
+	.if (.not .blank({oom_msg_ptr}))
+		check_regs_ptr AY, oom_msg_ptr
+	.endif
+
+	.if (.not .blank({ptr}))
+		sta ptr
+		sty ptr+1
+	.endif
+
 .endmacro
 
 ;----------------------------------------------------------------------
@@ -440,4 +471,53 @@
 		.word exec
 .endmacro
 
+
+;======================================================================
+;			Pointer functions
+;======================================================================
+;----------------------------------------------------------------------
+; check_regs_ptr
+;
+; usage:
+;	check_regs_ptr regs [, oom_msg_ptr]
+;
+; Note:
+;	regs is one of: AX, AY, XY, XA, YA, YX
+;
+; Check display oom_msg_ptr and return if regs pairs is null
+;----------------------------------------------------------------------
+.macro check_regs_ptr regs, oom_msg_ptr
+
+	.if (.not .blank({oom_msg_ptr}))
+		.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
+			cpy #$00
+			bne @exit
+			cmp #$00
+			bne @exit
+			print oom_msg_ptr
+			rts
+			@exit:
+
+		.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
+			cpx #$00
+			bne @exit
+			cmp #$00
+			bne @exit
+			print oom_msg_ptr
+			rts
+			@exit:
+
+		.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
+			cpx #$00
+			bne @exit
+			cpy #$00
+			bne @exit
+			print oom_msg_ptr
+			rts
+			@exit:
+		.else
+			.error .sprintf("Unknown registers: %s (must be 'AX', 'XA', 'AY', 'YA', 'XY', 'YX')", .string(regs))
+		.endif
+	.endif
+.endmacro
 
