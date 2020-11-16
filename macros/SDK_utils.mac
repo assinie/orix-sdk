@@ -142,16 +142,16 @@
 	;----------------------------------------------------------------------
 	.macro SDK_call_function func, dest, src
 
-		.out .sprintf("--- START %s ---", .string(func))
+		; .out .sprintf("--- START %s ---", .string(func))
 
 		.if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
-			.out .sprintf("%s: src == dest", .string(func))
+			.warning .sprintf("%s: no src nor dest", .string(func))
 			; .error "strcpy: src == dest"
 			; .fatal "strcpy: src == dest"
 		.else
 
 			.if ( .xmatch({src}, {dest}) )
-				.out .sprintf("%s: src == dest", .string(func))
+				.warning .sprintf("%s: src == dest", .string(func))
 				; .error "strcpy: src == dest"
 				; .fatal "strcpy: src == dest"
 			.else
@@ -162,7 +162,7 @@
 				; sinon AY sera écrasé par le traitement de 'src'
 				;----------------------------------------------------------
 				.if ( .xmatch({dest}, AY) )
-					.out .sprintf("%s: AY is dest", .string(func))
+					; .out .sprintf("%s: AY is dest", .string(func))
 					; .warning "strcpy:  AY is dest"
 					sta RESB
 					sty RESB+1
@@ -180,7 +180,7 @@
 				;----------------------------------------------------------
 				.if ( .not .blank({src}) )
 					.if ( .xmatch({src}, AY) )
-						.out .sprintf("%s: AY is src", .string(func))
+						; .out .sprintf("%s: AY is src", .string(func))
 						; Rien à faire ici, les STA/STY sont faits plus bas
 
 					.elseif ( .match(.left(1, {src}), {(}) )
@@ -249,10 +249,10 @@
 				.endif
 
 				.if ( .not .blank({func}) )
-					.out "--- OK ---"
+					; .out "--- OK ---"
 					jsr func
 				.else
-					.out "--- NO CALL ---"
+					.fatal "--- NO CALL ---"
 				.endif
 
 			; .if ( .xmatch({src}, {dest}) )
@@ -261,7 +261,7 @@
 		; .if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
 		.endif
 
-		.out "--- END ---"
+		; .out "--- END ---"
 
 	.endmacro
 

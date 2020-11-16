@@ -166,7 +166,7 @@
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	malloc size [,ptr] [,oom_msg_ptr]
+;	malloc size [,ptr] [,oom_msg_ptr] [,fail_value]
 ;
 ;	malloc #$0100
 ;	malloc (ptr)
@@ -180,7 +180,7 @@
 ; Call XMALLOC function
 ;
 ;----------------------------------------------------------------------
-.macro malloc size, ptr, oom_msg_ptr
+.macro malloc size, ptr, oom_msg_ptr, fail_value
 
 	;SDK_imm_or_ind_or_abs size
 	SDK_get_AY size
@@ -198,7 +198,10 @@
 	.endif
 
 	.if (.not .blank({oom_msg_ptr}))
-		check_regs_ptr AY, oom_msg_ptr
+		check_regs AY, oom_msg_ptr, fail_value
+
+	.elseif (.not .blank({fail_value}))
+		check_regs AY, oom_msg_ptr, fail_value
 	.endif
 
 	.if (.not .blank({ptr}))
@@ -249,7 +252,7 @@
 ;
 ; note:
 ;	- file may be: (ptr), address
-;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'ptr' is present, store resulting AY in ptr & ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
 ;		'oom_msg_ptr' and return if AY is null (ie malloc error)
 ;
@@ -275,7 +278,7 @@
 
 
 	.if (.not .blank({oom_msg_ptr}))
-		check_regs_ptr AY, oom_msg_ptr
+		check_regs AY, oom_msg_ptr
 	.endif
 
 	.if (.not .blank({ptr}))
@@ -311,10 +314,7 @@
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	fclose fp [,TELEMON]
-;
-; note:
-;	fp may be: #value, (ptr), address
+;	fclose (fp) [,TELEMON]
 ;
 ; Call XCLOSE function
 ;----------------------------------------------------------------------
@@ -324,15 +324,34 @@
 		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
 	.endif
 
+	.if (.match(.left(1, {fp}), {(}) )
+		; Indirect
+
+		.if (.match(.right(1,{fp}), {)}))
+			; .out"Indirect mode"
+
+			lda .mid (1,.tcount ({fp})-2, {fp})
+			ldy 1+(.mid (1,.tcount ({fp})-2, {fp}))
+
+		.else
+			.error "error: ')' missing"
+		.endif
+
+	.else
+		; assume absolute
+		; .out "Aboslute mode"
+		.error "error: indirect mode only"
+	.endif
+
 	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
-		lda fp
-		ldy fp+1
+		;lda fp
+		;ldy fp+1
 		jsr XFREE_ROUTINE
 		jsr XCLOSE_ROUTINE
 
 	.else
-		lda fp
-		ldy fp+1
+		;lda fp
+		;ldy fp+1
 		.byte $00, XFREE
 		.byte $00, XCLOSE
 
@@ -430,12 +449,10 @@
 ;----------------------------------------------------------------------
 .macro cursor mode
 	.if (.xmatch(.string(mode), .string(ON)) .or .xmatch(.string(mode), .string(on)))
-		.out "Mode = on"
 		ldx #$00
 		.byte $00, XCSSCR
 
 	.elseif (.xmatch(.string(mode), .string(OFF)) .or .xmatch(.string(mode), .string(off)))
-		.out "Mode = off"
 		ldx #$00
 		.byte $00, XCOSCR
 
@@ -482,17 +499,17 @@
 ;			Pointer functions
 ;======================================================================
 ;----------------------------------------------------------------------
-; check_regs_ptr
+; check_regs
 ;
 ; usage:
-;	check_regs_ptr regs [, oom_msg_ptr]
+;	check_regs regs [,oom_msg_ptr] [,fail_value]
 ;
 ; Note:
 ;	regs is one of: AX, AY, XY, XA, YA, YX
 ;
-; Check regs pair and display oom_msg_ptr and return if regs pairs is null
+; Check regs pair, display oom_msg_ptr and return if regs pairs is null
 ;----------------------------------------------------------------------
-.macro check_regs_ptr regs, oom_msg_ptr
+.macro check_regs regs, oom_msg_ptr, fail_value
 	.local exit
 
 	.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
@@ -520,7 +537,17 @@
 
 	.if (.not .blank({oom_msg_ptr}))
 		print oom_msg_ptr, NOSAVE
+
+;		.if (.not .blank({fail_value}))
+;			lda fail_value
+;		.endif
+
 	.endif
+;	.elseif (.not .blank({fail_value}))
+	.if (.not .blank({fail_value}))
+		lda fail_value
+	.endif
+
 		rts
 	exit:
 .endmacro
