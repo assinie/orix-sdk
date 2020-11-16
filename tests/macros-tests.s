@@ -1,0 +1,885 @@
+.feature labels_without_colons, c_comments
+.listbytes unlimited
+.debuginfo
+
+;----------------------------------------------------------------------
+;			Tests des Macros
+;----------------------------------------------------------------------
+/*
+ # Assemblage
+ cl65 -t none -Ln macros-tests.ca.sym --listing macros-tests.lst --asm-include-dir ../ macros-tests.s
+
+ # Génération du fichier .info
+ sed -re '/LOCAL-MACRO/d; /__/d; s/al 00(.{4}) \.(.+)$$/\1 \2/' macros-tests.ca.sym | sort | sed -re 's/^([^ ]+) (.+)/label { addr $\1; name "\2"; };/; s/"(RES|RESB|PTR_READ_DEST|ptr1|ptr2|var|_argv)";/"\1"; size 2;/' > macros-tests.info
+
+ # Ajout des commentaires au fichier .info
+ sed -nre ':x /^[^ ]+[0-9]{2}$/ { N; s/\n//g ; bx ; } ; /^[^ ]+[0-9]{2}/p'  macros-tests.s | sed -re 's#(.+)\t(.+)$#s/"\1"/"\1"; comment "\\n; \2"\\n;/;#' | sed -f - -i macros-tests.info
+
+ # Désassemblage
+ ../../../cc65/bin/da65 -o macro.lst --comments 3 --start-addr 0x1000 --info macros-tests.info macros-tests
+*/
+
+/*
+range { start $199D; end $19A6; name "src"; type bytetable; };
+range { start $19A7; end $19B0; name "dst"; type bytetable; };
+range { start $19B1; end $19B2; name "ptr1"; type addrtable; };
+range { start $19B3; end $19B4; name "ptr2"; type addrtable; };
+range { start $19B5; end $19BB; name "msg"; type texttable; };
+label { addr $19BC; name "_argc"; };
+range { start $19BD; end $19BE; name "_argv"; type addrtable; };
+*/
+
+;----------------------------------------------------------------------
+;			Orix SDK includes
+;----------------------------------------------------------------------
+.include "macros/SDK.mac"
+;.include "include/SDK.inc"
+;.include "macros/types.mac"
+
+
+;----------------------------------------------------------------------
+; Defines / Constants
+;----------------------------------------------------------------------
+	XWR0 = $10
+	XWSTR0 = $14
+	XFREAD = $27
+	XOPEN = $30
+	XCOSCR = $34
+	XCSSCR = $35
+	XCLOSE = $3a
+	XMKDIR = $4b
+	XMALLOC = $5b
+	XFREE = $62
+
+	O_RDONLY = $01
+
+	var = $5678
+
+;----------------------------------------------------------------------
+;				Page Zéro
+;----------------------------------------------------------------------
+.zeropage
+	RES: .res 2
+	RESB: .res 2
+
+	PTR_READ_DEST  := $2C
+
+
+;----------------------------------------------------------------------
+;				Variables
+;----------------------------------------------------------------------
+.segment "DATA"
+	src: .res 10, 0
+	dst: .res 10, 0
+	ptr1: .res 2, 0
+	ptr2: .res 2, 0
+	msg: .asciiz "Erreur"
+
+
+	_argc:
+		.res 1, 0
+	_argv:
+		.res 2, 0
+
+
+;----------------------------------------------------------------------
+;				Dummy Code
+;----------------------------------------------------------------------
+.segment "CODE"
+
+_strcpy
+	rts
+_strcat
+	rts
+_strlen
+	rts
+
+
+XWR0_ROUTINE
+	rts
+
+XWSTR0_ROUTINE
+	rts
+
+XOPEN_ROUTINE
+	rts
+
+XCLOSE_ROUTINE
+	rts
+
+XMKDIR_ROUTINE
+	rts
+
+XFREE_ROUTINE
+	rts
+
+
+_init_argv
+	rts
+_get_argv
+	rts
+
+func:
+	rts
+
+
+;----------------------------------------------------------------------
+;			Tests des Macros
+;----------------------------------------------------------------------
+.segment "CODE"
+
+
+;======================================================================
+;			String functions
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strcpy dest, src
+;
+; Call _strcpy function
+;
+; note:
+;	dest: may be nothing, AY, (ptr), address
+;	src : may be nothing, AY, (ptr), address
+;----------------------------------------------------------------------
+strcpy01
+	strcpy dst, src
+
+strcpy02
+	strcpy (ptr1), src
+
+strcpy03
+	strcpy dst, (ptr2)
+
+strcpy04
+	strcpy (ptr1), (ptr2)
+
+strcpy05
+	strcpy AY, src
+
+strcpy06
+	strcpy AY, (ptr2)
+
+strcpy07
+	strcpy dst, AY
+
+strcpy08
+	strcpy (ptr1), AY
+
+	;----------------------------------------------------------------------
+
+strcpy11
+	strcpy , src
+
+strcpy12
+	strcpy , (ptr2)
+
+strcpy13
+	strcpy , AY
+
+	;----------------------------------------------------------------------
+
+strcpy21
+	strcpy dst
+
+strcpy22
+	strcpy (ptr1)
+
+strcpy23
+	strcpy AY
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strcat dest, src
+;
+; Call _strcat function
+;
+; note:
+;	dest: may be nothing, AY, (ptr), address
+;	src : may be nothing, AY, (ptr), address
+;----------------------------------------------------------------------
+strcat01
+	strcat dst, src
+
+strcat02
+	strcat (ptr1), src
+
+strcat03
+	strcat dst, (ptr2)
+
+strcat04
+	strcat (ptr1), (ptr2)
+
+strcat05
+	strcat AY, src
+
+strcat06
+	strcat AY, (ptr2)
+
+strcat07
+	strcat dst, AY
+
+strcat08
+	strcat (ptr1), AY
+
+	;----------------------------------------------------------------------
+
+strcat11
+	strcat , src
+
+strcat12
+	strcat , (ptr2)
+
+strcat13
+	strcat , AY
+
+	;----------------------------------------------------------------------
+
+strcat21
+	strcat dst
+
+strcat22
+	strcat (ptr1)
+
+strcat23
+	strcat AY
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	strlen str
+;	strlen (ptr)
+;
+; Call _strlen function
+;
+;----------------------------------------------------------------------
+strlen01
+	strlen src
+
+strlen02
+	strlen (ptr1)
+
+;======================================================================
+;				Print
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	print #byte [,TELEMON|NOSAVE]
+;	print (pointer) [,TELEMON|NOSAVE]
+;	print address [,TELEMON|NOSAVE]
+;
+; Option:
+;	- TELEMON: when used within TELEMON bank
+;	- NOSAVE : does not preserve A,X,Y registers
+;
+; Call XWSTR0 function
+;
+;----------------------------------------------------------------------
+print01
+	print #'A'
+
+print02
+	print #$41
+
+print03
+	print (ptr1)
+
+print04
+	print src
+
+print05
+	print $1234
+
+	;----------------------------------------------------------------------
+
+print11
+	print #'A', NOSAVE
+
+print12
+	print #$41, NOSAVE
+
+print13
+	print (ptr1), NOSAVE
+
+print14
+	print src, NOSAVE
+
+print15
+	print $1234, NOSAVE
+
+	;----------------------------------------------------------------------
+
+print21
+	print #'A', TELEMON
+
+print22
+	print #$41, TELEMON
+
+print23
+	print (ptr1), TELEMON
+
+print24
+	print src, TELEMON
+
+print25
+	print $1234, TELEMON
+
+;======================================================================
+;			Memory functions
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	malloc size [,ptr] [,oom_msg_ptr] [,fail_value]
+;
+;	malloc #$0100
+;	malloc (ptr)
+;	malloc value
+;
+; Note:
+;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
+;		'oom_msg_ptr' and return if AY is null (ie malloc error)
+;
+; Call XMALLOC function
+;
+;----------------------------------------------------------------------
+malloc01
+	malloc #$1234
+
+malloc02
+	malloc #$1234, ptr1
+
+malloc03
+	malloc #$1234, ptr1, msg
+
+malloc04
+	malloc #$1234, , msg
+
+malloc05
+	malloc var
+
+malloc06
+	malloc (ptr1)
+
+	;----------------------------------------------------------------------
+
+malloc11
+	malloc #$1234, , , $12
+
+malloc12
+	malloc #$1234, ptr1, , $12
+
+malloc13
+	malloc #$1234, ptr1, msg, $12
+
+malloc14
+	malloc #$1234, , msg, $12
+
+malloc15
+	malloc var, , , $12
+
+malloc16
+	malloc (ptr1), , , $12
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	mfree (ptr)
+;
+; Call XFREE function
+;----------------------------------------------------------------------
+mfree01
+	mfree (ptr1)
+
+
+;======================================================================
+;				File
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr]
+;
+; note:
+;	- file may be: (ptr), address
+;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
+;		'oom_msg_ptr' and return if AY is null (ie malloc error)
+;
+; Call XOPEN function
+;----------------------------------------------------------------------
+fopen01
+	fopen #$1234, O_RDONLY
+
+fopen02
+	fopen (ptr1), O_RDONLY
+
+fopen03
+	fopen src, O_RDONLY
+
+	;----------------------------------------------------------------------
+
+fopen11
+	fopen #$1234, O_RDONLY, , ptr1
+
+fopen12
+	fopen (ptr1), O_RDONLY, , ptr1
+
+fopen13
+	fopen src, O_RDONLY, , ptr1
+
+	;----------------------------------------------------------------------
+
+fopen21
+	fopen #$1234, O_RDONLY, , , msg
+
+fopen22
+	fopen (ptr1), O_RDONLY, , , msg
+
+fopen23
+	fopen src, O_RDONLY, , , msg
+
+	;----------------------------------------------------------------------
+
+fopen31
+	fopen #$1234, O_RDONLY, , ptr1 , msg
+
+fopen32
+	fopen (ptr1), O_RDONLY, , ptr1, msg
+
+fopen33
+	fopen src, O_RDONLY, , ptr1, msg
+
+	;----------------------------------------------------------------------
+
+fopen41
+	fopen #$1234, O_RDONLY, TELEMON
+
+fopen42
+	fopen (ptr1), O_RDONLY, TELEMON
+
+fopen43
+	fopen src, O_RDONLY, TELEMON
+
+	;----------------------------------------------------------------------
+
+fopen51
+	fopen #$1234, O_RDONLY, TELEMON, ptr1
+
+fopen52
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1
+
+fopen53
+	fopen src, O_RDONLY, TELEMON, ptr1
+
+	;----------------------------------------------------------------------
+
+fopen61
+	fopen #$1234, O_RDONLY, TELEMON, , msg
+
+fopen62
+	fopen (ptr1), O_RDONLY, TELEMON, , msg
+
+fopen63
+	fopen src, O_RDONLY, TELEMON, , msg
+
+	;----------------------------------------------------------------------
+
+fopen71
+	fopen #$1234, O_RDONLY, TELEMON, ptr1, msg
+
+fopen72
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
+
+fopen73
+	fopen src, O_RDONLY, TELEMON, ptr1, msg
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fread ptr, size, count, fp
+;
+; note:
+;	ptr may be : (ptr), address
+;	size may be: (ptr), address
+;
+; Call XFREAD function
+;----------------------------------------------------------------------
+fread01
+	fread #$1234, #$1234, dummy, dummy
+
+fread02
+	fread #$1234, (ptr2), dummy, dummy
+
+fread03
+	fread #$1234, var, dummy, dummy
+
+	;----------------------------------------------------------------------
+
+fread11
+	fread (ptr1), #$1234, dummy, dummy
+
+fread12
+	fread (ptr1), (ptr2), dummy, dummy
+
+fread13
+	fread (ptr1), var, dummy, dummy
+
+	;----------------------------------------------------------------------
+
+fread21
+	fread src, #$1234, dummy, dummy
+
+fread22
+	fread src, (ptr2), dummy, dummy
+
+fread23
+	fread src, var, dummy, dummy
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fclose (fp) [,TELEMON]
+;
+; Call XCLOSE function
+;----------------------------------------------------------------------
+fclose01
+	fclose (ptr1)
+
+fclose02
+	fclose (ptr1), TELEMON
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	mkdir ptr
+;
+; note:
+;	str may be: (ptr), address
+;
+; Call XMKDIR function
+;----------------------------------------------------------------------
+mkdir01
+	mkdir #$1234
+
+mkdir02
+	mkdir (ptr1)
+
+mkdir03
+	mkdir src
+
+	;----------------------------------------------------------------------
+
+mkdir11
+	mkdir #$1234, TELEMON
+
+mkdir12
+	mkdir (ptr1), TELEMON
+
+mkdir13
+	mkdir src, TELEMON
+
+
+;======================================================================
+;			ARGV/ARGC
+;======================================================================
+
+;----------------------------------------------------------------------
+; init_argv
+;
+; usage:
+;	init_argv argv, cmdline
+;
+; Note:
+;	argv must the address of a buffer
+;	argv may be   : address, (ptr), #value
+;	cmdline may be: address, (ptr), #value
+;
+; Initialize _argv array & _argc, must be called before get_argv
+;----------------------------------------------------------------------
+; #value interdit
+;----------------------------------------------------------------------
+init_argv01
+	init_argv dst, AY
+
+init_argv02
+	init_argv dst, src
+
+init_argv03
+	init_argv dst, (ptr1)
+
+	;----------------------------------------------------------------------
+
+init_argv11
+	init_argv AY, src
+
+init_argv12
+	init_argv AY, (ptr1)
+
+	;----------------------------------------------------------------------
+
+init_argv21
+	init_argv (ptr2), AY
+
+init_argv22
+	init_argv (ptr2), src
+
+init_argv23
+	init_argv (ptr2), (ptr1)
+
+
+;----------------------------------------------------------------------
+; get_argv
+;
+; usage:
+;	ldx index
+;	get_argv
+;
+; Note:
+;	Use _argv
+;
+; Get the argument N° X from _argv
+;----------------------------------------------------------------------
+get_argv01
+	get_argv
+
+
+;======================================================================
+;				Misc
+;======================================================================
+;----------------------------------------------------------------------
+;
+; usage:
+;	cursor ON|OFF
+;
+; Call XCSSCR/XCOSCR functions
+;----------------------------------------------------------------------
+cursor01
+	cursor on
+
+cursor02
+	cursor ON
+
+	;----------------------------------------------------------------------
+
+cursor03
+	cursor off
+
+cursor04
+	cursor OFF
+
+
+;======================================================================
+;			Pointer functions
+;======================================================================
+;----------------------------------------------------------------------
+; check_regs
+;
+; usage:
+;	check_regs regs [, oom_msg_ptr]
+;
+; Note:
+;	regs is one of: AX, AY, XY, XA, YA, YX
+;
+; Check regs pair and display oom_msg_ptr and return if regs pairs is null
+;----------------------------------------------------------------------
+check_regs01
+	check_regs AX
+
+check_regs02
+	check_regs AY
+
+check_regs03
+	check_regs XA
+
+check_regs04
+	check_regs XY
+
+check_regs05
+	check_regs YA
+
+check_regs06
+	check_regs YX
+
+	;----------------------------------------------------------------------
+
+check_regs11
+	check_regs AX, msg
+
+check_regs12
+	check_regs AY, msg
+
+check_regs13
+	check_regs XA, msg
+
+check_regs14
+	check_regs XY, msg
+
+check_regs15
+	check_regs YA, msg
+
+check_regs16
+	check_regs YX, msg
+
+	;----------------------------------------------------------------------
+
+check_regs21
+	check_regs AX, , var
+
+check_regs22
+	check_regs AY, , var
+
+check_regs23
+	check_regs XA, , var
+
+check_regs24
+	check_regs XY, , var
+
+check_regs25
+	check_regs YA, , var
+
+check_regs26
+	check_regs YX, , var
+
+	;----------------------------------------------------------------------
+
+check_regs31
+	check_regs AX, msg, var
+
+check_regs32
+	check_regs AY, msg, var
+
+check_regs33
+	check_regs XA, msg, var
+
+check_regs34
+	check_regs XY, msg, var
+
+check_regs35
+	check_regs YA, msg, var
+
+check_regs36
+	check_regs YX, msg, var
+
+
+;======================================================================
+;			SDK_utils
+;======================================================================
+	;----------------------------------------------------------------------
+	; accept:
+	;		   - #byte	-> lda #arg
+	;		   - (pointer)	-> lda arg / ldy arg+1
+	;		   - address	-> lda #<address / ldy #>address
+	;----------------------------------------------------------------------
+SDK_imm_or_ind_or_abs01
+	SDK_imm_or_ind_or_abs #$1234
+
+SDK_imm_or_ind_or_abs02
+	SDK_imm_or_ind_or_abs (ptr1)
+
+SDK_imm_or_ind_or_abs03
+	SDK_imm_or_ind_or_abs var
+
+SDK_imm_or_ind_or_abs04
+	SDK_imm_or_ind_or_abs $1234
+
+	;----------------------------------------------------------------------
+	; accept:
+	;		   - #word	-> lda #<arg / ldy #>arg
+	;		   - (pointer)	-> lda arg / ldy arg+1
+	;		   - address	-> lda #<address / ldy #>address
+	;----------------------------------------------------------------------
+SDK_get_AY01
+	SDK_get_AY #$1234
+
+SDK_get_AY02
+	SDK_get_AY (ptr1)
+
+SDK_get_AY03
+	SDK_get_AY var
+
+SDK_get_AY04
+	SDK_get_AY $1234
+
+	;----------------------------------------------------------------------
+	; accept:
+	;		   - #word	-> lda #<arg / ldx #>arg
+	;		   - (pointer)	-> lda arg / ldx arg+1
+	;		   - address	-> lda #<address / ldx #>address
+	;----------------------------------------------------------------------
+SDK_get_AX01
+	SDK_get_AX #$1234
+
+SDK_get_AX02
+	SDK_get_AX (ptr1)
+
+SDK_get_AX03
+	SDK_get_AX var
+
+SDK_get_AX04
+	SDK_get_AX $1234
+
+	;----------------------------------------------------------------------
+	; Place les paramètres dans RES et RESB puis appelle la fonction func
+	;
+	; dest -> RESB
+	; src  -> RES
+	;
+	; Si dest/src n'est pas indiqué, la valeur de RESB/RES n'est pas modifiée
+	; Si dest/src est 'AY', on place la valeur des registres AY dans RESB/RES
+	; Si func n'est pas indiqué, seuls RES et RESB sont mis à jour et il
+	; n'y aura pas d'appel vers une fonction.
+	;
+	;----------------------------------------------------------------------
+SDK_call_function01
+	SDK_call_function func, $1234
+
+SDK_call_function02
+	SDK_call_function func, dst
+
+SDK_call_function03
+	SDK_call_function func, (ptr2)
+
+
+SDK_call_function11
+	SDK_call_function func, dst, $1234
+
+SDK_call_function12
+	SDK_call_function func, dst, src
+
+SDK_call_function13
+	SDK_call_function func, dst, (ptr1)
+
+
+SDK_call_function21
+	SDK_call_function func, , $1234
+
+SDK_call_function22
+	SDK_call_function func, , src
+
+SDK_call_function23
+	SDK_call_function func, , (ptr1)
+
+
+SDK_call_function31
+	SDK_call_function func, (ptr2), $1234
+
+SDK_call_function32
+	SDK_call_function func, (ptr2), src
+
+SDK_call_function33
+	SDK_call_function func, (ptr2), (ptr1)
+
