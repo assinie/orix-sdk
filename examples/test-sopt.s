@@ -108,7 +108,8 @@ _main:
         ; Affiche la valeur du code de retour en hexa (masque des options)
         txa
         and #08
-        bne DisplayHelp
+	beq *+5
+        jmp DisplayHelp
 
         txa
         jsr PrintHexByte
@@ -175,10 +176,10 @@ _main:
 
         ; Affiche la valeur du code de retour en bits (masque des options)
 	;RES est déjà à la bonne valeur
-	;lda #<msgBuffer
-	;ldy #>msgBuffer
-	;sta RES
-	;sty RES+1
+	lda #<msgBuffer
+	ldy #>msgBuffer
+	sta RES
+	sty RES+1
 	lda #<msg_vars
 	ldy #>msg_vars
         ;txa
