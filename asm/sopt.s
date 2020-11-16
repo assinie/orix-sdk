@@ -13,15 +13,27 @@
 ;----------------------------------------------------------------------
 
 
+.reloc
 ;----------------------------------------------------------------------
 ;				Imports
 ;----------------------------------------------------------------------
+
 ;----------------------------------------------------------------------
 ;				Exports
 ;----------------------------------------------------------------------
-.export sopt1
-.export spar1
-.export cbp
+.export sopt1, spar1
+.export tincr, incr
+.export sechar, sech1
+.export bufkey1
+.export setcbp
+.export calposp
+.export loupch1
+
+.exportzp tepo
+.exportzp cbp
+.exportzp mode, opt
+
+.export inbuf
 
 ;**********************************************************************
 ;               page 0 used by command interpreter
