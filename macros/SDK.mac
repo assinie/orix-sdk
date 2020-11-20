@@ -538,14 +538,19 @@
 	.if (.not .blank({oom_msg_ptr}))
 		print oom_msg_ptr, NOSAVE
 
-;		.if (.not .blank({fail_value}))
-;			lda fail_value
-;		.endif
+		sec
+		ldy #$00
 
-	.endif
-;	.elseif (.not .blank({fail_value}))
-	.if (.not .blank({fail_value}))
-		lda fail_value
+		.if (.not .blank({fail_value}))
+			lda #fail_value
+		.else
+			tya
+		.endif
+
+;	.endif
+	.elseif (.not .blank({fail_value}))
+;	.if (.not .blank({fail_value}))
+		lda #fail_value
 	.endif
 
 		rts

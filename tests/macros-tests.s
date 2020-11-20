@@ -20,13 +20,13 @@
 */
 
 /*
-range { start $199D; end $19A6; name "src"; type bytetable; };
-range { start $19A7; end $19B0; name "dst"; type bytetable; };
-range { start $19B1; end $19B2; name "ptr1"; type addrtable; };
-range { start $19B3; end $19B4; name "ptr2"; type addrtable; };
-range { start $19B5; end $19BB; name "msg"; type texttable; };
-label { addr $19BC; name "_argc"; };
-range { start $19BD; end $19BE; name "_argv"; type addrtable; };
+range { start $19F9; end $1A02; name "src"; type bytetable; };
+range { start $1A03; end $1A0C; name "dst"; type bytetable; };
+range { start $1A0D; end $1A0E; name "ptr1"; type addrtable; };
+range { start $1A0F; end $1A1; name "ptr2"; type addrtable; };
+range { start $1A11; end $1A17; name "msg"; type texttable; };
+label { addr $1A18; name "_argc"; };
+range { start $1A19; end $1A1A; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -689,7 +689,7 @@ cursor04
 ; check_regs
 ;
 ; usage:
-;	check_regs regs [, oom_msg_ptr]
+;	check_regs regs [, oom_msg_ptr] [, fail_value]
 ;
 ; Note:
 ;	regs is one of: AX, AY, XY, XA, YA, YX
@@ -737,42 +737,42 @@ check_regs16
 	;----------------------------------------------------------------------
 
 check_regs21
-	check_regs AX, , var
+	check_regs AX, , $01
 
 check_regs22
-	check_regs AY, , var
+	check_regs AY, , $01
 
 check_regs23
-	check_regs XA, , var
+	check_regs XA, , $01
 
 check_regs24
-	check_regs XY, , var
+	check_regs XY, , $01
 
 check_regs25
-	check_regs YA, , var
+	check_regs YA, , $01
 
 check_regs26
-	check_regs YX, , var
+	check_regs YX, , $01
 
 	;----------------------------------------------------------------------
 
 check_regs31
-	check_regs AX, msg, var
+	check_regs AX, msg, $01
 
 check_regs32
-	check_regs AY, msg, var
+	check_regs AY, msg, $01
 
 check_regs33
-	check_regs XA, msg, var
+	check_regs XA, msg, $01
 
 check_regs34
-	check_regs XY, msg, var
+	check_regs XY, msg, $01
 
 check_regs35
-	check_regs YA, msg, var
+	check_regs YA, msg, $01
 
 check_regs36
-	check_regs YX, msg, var
+	check_regs YX, msg, $01
 
 
 ;======================================================================
