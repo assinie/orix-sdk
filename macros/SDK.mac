@@ -248,7 +248,7 @@
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr]
+;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr] [,fail_value]
 ;
 ; note:
 ;	- file may be: (ptr), address
@@ -258,7 +258,7 @@
 ;
 ; Call XOPEN function
 ;----------------------------------------------------------------------
-.macro fopen file, mode, option, ptr, oom_msg_ptr
+.macro fopen file, mode, option, ptr, oom_msg_ptr, fail_value
 
 	.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
 		.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
@@ -278,7 +278,10 @@
 
 
 	.if (.not .blank({oom_msg_ptr}))
-		check_regs AY, oom_msg_ptr
+		check_regs AY, oom_msg_ptr, fail_value
+
+	.elseif (.not .blank({fail_value}))
+		check_regs AY, oom_msg_ptr, fail_value
 	.endif
 
 	.if (.not .blank({ptr}))
@@ -550,6 +553,7 @@
 ;	.endif
 	.elseif (.not .blank({fail_value}))
 ;	.if (.not .blank({fail_value}))
+		ldy #$00
 		lda #fail_value
 	.endif
 

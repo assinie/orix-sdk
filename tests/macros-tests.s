@@ -16,17 +16,17 @@
  sed -nre ':x /^[^ ]+[0-9]{2}$/ { N; s/\n//g ; bx ; } ; /^[^ ]+[0-9]{2}/p'  macros-tests.s | sed -re 's#(.+)\t(.+)$#s/"\1"/"\1"; comment "\\n; \2"\\n;/;#' | sed -f - -i macros-tests.info
 
  # Désassemblage
- ../../../cc65/bin/da65 -o macro.lst --comments 3 --start-addr 0x1000 --info macros-tests.info macros-tests
+ ../../../cc65/bin/da65 -o macros-tests.out --comments 3 --start-addr 0x1000 --info macros-tests.info macros-tests
 */
 
 /*
-range { start $19F9; end $1A02; name "src"; type bytetable; };
-range { start $1A03; end $1A0C; name "dst"; type bytetable; };
-range { start $1A0D; end $1A0E; name "ptr1"; type addrtable; };
-range { start $1A0F; end $1A1; name "ptr2"; type addrtable; };
-range { start $1A11; end $1A17; name "msg"; type texttable; };
-label { addr $1A18; name "_argc"; };
-range { start $1A19; end $1A1A; name "_argv"; type addrtable; };
+range { start $1C67; end $1C70; name "src"; type bytetable; };
+range { start $1C71; end $1C7A; name "dst"; type bytetable; };
+range { start $1C7B; end $1C7C; name "ptr1"; type addrtable; };
+range { start $1C7D; end $1C7E; name "ptr2"; type addrtable; };
+range { start $1C7F; end $1C85; name "msg"; type texttable; };
+label { addr $1C86; name "_argc"; };
+range { start $1C87; end $1C88; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -408,7 +408,7 @@ mfree01
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr]
+;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr] [,fail_value]
 ;
 ; note:
 ;	- file may be: (ptr), address
@@ -452,57 +452,128 @@ fopen23
 	;----------------------------------------------------------------------
 
 fopen31
-	fopen #$1234, O_RDONLY, , ptr1 , msg
+	fopen #$1234, O_RDONLY, , , , $EC
 
 fopen32
-	fopen (ptr1), O_RDONLY, , ptr1, msg
+	fopen (ptr1), O_RDONLY, , , , $EC
 
 fopen33
-	fopen src, O_RDONLY, , ptr1, msg
+	fopen src, O_RDONLY, , , , $EC
 
 	;----------------------------------------------------------------------
 
 fopen41
-	fopen #$1234, O_RDONLY, TELEMON
+	fopen #$1234, O_RDONLY, , ptr1 , msg
 
 fopen42
-	fopen (ptr1), O_RDONLY, TELEMON
+	fopen (ptr1), O_RDONLY, , ptr1, msg
 
 fopen43
-	fopen src, O_RDONLY, TELEMON
+	fopen src, O_RDONLY, , ptr1, msg
+
+
+fopen44
+	fopen #$1234, O_RDONLY, , ptr1 , msg, $EC
+
+fopen45
+	fopen (ptr1), O_RDONLY, , ptr1, msg, $EC
+
+fopen46
+	fopen src, O_RDONLY, , ptr1, msg, $EC
+
+
+fopen47
+	fopen #$1234, O_RDONLY, , ptr1 , , $EC
+
+fopen48
+	fopen (ptr1), O_RDONLY, , ptr1, , $EC
+
+fopen49
+	fopen src, O_RDONLY, , ptr1, , $EC
 
 	;----------------------------------------------------------------------
 
 fopen51
-	fopen #$1234, O_RDONLY, TELEMON, ptr1
+	fopen #$1234, O_RDONLY, TELEMON
 
 fopen52
-	fopen (ptr1), O_RDONLY, TELEMON, ptr1
+	fopen (ptr1), O_RDONLY, TELEMON
 
 fopen53
-	fopen src, O_RDONLY, TELEMON, ptr1
+	fopen src, O_RDONLY, TELEMON
 
 	;----------------------------------------------------------------------
 
 fopen61
-	fopen #$1234, O_RDONLY, TELEMON, , msg
+	fopen #$1234, O_RDONLY, TELEMON, ptr1
 
 fopen62
-	fopen (ptr1), O_RDONLY, TELEMON, , msg
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1
 
 fopen63
-	fopen src, O_RDONLY, TELEMON, , msg
+	fopen src, O_RDONLY, TELEMON, ptr1
 
 	;----------------------------------------------------------------------
 
 fopen71
-	fopen #$1234, O_RDONLY, TELEMON, ptr1, msg
+	fopen #$1234, O_RDONLY, TELEMON, , msg
 
 fopen72
-	fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
+	fopen (ptr1), O_RDONLY, TELEMON, , msg
 
 fopen73
+	fopen src, O_RDONLY, TELEMON, , msg
+
+
+fopen74
+	fopen #$1234, O_RDONLY, TELEMON, , msg, $EC
+
+fopen75
+	fopen (ptr1), O_RDONLY, TELEMON, , msg, $EC
+
+fopen76
+	fopen src, O_RDONLY, TELEMON, , msg, $EC
+
+
+fopen77
+	fopen #$1234, O_RDONLY, TELEMON, , , $EC
+
+fopen78
+	fopen (ptr1), O_RDONLY, TELEMON, , , $EC
+
+fopen79
+	fopen src, O_RDONLY, TELEMON, , , $EC
+
+	;----------------------------------------------------------------------
+
+fopen81
+	fopen #$1234, O_RDONLY, TELEMON, ptr1, msg
+
+fopen82
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
+
+fopen83
 	fopen src, O_RDONLY, TELEMON, ptr1, msg
+
+
+fopen84
+	fopen #$1234, O_RDONLY, TELEMON, ptr1, msg, $EC
+
+fopen85
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg, $EC
+
+fopen86
+	fopen src, O_RDONLY, TELEMON, ptr1, msg, $EC
+
+
+fopen87
+	fopen #$1234, O_RDONLY, TELEMON, ptr1, , $EC
+
+fopen88
+	fopen (ptr1), O_RDONLY, TELEMON, ptr1, , $EC
+
+fopen89
+	fopen src, O_RDONLY, TELEMON, ptr1, , $EC
 
 
 ;----------------------------------------------------------------------

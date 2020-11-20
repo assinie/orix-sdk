@@ -1,5 +1,5 @@
 ; da65 V2.18 - Git 93145246f
-; Created:    2020-11-16 16:21:04
+; Created:    2020-11-20 14:51:23
 ; Input file: macros-tests
 ; Page:       1
 
@@ -60,12 +60,12 @@ func:   rts                                     ; 100B
 ; strcpy dst, src
 ;
 strcpy01:
-        lda     #$9D                            ; 100C
-        ldy     #$19                            ; 100E
+        lda     #$67                            ; 100C
+        ldy     #$1C                            ; 100E
         sta     RES                             ; 1010
         sty     RES+1                           ; 1012
-        lda     #$A7                            ; 1014
-        ldy     #$19                            ; 1016
+        lda     #$71                            ; 1014
+        ldy     #$1C                            ; 1016
         sta     RESB                            ; 1018
         sty     RESB+1                          ; 101A
         jsr     _strcpy                         ; 101C
@@ -73,8 +73,8 @@ strcpy01:
 ; strcpy (ptr1), src
 ;
 strcpy02:
-        lda     #$9D                            ; 101F
-        ldy     #$19                            ; 1021
+        lda     #$67                            ; 101F
+        ldy     #$1C                            ; 1021
         sta     RES                             ; 1023
         sty     RES+1                           ; 1025
         lda     ptr1                            ; 1027
@@ -90,8 +90,8 @@ strcpy03:
         ldy     ptr2+1                          ; 1037
         sta     RES                             ; 103A
         sty     RES+1                           ; 103C
-        lda     #$A7                            ; 103E
-        ldy     #$19                            ; 1040
+        lda     #$71                            ; 103E
+        ldy     #$1C                            ; 1040
         sta     RESB                            ; 1042
         sty     RESB+1                          ; 1044
         jsr     _strcpy                         ; 1046
@@ -114,8 +114,8 @@ strcpy04:
 strcpy05:
         sta     RESB                            ; 1060
         sty     RESB+1                          ; 1062
-        lda     #$9D                            ; 1064
-        ldy     #$19                            ; 1066
+        lda     #$67                            ; 1064
+        ldy     #$1C                            ; 1066
         sta     RES                             ; 1068
         sty     RES+1                           ; 106A
         jsr     _strcpy                         ; 106C
@@ -136,8 +136,8 @@ strcpy06:
 strcpy07:
         sta     RES                             ; 1080
         sty     RES+1                           ; 1082
-        lda     #$A7                            ; 1084
-        ldy     #$19                            ; 1086
+        lda     #$71                            ; 1084
+        ldy     #$1C                            ; 1086
         sta     RESB                            ; 1088
         sty     RESB+1                          ; 108A
         jsr     _strcpy                         ; 108C
@@ -156,8 +156,8 @@ strcpy08:
 ; strcpy , src
 ;
 strcpy11:
-        lda     #$9D                            ; 10A0
-        ldy     #$19                            ; 10A2
+        lda     #$67                            ; 10A0
+        ldy     #$1C                            ; 10A2
         sta     RES                             ; 10A4
         sty     RES+1                           ; 10A6
         jsr     _strcpy                         ; 10A8
@@ -181,8 +181,8 @@ strcpy13:
 ; strcpy dst
 ;
 strcpy21:
-        lda     #$A7                            ; 10BF
-        ldy     #$19                            ; 10C1
+        lda     #$71                            ; 10BF
+        ldy     #$1C                            ; 10C1
         sta     RESB                            ; 10C3
         sty     RESB+1                          ; 10C5
         jsr     _strcpy                         ; 10C7
@@ -206,12 +206,12 @@ strcpy23:
 ; strcat dst, src
 ;
 strcat01:
-        lda     #$A7                            ; 10DE
-        ldy     #$19                            ; 10E0
+        lda     #$71                            ; 10DE
+        ldy     #$1C                            ; 10E0
         sta     RES                             ; 10E2
         sty     RES+1                           ; 10E4
-        lda     #$9D                            ; 10E6
-        ldy     #$19                            ; 10E8
+        lda     #$67                            ; 10E6
+        ldy     #$1C                            ; 10E8
         sta     RESB                            ; 10EA
         sty     RESB+1                          ; 10EC
         jsr     _strcat                         ; 10EE
@@ -223,8 +223,8 @@ strcat02:
         ldy     ptr1+1                          ; 10F4
         sta     RES                             ; 10F7
         sty     RES+1                           ; 10F9
-        lda     #$9D                            ; 10FB
-        ldy     #$19                            ; 10FD
+        lda     #$67                            ; 10FB
+        ldy     #$1C                            ; 10FD
         sta     RESB                            ; 10FF
         sty     RESB+1                          ; 1101
         jsr     _strcat                         ; 1103
@@ -232,8 +232,8 @@ strcat02:
 ; strcat dst, (ptr2)
 ;
 strcat03:
-        lda     #$A7                            ; 1106
-        ldy     #$19                            ; 1108
+        lda     #$71                            ; 1106
+        ldy     #$1C                            ; 1108
         sta     RES                             ; 110A
         sty     RES+1                           ; 110C
         lda     ptr2                            ; 110E
@@ -260,8 +260,8 @@ strcat04:
 strcat05:
         sta     RES                             ; 1132
         sty     RES+1                           ; 1134
-        lda     #$9D                            ; 1136
-        ldy     #$19                            ; 1138
+        lda     #$67                            ; 1136
+        ldy     #$1C                            ; 1138
         sta     RESB                            ; 113A
         sty     RESB+1                          ; 113C
         jsr     _strcat                         ; 113E
@@ -282,8 +282,8 @@ strcat06:
 strcat07:
         sta     RESB                            ; 1152
         sty     RESB+1                          ; 1154
-        lda     #$A7                            ; 1156
-        ldy     #$19                            ; 1158
+        lda     #$71                            ; 1156
+        ldy     #$1C                            ; 1158
         sta     RES                             ; 115A
         sty     RES+1                           ; 115C
         jsr     _strcat                         ; 115E
@@ -302,8 +302,8 @@ strcat08:
 ; strcat , src
 ;
 strcat11:
-        lda     #$9D                            ; 1172
-        ldy     #$19                            ; 1174
+        lda     #$67                            ; 1172
+        ldy     #$1C                            ; 1174
         sta     RESB                            ; 1176
         sty     RESB+1                          ; 1178
         jsr     _strcat                         ; 117A
@@ -327,8 +327,8 @@ strcat13:
 ; strcat dst
 ;
 strcat21:
-        lda     #$A7                            ; 1191
-        ldy     #$19                            ; 1193
+        lda     #$71                            ; 1191
+        ldy     #$1C                            ; 1193
         sta     RES                             ; 1195
         sty     RES+1                           ; 1197
         jsr     _strcat                         ; 1199
@@ -352,8 +352,8 @@ strcat23:
 ; strlen src
 ;
 strlen01:
-        lda     #$9D                            ; 11B0
-        ldy     #$19                            ; 11B2
+        lda     #$67                            ; 11B0
+        ldy     #$1C                            ; 11B2
         sta     RES                             ; 11B4
         sty     RES+1                           ; 11B6
         jsr     _strlen                         ; 11B8
@@ -420,8 +420,8 @@ print04:pha                                     ; 11F6
         pha                                     ; 11F8
         tya                                     ; 11F9
         pha                                     ; 11FA
-        lda     #$9D                            ; 11FB
-        ldy     #$19                            ; 11FD
+        lda     #$67                            ; 11FB
+        ldy     #$1C                            ; 11FD
         brk     #$14                            ; 11FF
         pla                                     ; 1201
         tay                                     ; 1202
@@ -463,8 +463,8 @@ print13:lda     ptr1                            ; 121E
 ; 
 ; print src, NOSAVE
 ;
-print14:lda     #$9D                            ; 1226
-        ldy     #$19                            ; 1228
+print14:lda     #$67                            ; 1226
+        ldy     #$1C                            ; 1228
         brk     #$14                            ; 122A
 ; 
 ; print $1234, NOSAVE
@@ -554,8 +554,8 @@ print24:pha                                     ; 1287
         pha                                     ; 128E
         lda     RES+1                           ; 128F
         pha                                     ; 1291
-        lda     #$9D                            ; 1292
-        ldy     #$19                            ; 1294
+        lda     #$67                            ; 1292
+        ldy     #$1C                            ; 1294
         jsr     XWSTR0_ROUTINE                  ; 1296
         pla                                     ; 1299
         sta     RES+1                           ; 129A
@@ -617,1311 +617,1794 @@ malloc03:
         ldy     #$00                            ; 12DB
         brk     #$5B                            ; 12DD
         cpy     #$00                            ; 12DF
-        bne     L12EE                           ; 12E1
+        bne     L12F2                           ; 12E1
         cmp     #$00                            ; 12E3
-        bne     L12EE                           ; 12E5
-        lda     #$B5                            ; 12E7
-        ldy     #$19                            ; 12E9
+        bne     L12F2                           ; 12E5
+        lda     #$7F                            ; 12E7
+        ldy     #$1C                            ; 12E9
         brk     #$14                            ; 12EB
-        rts                                     ; 12ED
+        sec                                     ; 12ED
+        ldy     #$00                            ; 12EE
+        tya                                     ; 12F0
+        rts                                     ; 12F1
 
 ; ----------------------------------------------------------------------------
-L12EE:  sta     ptr1                            ; 12EE
-        sty     ptr1+1                          ; 12F1
+L12F2:  sta     ptr1                            ; 12F2
+        sty     ptr1+1                          ; 12F5
 ; 
 ; malloc #$1234, , msg
 ;
 malloc04:
-        lda     #$34                            ; 12F4
-        ldy     #$12                            ; 12F6
-        ldy     #$00                            ; 12F8
-        brk     #$5B                            ; 12FA
-        cpy     #$00                            ; 12FC
-        bne     malloc05                        ; 12FE
-        cmp     #$00                            ; 1300
+        lda     #$34                            ; 12F8
+        ldy     #$12                            ; 12FA
+        ldy     #$00                            ; 12FC
+        brk     #$5B                            ; 12FE
+        cpy     #$00                            ; 1300
         bne     malloc05                        ; 1302
-        lda     #$B5                            ; 1304
-        ldy     #$19                            ; 1306
-        brk     #$14                            ; 1308
-        rts                                     ; 130A
+        cmp     #$00                            ; 1304
+        bne     malloc05                        ; 1306
+        lda     #$7F                            ; 1308
+        ldy     #$1C                            ; 130A
+        brk     #$14                            ; 130C
+        sec                                     ; 130E
+        ldy     #$00                            ; 130F
+        tya                                     ; 1311
+        rts                                     ; 1312
 
 ; ----------------------------------------------------------------------------
 ; 
 ; malloc var
 ;
 malloc05:
-        lda     #$78                            ; 130B
-        ldy     #$56                            ; 130D
-        brk     #$5B                            ; 130F
+        lda     #$78                            ; 1313
+        ldy     #$56                            ; 1315
+        brk     #$5B                            ; 1317
 ; 
 ; malloc (ptr1)
 ;
 malloc06:
-        lda     ptr1                            ; 1311
-        ldy     ptr1+1                          ; 1314
-        brk     #$5B                            ; 1317
+        lda     ptr1                            ; 1319
+        ldy     ptr1+1                          ; 131C
+        brk     #$5B                            ; 131F
 ; 
 ; malloc #$1234, , , $12
 ;
 malloc11:
-        lda     #$34                            ; 1319
-        ldy     #$12                            ; 131B
-        ldy     #$00                            ; 131D
-        brk     #$5B                            ; 131F
-        cpy     #$00                            ; 1321
-        bne     malloc12                        ; 1323
-        cmp     #$00                            ; 1325
-        bne     malloc12                        ; 1327
-        lda     $12                             ; 1329
-        rts                                     ; 132B
+        lda     #$34                            ; 1321
+        ldy     #$12                            ; 1323
+        ldy     #$00                            ; 1325
+        brk     #$5B                            ; 1327
+        cpy     #$00                            ; 1329
+        bne     malloc12                        ; 132B
+        cmp     #$00                            ; 132D
+        bne     malloc12                        ; 132F
+        ldy     #$00                            ; 1331
+        lda     #$12                            ; 1333
+        rts                                     ; 1335
 
 ; ----------------------------------------------------------------------------
 ; 
 ; malloc #$1234, ptr1, , $12
 ;
 malloc12:
-        lda     #$34                            ; 132C
-        ldy     #$12                            ; 132E
-        ldy     #$00                            ; 1330
-        brk     #$5B                            ; 1332
-        cpy     #$00                            ; 1334
-        bne     L133F                           ; 1336
-        cmp     #$00                            ; 1338
-        bne     L133F                           ; 133A
-        lda     $12                             ; 133C
-        rts                                     ; 133E
+        lda     #$34                            ; 1336
+        ldy     #$12                            ; 1338
+        ldy     #$00                            ; 133A
+        brk     #$5B                            ; 133C
+        cpy     #$00                            ; 133E
+        bne     L134B                           ; 1340
+        cmp     #$00                            ; 1342
+        bne     L134B                           ; 1344
+        ldy     #$00                            ; 1346
+        lda     #$12                            ; 1348
+        rts                                     ; 134A
 
 ; ----------------------------------------------------------------------------
-L133F:  sta     ptr1                            ; 133F
-        sty     ptr1+1                          ; 1342
+L134B:  sta     ptr1                            ; 134B
+        sty     ptr1+1                          ; 134E
 ; 
 ; malloc #$1234, ptr1, msg, $12
 ;
 malloc13:
-        lda     #$34                            ; 1345
-        ldy     #$12                            ; 1347
-        ldy     #$00                            ; 1349
-        brk     #$5B                            ; 134B
-        cpy     #$00                            ; 134D
-        bne     L135E                           ; 134F
-        cmp     #$00                            ; 1351
-        bne     L135E                           ; 1353
-        lda     #$B5                            ; 1355
-        ldy     #$19                            ; 1357
-        brk     #$14                            ; 1359
-        lda     $12                             ; 135B
-        rts                                     ; 135D
+        lda     #$34                            ; 1351
+        ldy     #$12                            ; 1353
+        ldy     #$00                            ; 1355
+        brk     #$5B                            ; 1357
+        cpy     #$00                            ; 1359
+        bne     L136D                           ; 135B
+        cmp     #$00                            ; 135D
+        bne     L136D                           ; 135F
+        lda     #$7F                            ; 1361
+        ldy     #$1C                            ; 1363
+        brk     #$14                            ; 1365
+        sec                                     ; 1367
+        ldy     #$00                            ; 1368
+        lda     #$12                            ; 136A
+        rts                                     ; 136C
 
 ; ----------------------------------------------------------------------------
-L135E:  sta     ptr1                            ; 135E
-        sty     ptr1+1                          ; 1361
+L136D:  sta     ptr1                            ; 136D
+        sty     ptr1+1                          ; 1370
 ; 
 ; malloc #$1234, , msg, $12
 ;
 malloc14:
-        lda     #$34                            ; 1364
-        ldy     #$12                            ; 1366
-        ldy     #$00                            ; 1368
-        brk     #$5B                            ; 136A
-        cpy     #$00                            ; 136C
-        bne     malloc15                        ; 136E
-        cmp     #$00                            ; 1370
-        bne     malloc15                        ; 1372
-        lda     #$B5                            ; 1374
-        ldy     #$19                            ; 1376
-        brk     #$14                            ; 1378
-        lda     $12                             ; 137A
-        rts                                     ; 137C
+        lda     #$34                            ; 1373
+        ldy     #$12                            ; 1375
+        ldy     #$00                            ; 1377
+        brk     #$5B                            ; 1379
+        cpy     #$00                            ; 137B
+        bne     malloc15                        ; 137D
+        cmp     #$00                            ; 137F
+        bne     malloc15                        ; 1381
+        lda     #$7F                            ; 1383
+        ldy     #$1C                            ; 1385
+        brk     #$14                            ; 1387
+        sec                                     ; 1389
+        ldy     #$00                            ; 138A
+        lda     #$12                            ; 138C
+        rts                                     ; 138E
 
 ; ----------------------------------------------------------------------------
 ; 
 ; malloc var, , , $12
 ;
 malloc15:
-        lda     #$78                            ; 137D
-        ldy     #$56                            ; 137F
-        brk     #$5B                            ; 1381
-        cpy     #$00                            ; 1383
-        bne     malloc16                        ; 1385
-        cmp     #$00                            ; 1387
-        bne     malloc16                        ; 1389
-        lda     $12                             ; 138B
-        rts                                     ; 138D
+        lda     #$78                            ; 138F
+        ldy     #$56                            ; 1391
+        brk     #$5B                            ; 1393
+        cpy     #$00                            ; 1395
+        bne     malloc16                        ; 1397
+        cmp     #$00                            ; 1399
+        bne     malloc16                        ; 139B
+        ldy     #$00                            ; 139D
+        lda     #$12                            ; 139F
+        rts                                     ; 13A1
 
 ; ----------------------------------------------------------------------------
 ; 
 ; malloc (ptr1), , , $12
 ;
 malloc16:
-        lda     ptr1                            ; 138E
-        ldy     ptr1+1                          ; 1391
-        brk     #$5B                            ; 1394
-        cpy     #$00                            ; 1396
-        bne     mfree01                         ; 1398
-        cmp     #$00                            ; 139A
-        bne     mfree01                         ; 139C
-        lda     $12                             ; 139E
-        rts                                     ; 13A0
+        lda     ptr1                            ; 13A2
+        ldy     ptr1+1                          ; 13A5
+        brk     #$5B                            ; 13A8
+        cpy     #$00                            ; 13AA
+        bne     mfree01                         ; 13AC
+        cmp     #$00                            ; 13AE
+        bne     mfree01                         ; 13B0
+        ldy     #$00                            ; 13B2
+        lda     #$12                            ; 13B4
+        rts                                     ; 13B6
 
 ; ----------------------------------------------------------------------------
 ; 
 ; mfree (ptr1)
 ;
-mfree01:lda     ptr1                            ; 13A1
-        ldy     ptr1+1                          ; 13A4
-        brk     #$62                            ; 13A7
+mfree01:lda     ptr1                            ; 13B7
+        ldy     ptr1+1                          ; 13BA
+        brk     #$62                            ; 13BD
 ; 
 ; fopen #$1234, O_RDONLY
 ;
-fopen01:lda     #$34                            ; 13A9
-        ldx     #$12                            ; 13AB
-        ldy     #$01                            ; 13AD
-        brk     #$30                            ; 13AF
+fopen01:lda     #$34                            ; 13BF
+        ldx     #$12                            ; 13C1
+        ldy     #$01                            ; 13C3
+        brk     #$30                            ; 13C5
 ; 
 ; fopen (ptr1), O_RDONLY
 ;
-fopen02:lda     ptr1                            ; 13B1
-        ldx     ptr1+1                          ; 13B4
-        ldy     #$01                            ; 13B7
-        brk     #$30                            ; 13B9
+fopen02:lda     ptr1                            ; 13C7
+        ldx     ptr1+1                          ; 13CA
+        ldy     #$01                            ; 13CD
+        brk     #$30                            ; 13CF
 ; 
 ; fopen src, O_RDONLY
 ;
-fopen03:lda     #$9D                            ; 13BB
-        ldx     #$19                            ; 13BD
-        ldy     #$01                            ; 13BF
-        brk     #$30                            ; 13C1
+fopen03:lda     #$67                            ; 13D1
+        ldx     #$1C                            ; 13D3
+        ldy     #$01                            ; 13D5
+        brk     #$30                            ; 13D7
 ; 
 ; fopen #$1234, O_RDONLY, , ptr1
 ;
-fopen11:lda     #$34                            ; 13C3
-        ldx     #$12                            ; 13C5
-        ldy     #$01                            ; 13C7
-        brk     #$30                            ; 13C9
-        sta     ptr1                            ; 13CB
-        sty     ptr1+1                          ; 13CE
+fopen11:lda     #$34                            ; 13D9
+        ldx     #$12                            ; 13DB
+        ldy     #$01                            ; 13DD
+        brk     #$30                            ; 13DF
+        sta     ptr1                            ; 13E1
+        sty     ptr1+1                          ; 13E4
 ; 
 ; fopen (ptr1), O_RDONLY, , ptr1
 ;
-fopen12:lda     ptr1                            ; 13D1
-        ldx     ptr1+1                          ; 13D4
-        ldy     #$01                            ; 13D7
-        brk     #$30                            ; 13D9
-        sta     ptr1                            ; 13DB
-        sty     ptr1+1                          ; 13DE
+fopen12:lda     ptr1                            ; 13E7
+        ldx     ptr1+1                          ; 13EA
+        ldy     #$01                            ; 13ED
+        brk     #$30                            ; 13EF
+        sta     ptr1                            ; 13F1
+        sty     ptr1+1                          ; 13F4
 ; 
 ; fopen src, O_RDONLY, , ptr1
 ;
-fopen13:lda     #$9D                            ; 13E1
-        ldx     #$19                            ; 13E3
-        ldy     #$01                            ; 13E5
-        brk     #$30                            ; 13E7
-        sta     ptr1                            ; 13E9
-        sty     ptr1+1                          ; 13EC
+fopen13:lda     #$67                            ; 13F7
+        ldx     #$1C                            ; 13F9
+        ldy     #$01                            ; 13FB
+        brk     #$30                            ; 13FD
+        sta     ptr1                            ; 13FF
+        sty     ptr1+1                          ; 1402
 ; 
 ; fopen #$1234, O_RDONLY, , , msg
 ;
-fopen21:lda     #$34                            ; 13EF
-        ldx     #$12                            ; 13F1
-        ldy     #$01                            ; 13F3
-        brk     #$30                            ; 13F5
-        cpy     #$00                            ; 13F7
-        bne     fopen22                         ; 13F9
-        cmp     #$00                            ; 13FB
-        bne     fopen22                         ; 13FD
-        lda     #$B5                            ; 13FF
-        ldy     #$19                            ; 1401
-        brk     #$14                            ; 1403
-        rts                                     ; 1405
+fopen21:lda     #$34                            ; 1405
+        ldx     #$12                            ; 1407
+        ldy     #$01                            ; 1409
+        brk     #$30                            ; 140B
+        cpy     #$00                            ; 140D
+        bne     fopen22                         ; 140F
+        cmp     #$00                            ; 1411
+        bne     fopen22                         ; 1413
+        lda     #$7F                            ; 1415
+        ldy     #$1C                            ; 1417
+        brk     #$14                            ; 1419
+        sec                                     ; 141B
+        ldy     #$00                            ; 141C
+        tya                                     ; 141E
+        rts                                     ; 141F
 
 ; ----------------------------------------------------------------------------
 ; 
 ; fopen (ptr1), O_RDONLY, , , msg
 ;
-fopen22:lda     ptr1                            ; 1406
-        ldx     ptr1+1                          ; 1409
-        ldy     #$01                            ; 140C
-        brk     #$30                            ; 140E
-        cpy     #$00                            ; 1410
-        bne     fopen23                         ; 1412
-        cmp     #$00                            ; 1414
-        bne     fopen23                         ; 1416
-        lda     #$B5                            ; 1418
-        ldy     #$19                            ; 141A
-        brk     #$14                            ; 141C
-        rts                                     ; 141E
+fopen22:lda     ptr1                            ; 1420
+        ldx     ptr1+1                          ; 1423
+        ldy     #$01                            ; 1426
+        brk     #$30                            ; 1428
+        cpy     #$00                            ; 142A
+        bne     fopen23                         ; 142C
+        cmp     #$00                            ; 142E
+        bne     fopen23                         ; 1430
+        lda     #$7F                            ; 1432
+        ldy     #$1C                            ; 1434
+        brk     #$14                            ; 1436
+        sec                                     ; 1438
+        ldy     #$00                            ; 1439
+        tya                                     ; 143B
+        rts                                     ; 143C
 
 ; ----------------------------------------------------------------------------
 ; 
 ; fopen src, O_RDONLY, , , msg
 ;
-fopen23:lda     #$9D                            ; 141F
-        ldx     #$19                            ; 1421
-        ldy     #$01                            ; 1423
-        brk     #$30                            ; 1425
-        cpy     #$00                            ; 1427
-        bne     fopen31                         ; 1429
-        cmp     #$00                            ; 142B
-        bne     fopen31                         ; 142D
-        lda     #$B5                            ; 142F
-        ldy     #$19                            ; 1431
-        brk     #$14                            ; 1433
-        rts                                     ; 1435
+fopen23:lda     #$67                            ; 143D
+        ldx     #$1C                            ; 143F
+        ldy     #$01                            ; 1441
+        brk     #$30                            ; 1443
+        cpy     #$00                            ; 1445
+        bne     fopen31                         ; 1447
+        cmp     #$00                            ; 1449
+        bne     fopen31                         ; 144B
+        lda     #$7F                            ; 144D
+        ldy     #$1C                            ; 144F
+        brk     #$14                            ; 1451
+        sec                                     ; 1453
+        ldy     #$00                            ; 1454
+        tya                                     ; 1456
+        rts                                     ; 1457
+
+; ----------------------------------------------------------------------------
+; 
+; fopen #$1234, O_RDONLY, , , , $EC
+;
+fopen31:lda     #$34                            ; 1458
+        ldx     #$12                            ; 145A
+        ldy     #$01                            ; 145C
+        brk     #$30                            ; 145E
+        cpy     #$00                            ; 1460
+        bne     fopen32                         ; 1462
+        cmp     #$00                            ; 1464
+        bne     fopen32                         ; 1466
+        ldy     #$00                            ; 1468
+        lda     #$EC                            ; 146A
+        rts                                     ; 146C
+
+; ----------------------------------------------------------------------------
+; 
+; fopen (ptr1), O_RDONLY, , , , $EC
+;
+fopen32:lda     ptr1                            ; 146D
+        ldx     ptr1+1                          ; 1470
+        ldy     #$01                            ; 1473
+        brk     #$30                            ; 1475
+        cpy     #$00                            ; 1477
+        bne     fopen33                         ; 1479
+        cmp     #$00                            ; 147B
+        bne     fopen33                         ; 147D
+        ldy     #$00                            ; 147F
+        lda     #$EC                            ; 1481
+        rts                                     ; 1483
+
+; ----------------------------------------------------------------------------
+; 
+; fopen src, O_RDONLY, , , , $EC
+;
+fopen33:lda     #$67                            ; 1484
+        ldx     #$1C                            ; 1486
+        ldy     #$01                            ; 1488
+        brk     #$30                            ; 148A
+        cpy     #$00                            ; 148C
+        bne     fopen41                         ; 148E
+        cmp     #$00                            ; 1490
+        bne     fopen41                         ; 1492
+        ldy     #$00                            ; 1494
+        lda     #$EC                            ; 1496
+        rts                                     ; 1498
 
 ; ----------------------------------------------------------------------------
 ; 
 ; fopen #$1234, O_RDONLY, , ptr1 , msg
 ;
-fopen31:lda     #$34                            ; 1436
-        ldx     #$12                            ; 1438
-        ldy     #$01                            ; 143A
-        brk     #$30                            ; 143C
-        cpy     #$00                            ; 143E
-        bne     L144D                           ; 1440
-        cmp     #$00                            ; 1442
-        bne     L144D                           ; 1444
-        lda     #$B5                            ; 1446
-        ldy     #$19                            ; 1448
-        brk     #$14                            ; 144A
-        rts                                     ; 144C
+fopen41:lda     #$34                            ; 1499
+        ldx     #$12                            ; 149B
+        ldy     #$01                            ; 149D
+        brk     #$30                            ; 149F
+        cpy     #$00                            ; 14A1
+        bne     L14B4                           ; 14A3
+        cmp     #$00                            ; 14A5
+        bne     L14B4                           ; 14A7
+        lda     #$7F                            ; 14A9
+        ldy     #$1C                            ; 14AB
+        brk     #$14                            ; 14AD
+        sec                                     ; 14AF
+        ldy     #$00                            ; 14B0
+        tya                                     ; 14B2
+        rts                                     ; 14B3
 
 ; ----------------------------------------------------------------------------
-L144D:  sta     ptr1                            ; 144D
-        sty     ptr1+1                          ; 1450
+L14B4:  sta     ptr1                            ; 14B4
+        sty     ptr1+1                          ; 14B7
 ; 
 ; fopen (ptr1), O_RDONLY, , ptr1, msg
 ;
-fopen32:lda     ptr1                            ; 1453
-        ldx     ptr1+1                          ; 1456
-        ldy     #$01                            ; 1459
-        brk     #$30                            ; 145B
-        cpy     #$00                            ; 145D
-        bne     L146C                           ; 145F
-        cmp     #$00                            ; 1461
-        bne     L146C                           ; 1463
-        lda     #$B5                            ; 1465
-        ldy     #$19                            ; 1467
-        brk     #$14                            ; 1469
-        rts                                     ; 146B
+fopen42:lda     ptr1                            ; 14BA
+        ldx     ptr1+1                          ; 14BD
+        ldy     #$01                            ; 14C0
+        brk     #$30                            ; 14C2
+        cpy     #$00                            ; 14C4
+        bne     L14D7                           ; 14C6
+        cmp     #$00                            ; 14C8
+        bne     L14D7                           ; 14CA
+        lda     #$7F                            ; 14CC
+        ldy     #$1C                            ; 14CE
+        brk     #$14                            ; 14D0
+        sec                                     ; 14D2
+        ldy     #$00                            ; 14D3
+        tya                                     ; 14D5
+        rts                                     ; 14D6
 
 ; ----------------------------------------------------------------------------
-L146C:  sta     ptr1                            ; 146C
-        sty     ptr1+1                          ; 146F
+L14D7:  sta     ptr1                            ; 14D7
+        sty     ptr1+1                          ; 14DA
 ; 
 ; fopen src, O_RDONLY, , ptr1, msg
 ;
-fopen33:lda     #$9D                            ; 1472
-        ldx     #$19                            ; 1474
-        ldy     #$01                            ; 1476
-        brk     #$30                            ; 1478
-        cpy     #$00                            ; 147A
-        bne     L1489                           ; 147C
-        cmp     #$00                            ; 147E
-        bne     L1489                           ; 1480
-        lda     #$B5                            ; 1482
-        ldy     #$19                            ; 1484
-        brk     #$14                            ; 1486
-        rts                                     ; 1488
+fopen43:lda     #$67                            ; 14DD
+        ldx     #$1C                            ; 14DF
+        ldy     #$01                            ; 14E1
+        brk     #$30                            ; 14E3
+        cpy     #$00                            ; 14E5
+        bne     L14F8                           ; 14E7
+        cmp     #$00                            ; 14E9
+        bne     L14F8                           ; 14EB
+        lda     #$7F                            ; 14ED
+        ldy     #$1C                            ; 14EF
+        brk     #$14                            ; 14F1
+        sec                                     ; 14F3
+        ldy     #$00                            ; 14F4
+        tya                                     ; 14F6
+        rts                                     ; 14F7
 
 ; ----------------------------------------------------------------------------
-L1489:  sta     ptr1                            ; 1489
-        sty     ptr1+1                          ; 148C
+L14F8:  sta     ptr1                            ; 14F8
+        sty     ptr1+1                          ; 14FB
 ; 
-; fopen #$1234, O_RDONLY, TELEMON
+; fopen #$1234, O_RDONLY, , ptr1 , msg, $EC
 ;
-fopen41:lda     #$34                            ; 148F
-        ldx     #$12                            ; 1491
-        ldy     #$01                            ; 1493
-        jsr     XOPEN_ROUTINE                   ; 1495
-; 
-; fopen (ptr1), O_RDONLY, TELEMON
-;
-fopen42:lda     ptr1                            ; 1498
-        ldx     ptr1+1                          ; 149B
-        ldy     #$01                            ; 149E
-        jsr     XOPEN_ROUTINE                   ; 14A0
-; 
-; fopen src, O_RDONLY, TELEMON
-;
-fopen43:lda     #$9D                            ; 14A3
-        ldx     #$19                            ; 14A5
-        ldy     #$01                            ; 14A7
-        jsr     XOPEN_ROUTINE                   ; 14A9
-; 
-; fopen #$1234, O_RDONLY, TELEMON, ptr1
-;
-fopen51:lda     #$34                            ; 14AC
-        ldx     #$12                            ; 14AE
-        ldy     #$01                            ; 14B0
-        jsr     XOPEN_ROUTINE                   ; 14B2
-        sta     ptr1                            ; 14B5
-        sty     ptr1+1                          ; 14B8
-; 
-; fopen (ptr1), O_RDONLY, TELEMON, ptr1
-;
-fopen52:lda     ptr1                            ; 14BB
-        ldx     ptr1+1                          ; 14BE
-        ldy     #$01                            ; 14C1
-        jsr     XOPEN_ROUTINE                   ; 14C3
-        sta     ptr1                            ; 14C6
-        sty     ptr1+1                          ; 14C9
-; 
-; fopen src, O_RDONLY, TELEMON, ptr1
-;
-fopen53:lda     #$9D                            ; 14CC
-        ldx     #$19                            ; 14CE
-        ldy     #$01                            ; 14D0
-        jsr     XOPEN_ROUTINE                   ; 14D2
-        sta     ptr1                            ; 14D5
-        sty     ptr1+1                          ; 14D8
-; 
-; fopen #$1234, O_RDONLY, TELEMON, , msg
-;
-fopen61:lda     #$34                            ; 14DB
-        ldx     #$12                            ; 14DD
-        ldy     #$01                            ; 14DF
-        jsr     XOPEN_ROUTINE                   ; 14E1
-        cpy     #$00                            ; 14E4
-        bne     fopen62                         ; 14E6
-        cmp     #$00                            ; 14E8
-        bne     fopen62                         ; 14EA
-        lda     #$B5                            ; 14EC
-        ldy     #$19                            ; 14EE
-        brk     #$14                            ; 14F0
-        rts                                     ; 14F2
+fopen44:lda     #$34                            ; 14FE
+        ldx     #$12                            ; 1500
+        ldy     #$01                            ; 1502
+        brk     #$30                            ; 1504
+        cpy     #$00                            ; 1506
+        bne     L151A                           ; 1508
+        cmp     #$00                            ; 150A
+        bne     L151A                           ; 150C
+        lda     #$7F                            ; 150E
+        ldy     #$1C                            ; 1510
+        brk     #$14                            ; 1512
+        sec                                     ; 1514
+        ldy     #$00                            ; 1515
+        lda     #$EC                            ; 1517
+        rts                                     ; 1519
 
 ; ----------------------------------------------------------------------------
+L151A:  sta     ptr1                            ; 151A
+        sty     ptr1+1                          ; 151D
 ; 
-; fopen (ptr1), O_RDONLY, TELEMON, , msg
+; fopen (ptr1), O_RDONLY, , ptr1, msg, $EC
 ;
-fopen62:lda     ptr1                            ; 14F3
-        ldx     ptr1+1                          ; 14F6
-        ldy     #$01                            ; 14F9
-        jsr     XOPEN_ROUTINE                   ; 14FB
-        cpy     #$00                            ; 14FE
-        bne     fopen63                         ; 1500
-        cmp     #$00                            ; 1502
-        bne     fopen63                         ; 1504
-        lda     #$B5                            ; 1506
-        ldy     #$19                            ; 1508
-        brk     #$14                            ; 150A
-        rts                                     ; 150C
+fopen45:lda     ptr1                            ; 1520
+        ldx     ptr1+1                          ; 1523
+        ldy     #$01                            ; 1526
+        brk     #$30                            ; 1528
+        cpy     #$00                            ; 152A
+        bne     L153E                           ; 152C
+        cmp     #$00                            ; 152E
+        bne     L153E                           ; 1530
+        lda     #$7F                            ; 1532
+        ldy     #$1C                            ; 1534
+        brk     #$14                            ; 1536
+        sec                                     ; 1538
+        ldy     #$00                            ; 1539
+        lda     #$EC                            ; 153B
+        rts                                     ; 153D
 
 ; ----------------------------------------------------------------------------
+L153E:  sta     ptr1                            ; 153E
+        sty     ptr1+1                          ; 1541
 ; 
-; fopen src, O_RDONLY, TELEMON, , msg
+; fopen src, O_RDONLY, , ptr1, msg, $EC
 ;
-fopen63:lda     #$9D                            ; 150D
-        ldx     #$19                            ; 150F
-        ldy     #$01                            ; 1511
-        jsr     XOPEN_ROUTINE                   ; 1513
-        cpy     #$00                            ; 1516
-        bne     fopen71                         ; 1518
-        cmp     #$00                            ; 151A
-        bne     fopen71                         ; 151C
-        lda     #$B5                            ; 151E
-        ldy     #$19                            ; 1520
-        brk     #$14                            ; 1522
-        rts                                     ; 1524
+fopen46:lda     #$67                            ; 1544
+        ldx     #$1C                            ; 1546
+        ldy     #$01                            ; 1548
+        brk     #$30                            ; 154A
+        cpy     #$00                            ; 154C
+        bne     L1560                           ; 154E
+        cmp     #$00                            ; 1550
+        bne     L1560                           ; 1552
+        lda     #$7F                            ; 1554
+        ldy     #$1C                            ; 1556
+        brk     #$14                            ; 1558
+        sec                                     ; 155A
+        ldy     #$00                            ; 155B
+        lda     #$EC                            ; 155D
+        rts                                     ; 155F
 
 ; ----------------------------------------------------------------------------
+L1560:  sta     ptr1                            ; 1560
+        sty     ptr1+1                          ; 1563
 ; 
-; fopen #$1234, O_RDONLY, TELEMON, ptr1, msg
+; fopen #$1234, O_RDONLY, , ptr1 , , $EC
 ;
-fopen71:lda     #$34                            ; 1525
-        ldx     #$12                            ; 1527
-        ldy     #$01                            ; 1529
-        jsr     XOPEN_ROUTINE                   ; 152B
-        cpy     #$00                            ; 152E
-        bne     L153D                           ; 1530
-        cmp     #$00                            ; 1532
-        bne     L153D                           ; 1534
-        lda     #$B5                            ; 1536
-        ldy     #$19                            ; 1538
-        brk     #$14                            ; 153A
-        rts                                     ; 153C
-
-; ----------------------------------------------------------------------------
-L153D:  sta     ptr1                            ; 153D
-        sty     ptr1+1                          ; 1540
-; 
-; fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
-;
-fopen72:lda     ptr1                            ; 1543
-        ldx     ptr1+1                          ; 1546
-        ldy     #$01                            ; 1549
-        jsr     XOPEN_ROUTINE                   ; 154B
-        cpy     #$00                            ; 154E
-        bne     L155D                           ; 1550
-        cmp     #$00                            ; 1552
-        bne     L155D                           ; 1554
-        lda     #$B5                            ; 1556
-        ldy     #$19                            ; 1558
-        brk     #$14                            ; 155A
-        rts                                     ; 155C
-
-; ----------------------------------------------------------------------------
-L155D:  sta     ptr1                            ; 155D
-        sty     ptr1+1                          ; 1560
-; 
-; fopen src, O_RDONLY, TELEMON, ptr1, msg
-;
-fopen73:lda     #$9D                            ; 1563
-        ldx     #$19                            ; 1565
-        ldy     #$01                            ; 1567
-        jsr     XOPEN_ROUTINE                   ; 1569
-        cpy     #$00                            ; 156C
-        bne     L157B                           ; 156E
-        cmp     #$00                            ; 1570
-        bne     L157B                           ; 1572
-        lda     #$B5                            ; 1574
-        ldy     #$19                            ; 1576
-        brk     #$14                            ; 1578
+fopen47:lda     #$34                            ; 1566
+        ldx     #$12                            ; 1568
+        ldy     #$01                            ; 156A
+        brk     #$30                            ; 156C
+        cpy     #$00                            ; 156E
+        bne     L157B                           ; 1570
+        cmp     #$00                            ; 1572
+        bne     L157B                           ; 1574
+        ldy     #$00                            ; 1576
+        lda     #$EC                            ; 1578
         rts                                     ; 157A
 
 ; ----------------------------------------------------------------------------
 L157B:  sta     ptr1                            ; 157B
         sty     ptr1+1                          ; 157E
 ; 
+; fopen (ptr1), O_RDONLY, , ptr1, , $EC
+;
+fopen48:lda     ptr1                            ; 1581
+        ldx     ptr1+1                          ; 1584
+        ldy     #$01                            ; 1587
+        brk     #$30                            ; 1589
+        cpy     #$00                            ; 158B
+        bne     L1598                           ; 158D
+        cmp     #$00                            ; 158F
+        bne     L1598                           ; 1591
+        ldy     #$00                            ; 1593
+        lda     #$EC                            ; 1595
+        rts                                     ; 1597
+
+; ----------------------------------------------------------------------------
+L1598:  sta     ptr1                            ; 1598
+        sty     ptr1+1                          ; 159B
+; 
+; fopen src, O_RDONLY, , ptr1, , $EC
+;
+fopen49:lda     #$67                            ; 159E
+        ldx     #$1C                            ; 15A0
+        ldy     #$01                            ; 15A2
+        brk     #$30                            ; 15A4
+        cpy     #$00                            ; 15A6
+        bne     L15B3                           ; 15A8
+        cmp     #$00                            ; 15AA
+        bne     L15B3                           ; 15AC
+        ldy     #$00                            ; 15AE
+        lda     #$EC                            ; 15B0
+        rts                                     ; 15B2
+
+; ----------------------------------------------------------------------------
+L15B3:  sta     ptr1                            ; 15B3
+        sty     ptr1+1                          ; 15B6
+; 
+; fopen #$1234, O_RDONLY, TELEMON
+;
+fopen51:lda     #$34                            ; 15B9
+        ldx     #$12                            ; 15BB
+        ldy     #$01                            ; 15BD
+        jsr     XOPEN_ROUTINE                   ; 15BF
+; 
+; fopen (ptr1), O_RDONLY, TELEMON
+;
+fopen52:lda     ptr1                            ; 15C2
+        ldx     ptr1+1                          ; 15C5
+        ldy     #$01                            ; 15C8
+        jsr     XOPEN_ROUTINE                   ; 15CA
+; 
+; fopen src, O_RDONLY, TELEMON
+;
+fopen53:lda     #$67                            ; 15CD
+        ldx     #$1C                            ; 15CF
+        ldy     #$01                            ; 15D1
+        jsr     XOPEN_ROUTINE                   ; 15D3
+; 
+; fopen #$1234, O_RDONLY, TELEMON, ptr1
+;
+fopen61:lda     #$34                            ; 15D6
+        ldx     #$12                            ; 15D8
+        ldy     #$01                            ; 15DA
+        jsr     XOPEN_ROUTINE                   ; 15DC
+        sta     ptr1                            ; 15DF
+        sty     ptr1+1                          ; 15E2
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, ptr1
+;
+fopen62:lda     ptr1                            ; 15E5
+        ldx     ptr1+1                          ; 15E8
+        ldy     #$01                            ; 15EB
+        jsr     XOPEN_ROUTINE                   ; 15ED
+        sta     ptr1                            ; 15F0
+        sty     ptr1+1                          ; 15F3
+; 
+; fopen src, O_RDONLY, TELEMON, ptr1
+;
+fopen63:lda     #$67                            ; 15F6
+        ldx     #$1C                            ; 15F8
+        ldy     #$01                            ; 15FA
+        jsr     XOPEN_ROUTINE                   ; 15FC
+        sta     ptr1                            ; 15FF
+        sty     ptr1+1                          ; 1602
+; 
+; fopen #$1234, O_RDONLY, TELEMON, , msg
+;
+fopen71:lda     #$34                            ; 1605
+        ldx     #$12                            ; 1607
+        ldy     #$01                            ; 1609
+        jsr     XOPEN_ROUTINE                   ; 160B
+        cpy     #$00                            ; 160E
+        bne     fopen72                         ; 1610
+        cmp     #$00                            ; 1612
+        bne     fopen72                         ; 1614
+        lda     #$7F                            ; 1616
+        ldy     #$1C                            ; 1618
+        brk     #$14                            ; 161A
+        sec                                     ; 161C
+        ldy     #$00                            ; 161D
+        tya                                     ; 161F
+        rts                                     ; 1620
+
+; ----------------------------------------------------------------------------
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, , msg
+;
+fopen72:lda     ptr1                            ; 1621
+        ldx     ptr1+1                          ; 1624
+        ldy     #$01                            ; 1627
+        jsr     XOPEN_ROUTINE                   ; 1629
+        cpy     #$00                            ; 162C
+        bne     fopen73                         ; 162E
+        cmp     #$00                            ; 1630
+        bne     fopen73                         ; 1632
+        lda     #$7F                            ; 1634
+        ldy     #$1C                            ; 1636
+        brk     #$14                            ; 1638
+        sec                                     ; 163A
+        ldy     #$00                            ; 163B
+        tya                                     ; 163D
+        rts                                     ; 163E
+
+; ----------------------------------------------------------------------------
+; 
+; fopen src, O_RDONLY, TELEMON, , msg
+;
+fopen73:lda     #$67                            ; 163F
+        ldx     #$1C                            ; 1641
+        ldy     #$01                            ; 1643
+        jsr     XOPEN_ROUTINE                   ; 1645
+        cpy     #$00                            ; 1648
+        bne     fopen74                         ; 164A
+        cmp     #$00                            ; 164C
+        bne     fopen74                         ; 164E
+        lda     #$7F                            ; 1650
+        ldy     #$1C                            ; 1652
+        brk     #$14                            ; 1654
+        sec                                     ; 1656
+        ldy     #$00                            ; 1657
+        tya                                     ; 1659
+        rts                                     ; 165A
+
+; ----------------------------------------------------------------------------
+; 
+; fopen #$1234, O_RDONLY, TELEMON, , msg, $EC
+;
+fopen74:lda     #$34                            ; 165B
+        ldx     #$12                            ; 165D
+        ldy     #$01                            ; 165F
+        jsr     XOPEN_ROUTINE                   ; 1661
+        cpy     #$00                            ; 1664
+        bne     fopen75                         ; 1666
+        cmp     #$00                            ; 1668
+        bne     fopen75                         ; 166A
+        lda     #$7F                            ; 166C
+        ldy     #$1C                            ; 166E
+        brk     #$14                            ; 1670
+        sec                                     ; 1672
+        ldy     #$00                            ; 1673
+        lda     #$EC                            ; 1675
+        rts                                     ; 1677
+
+; ----------------------------------------------------------------------------
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, , msg, $EC
+;
+fopen75:lda     ptr1                            ; 1678
+        ldx     ptr1+1                          ; 167B
+        ldy     #$01                            ; 167E
+        jsr     XOPEN_ROUTINE                   ; 1680
+        cpy     #$00                            ; 1683
+        bne     fopen76                         ; 1685
+        cmp     #$00                            ; 1687
+        bne     fopen76                         ; 1689
+        lda     #$7F                            ; 168B
+        ldy     #$1C                            ; 168D
+        brk     #$14                            ; 168F
+        sec                                     ; 1691
+        ldy     #$00                            ; 1692
+        lda     #$EC                            ; 1694
+        rts                                     ; 1696
+
+; ----------------------------------------------------------------------------
+; 
+; fopen src, O_RDONLY, TELEMON, , msg, $EC
+;
+fopen76:lda     #$67                            ; 1697
+        ldx     #$1C                            ; 1699
+        ldy     #$01                            ; 169B
+        jsr     XOPEN_ROUTINE                   ; 169D
+        cpy     #$00                            ; 16A0
+        bne     fopen77                         ; 16A2
+        cmp     #$00                            ; 16A4
+        bne     fopen77                         ; 16A6
+        lda     #$7F                            ; 16A8
+        ldy     #$1C                            ; 16AA
+        brk     #$14                            ; 16AC
+        sec                                     ; 16AE
+        ldy     #$00                            ; 16AF
+        lda     #$EC                            ; 16B1
+        rts                                     ; 16B3
+
+; ----------------------------------------------------------------------------
+; 
+; fopen #$1234, O_RDONLY, TELEMON, , , $EC
+;
+fopen77:lda     #$34                            ; 16B4
+        ldx     #$12                            ; 16B6
+        ldy     #$01                            ; 16B8
+        jsr     XOPEN_ROUTINE                   ; 16BA
+        cpy     #$00                            ; 16BD
+        bne     fopen78                         ; 16BF
+        cmp     #$00                            ; 16C1
+        bne     fopen78                         ; 16C3
+        ldy     #$00                            ; 16C5
+        lda     #$EC                            ; 16C7
+        rts                                     ; 16C9
+
+; ----------------------------------------------------------------------------
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, , , $EC
+;
+fopen78:lda     ptr1                            ; 16CA
+        ldx     ptr1+1                          ; 16CD
+        ldy     #$01                            ; 16D0
+        jsr     XOPEN_ROUTINE                   ; 16D2
+        cpy     #$00                            ; 16D5
+        bne     fopen79                         ; 16D7
+        cmp     #$00                            ; 16D9
+        bne     fopen79                         ; 16DB
+        ldy     #$00                            ; 16DD
+        lda     #$EC                            ; 16DF
+        rts                                     ; 16E1
+
+; ----------------------------------------------------------------------------
+; 
+; fopen src, O_RDONLY, TELEMON, , , $EC
+;
+fopen79:lda     #$67                            ; 16E2
+        ldx     #$1C                            ; 16E4
+        ldy     #$01                            ; 16E6
+        jsr     XOPEN_ROUTINE                   ; 16E8
+        cpy     #$00                            ; 16EB
+        bne     fopen81                         ; 16ED
+        cmp     #$00                            ; 16EF
+        bne     fopen81                         ; 16F1
+        ldy     #$00                            ; 16F3
+        lda     #$EC                            ; 16F5
+        rts                                     ; 16F7
+
+; ----------------------------------------------------------------------------
+; 
+; fopen #$1234, O_RDONLY, TELEMON, ptr1, msg
+;
+fopen81:lda     #$34                            ; 16F8
+        ldx     #$12                            ; 16FA
+        ldy     #$01                            ; 16FC
+        jsr     XOPEN_ROUTINE                   ; 16FE
+        cpy     #$00                            ; 1701
+        bne     L1714                           ; 1703
+        cmp     #$00                            ; 1705
+        bne     L1714                           ; 1707
+        lda     #$7F                            ; 1709
+        ldy     #$1C                            ; 170B
+        brk     #$14                            ; 170D
+        sec                                     ; 170F
+        ldy     #$00                            ; 1710
+        tya                                     ; 1712
+        rts                                     ; 1713
+
+; ----------------------------------------------------------------------------
+L1714:  sta     ptr1                            ; 1714
+        sty     ptr1+1                          ; 1717
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
+;
+fopen82:lda     ptr1                            ; 171A
+        ldx     ptr1+1                          ; 171D
+        ldy     #$01                            ; 1720
+        jsr     XOPEN_ROUTINE                   ; 1722
+        cpy     #$00                            ; 1725
+        bne     L1738                           ; 1727
+        cmp     #$00                            ; 1729
+        bne     L1738                           ; 172B
+        lda     #$7F                            ; 172D
+        ldy     #$1C                            ; 172F
+        brk     #$14                            ; 1731
+        sec                                     ; 1733
+        ldy     #$00                            ; 1734
+        tya                                     ; 1736
+        rts                                     ; 1737
+
+; ----------------------------------------------------------------------------
+L1738:  sta     ptr1                            ; 1738
+        sty     ptr1+1                          ; 173B
+; 
+; fopen src, O_RDONLY, TELEMON, ptr1, msg
+;
+fopen83:lda     #$67                            ; 173E
+        ldx     #$1C                            ; 1740
+        ldy     #$01                            ; 1742
+        jsr     XOPEN_ROUTINE                   ; 1744
+        cpy     #$00                            ; 1747
+        bne     L175A                           ; 1749
+        cmp     #$00                            ; 174B
+        bne     L175A                           ; 174D
+        lda     #$7F                            ; 174F
+        ldy     #$1C                            ; 1751
+        brk     #$14                            ; 1753
+        sec                                     ; 1755
+        ldy     #$00                            ; 1756
+        tya                                     ; 1758
+        rts                                     ; 1759
+
+; ----------------------------------------------------------------------------
+L175A:  sta     ptr1                            ; 175A
+        sty     ptr1+1                          ; 175D
+; 
+; fopen #$1234, O_RDONLY, TELEMON, ptr1, msg, $EC
+;
+fopen84:lda     #$34                            ; 1760
+        ldx     #$12                            ; 1762
+        ldy     #$01                            ; 1764
+        jsr     XOPEN_ROUTINE                   ; 1766
+        cpy     #$00                            ; 1769
+        bne     L177D                           ; 176B
+        cmp     #$00                            ; 176D
+        bne     L177D                           ; 176F
+        lda     #$7F                            ; 1771
+        ldy     #$1C                            ; 1773
+        brk     #$14                            ; 1775
+        sec                                     ; 1777
+        ldy     #$00                            ; 1778
+        lda     #$EC                            ; 177A
+        rts                                     ; 177C
+
+; ----------------------------------------------------------------------------
+L177D:  sta     ptr1                            ; 177D
+        sty     ptr1+1                          ; 1780
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg, $EC
+;
+fopen85:lda     ptr1                            ; 1783
+        ldx     ptr1+1                          ; 1786
+        ldy     #$01                            ; 1789
+        jsr     XOPEN_ROUTINE                   ; 178B
+        cpy     #$00                            ; 178E
+        bne     L17A2                           ; 1790
+        cmp     #$00                            ; 1792
+        bne     L17A2                           ; 1794
+        lda     #$7F                            ; 1796
+        ldy     #$1C                            ; 1798
+        brk     #$14                            ; 179A
+        sec                                     ; 179C
+        ldy     #$00                            ; 179D
+        lda     #$EC                            ; 179F
+        rts                                     ; 17A1
+
+; ----------------------------------------------------------------------------
+L17A2:  sta     ptr1                            ; 17A2
+        sty     ptr1+1                          ; 17A5
+; 
+; fopen src, O_RDONLY, TELEMON, ptr1, msg, $EC
+;
+fopen86:lda     #$67                            ; 17A8
+        ldx     #$1C                            ; 17AA
+        ldy     #$01                            ; 17AC
+        jsr     XOPEN_ROUTINE                   ; 17AE
+        cpy     #$00                            ; 17B1
+        bne     L17C5                           ; 17B3
+        cmp     #$00                            ; 17B5
+        bne     L17C5                           ; 17B7
+        lda     #$7F                            ; 17B9
+        ldy     #$1C                            ; 17BB
+        brk     #$14                            ; 17BD
+        sec                                     ; 17BF
+        ldy     #$00                            ; 17C0
+        lda     #$EC                            ; 17C2
+        rts                                     ; 17C4
+
+; ----------------------------------------------------------------------------
+L17C5:  sta     ptr1                            ; 17C5
+        sty     ptr1+1                          ; 17C8
+; 
+; fopen #$1234, O_RDONLY, TELEMON, ptr1, , $EC
+;
+fopen87:lda     #$34                            ; 17CB
+        ldx     #$12                            ; 17CD
+        ldy     #$01                            ; 17CF
+        jsr     XOPEN_ROUTINE                   ; 17D1
+        cpy     #$00                            ; 17D4
+        bne     L17E1                           ; 17D6
+        cmp     #$00                            ; 17D8
+        bne     L17E1                           ; 17DA
+        ldy     #$00                            ; 17DC
+        lda     #$EC                            ; 17DE
+        rts                                     ; 17E0
+
+; ----------------------------------------------------------------------------
+L17E1:  sta     ptr1                            ; 17E1
+        sty     ptr1+1                          ; 17E4
+; 
+; fopen (ptr1), O_RDONLY, TELEMON, ptr1, , $EC
+;
+fopen88:lda     ptr1                            ; 17E7
+        ldx     ptr1+1                          ; 17EA
+        ldy     #$01                            ; 17ED
+        jsr     XOPEN_ROUTINE                   ; 17EF
+        cpy     #$00                            ; 17F2
+        bne     L17FF                           ; 17F4
+        cmp     #$00                            ; 17F6
+        bne     L17FF                           ; 17F8
+        ldy     #$00                            ; 17FA
+        lda     #$EC                            ; 17FC
+        rts                                     ; 17FE
+
+; ----------------------------------------------------------------------------
+L17FF:  sta     ptr1                            ; 17FF
+        sty     ptr1+1                          ; 1802
+; 
+; fopen src, O_RDONLY, TELEMON, ptr1, , $EC
+;
+fopen89:lda     #$67                            ; 1805
+        ldx     #$1C                            ; 1807
+        ldy     #$01                            ; 1809
+        jsr     XOPEN_ROUTINE                   ; 180B
+        cpy     #$00                            ; 180E
+        bne     L181B                           ; 1810
+        cmp     #$00                            ; 1812
+        bne     L181B                           ; 1814
+        ldy     #$00                            ; 1816
+        lda     #$EC                            ; 1818
+        rts                                     ; 181A
+
+; ----------------------------------------------------------------------------
+L181B:  sta     ptr1                            ; 181B
+        sty     ptr1+1                          ; 181E
+; 
 ; fread #$1234, #$1234, dummy, dummy
 ;
-fread01:lda     #$34                            ; 1581
-        ldy     #$12                            ; 1583
-        sta     PTR_READ_DEST                   ; 1585
-        sty     PTR_READ_DEST+1                 ; 1587
-        lda     #$34                            ; 1589
-        ldy     #$12                            ; 158B
-        brk     #$27                            ; 158D
+fread01:lda     #$34                            ; 1821
+        ldy     #$12                            ; 1823
+        sta     PTR_READ_DEST                   ; 1825
+        sty     PTR_READ_DEST+1                 ; 1827
+        lda     #$34                            ; 1829
+        ldy     #$12                            ; 182B
+        brk     #$27                            ; 182D
 ; 
 ; fread #$1234, (ptr2), dummy, dummy
 ;
-fread02:lda     #$34                            ; 158F
-        ldy     #$12                            ; 1591
-        sta     PTR_READ_DEST                   ; 1593
-        sty     PTR_READ_DEST+1                 ; 1595
-        lda     ptr2                            ; 1597
-        ldy     ptr2+1                          ; 159A
-        brk     #$27                            ; 159D
+fread02:lda     #$34                            ; 182F
+        ldy     #$12                            ; 1831
+        sta     PTR_READ_DEST                   ; 1833
+        sty     PTR_READ_DEST+1                 ; 1835
+        lda     ptr2                            ; 1837
+        ldy     ptr2+1                          ; 183A
+        brk     #$27                            ; 183D
 ; 
 ; fread #$1234, var, dummy, dummy
 ;
-fread03:lda     #$34                            ; 159F
-        ldy     #$12                            ; 15A1
-        sta     PTR_READ_DEST                   ; 15A3
-        sty     PTR_READ_DEST+1                 ; 15A5
-        lda     #$78                            ; 15A7
-        ldy     #$56                            ; 15A9
-        brk     #$27                            ; 15AB
+fread03:lda     #$34                            ; 183F
+        ldy     #$12                            ; 1841
+        sta     PTR_READ_DEST                   ; 1843
+        sty     PTR_READ_DEST+1                 ; 1845
+        lda     #$78                            ; 1847
+        ldy     #$56                            ; 1849
+        brk     #$27                            ; 184B
 ; 
 ; fread (ptr1), #$1234, dummy, dummy
 ;
-fread11:lda     ptr1                            ; 15AD
-        ldy     ptr1+1                          ; 15B0
-        sta     PTR_READ_DEST                   ; 15B3
-        sty     PTR_READ_DEST+1                 ; 15B5
-        lda     #$34                            ; 15B7
-        ldy     #$12                            ; 15B9
-        brk     #$27                            ; 15BB
+fread11:lda     ptr1                            ; 184D
+        ldy     ptr1+1                          ; 1850
+        sta     PTR_READ_DEST                   ; 1853
+        sty     PTR_READ_DEST+1                 ; 1855
+        lda     #$34                            ; 1857
+        ldy     #$12                            ; 1859
+        brk     #$27                            ; 185B
 ; 
 ; fread (ptr1), (ptr2), dummy, dummy
 ;
-fread12:lda     ptr1                            ; 15BD
-        ldy     ptr1+1                          ; 15C0
-        sta     PTR_READ_DEST                   ; 15C3
-        sty     PTR_READ_DEST+1                 ; 15C5
-        lda     ptr2                            ; 15C7
-        ldy     ptr2+1                          ; 15CA
-        brk     #$27                            ; 15CD
+fread12:lda     ptr1                            ; 185D
+        ldy     ptr1+1                          ; 1860
+        sta     PTR_READ_DEST                   ; 1863
+        sty     PTR_READ_DEST+1                 ; 1865
+        lda     ptr2                            ; 1867
+        ldy     ptr2+1                          ; 186A
+        brk     #$27                            ; 186D
 ; 
 ; fread (ptr1), var, dummy, dummy
 ;
-fread13:lda     ptr1                            ; 15CF
-        ldy     ptr1+1                          ; 15D2
-        sta     PTR_READ_DEST                   ; 15D5
-        sty     PTR_READ_DEST+1                 ; 15D7
-        lda     #$78                            ; 15D9
-        ldy     #$56                            ; 15DB
-        brk     #$27                            ; 15DD
+fread13:lda     ptr1                            ; 186F
+        ldy     ptr1+1                          ; 1872
+        sta     PTR_READ_DEST                   ; 1875
+        sty     PTR_READ_DEST+1                 ; 1877
+        lda     #$78                            ; 1879
+        ldy     #$56                            ; 187B
+        brk     #$27                            ; 187D
 ; 
 ; fread src, #$1234, dummy, dummy
 ;
-fread21:lda     #$9D                            ; 15DF
-        ldy     #$19                            ; 15E1
-        sta     PTR_READ_DEST                   ; 15E3
-        sty     PTR_READ_DEST+1                 ; 15E5
-        lda     #$34                            ; 15E7
-        ldy     #$12                            ; 15E9
-        brk     #$27                            ; 15EB
+fread21:lda     #$67                            ; 187F
+        ldy     #$1C                            ; 1881
+        sta     PTR_READ_DEST                   ; 1883
+        sty     PTR_READ_DEST+1                 ; 1885
+        lda     #$34                            ; 1887
+        ldy     #$12                            ; 1889
+        brk     #$27                            ; 188B
 ; 
 ; fread src, (ptr2), dummy, dummy
 ;
-fread22:lda     #$9D                            ; 15ED
-        ldy     #$19                            ; 15EF
-        sta     PTR_READ_DEST                   ; 15F1
-        sty     PTR_READ_DEST+1                 ; 15F3
-        lda     ptr2                            ; 15F5
-        ldy     ptr2+1                          ; 15F8
-        brk     #$27                            ; 15FB
+fread22:lda     #$67                            ; 188D
+        ldy     #$1C                            ; 188F
+        sta     PTR_READ_DEST                   ; 1891
+        sty     PTR_READ_DEST+1                 ; 1893
+        lda     ptr2                            ; 1895
+        ldy     ptr2+1                          ; 1898
+        brk     #$27                            ; 189B
 ; 
 ; fread src, var, dummy, dummy
 ;
-fread23:lda     #$9D                            ; 15FD
-        ldy     #$19                            ; 15FF
-        sta     PTR_READ_DEST                   ; 1601
-        sty     PTR_READ_DEST+1                 ; 1603
-        lda     #$78                            ; 1605
-        ldy     #$56                            ; 1607
-        brk     #$27                            ; 1609
+fread23:lda     #$67                            ; 189D
+        ldy     #$1C                            ; 189F
+        sta     PTR_READ_DEST                   ; 18A1
+        sty     PTR_READ_DEST+1                 ; 18A3
+        lda     #$78                            ; 18A5
+        ldy     #$56                            ; 18A7
+        brk     #$27                            ; 18A9
 ; 
 ; fclose (ptr1)
 ;
 fclose01:
-        lda     ptr1                            ; 160B
-        ldy     ptr1+1                          ; 160E
-        brk     #$62                            ; 1611
-        brk     #$3A                            ; 1613
+        lda     ptr1                            ; 18AB
+        ldy     ptr1+1                          ; 18AE
+        brk     #$62                            ; 18B1
+        brk     #$3A                            ; 18B3
 ; 
 ; fclose (ptr1), TELEMON
 ;
 fclose02:
-        lda     ptr1                            ; 1615
-        ldy     ptr1+1                          ; 1618
-        jsr     XFREE_ROUTINE                   ; 161B
-        jsr     XCLOSE_ROUTINE                  ; 161E
+        lda     ptr1                            ; 18B5
+        ldy     ptr1+1                          ; 18B8
+        jsr     XFREE_ROUTINE                   ; 18BB
+        jsr     XCLOSE_ROUTINE                  ; 18BE
 ; 
 ; mkdir #$1234
 ;
-mkdir01:lda     #$34                            ; 1621
-        ldx     #$12                            ; 1623
-        brk     #$4B                            ; 1625
+mkdir01:lda     #$34                            ; 18C1
+        ldx     #$12                            ; 18C3
+        brk     #$4B                            ; 18C5
 ; 
 ; mkdir (ptr1)
 ;
-mkdir02:lda     ptr1                            ; 1627
-        ldx     ptr1+1                          ; 162A
-        brk     #$4B                            ; 162D
+mkdir02:lda     ptr1                            ; 18C7
+        ldx     ptr1+1                          ; 18CA
+        brk     #$4B                            ; 18CD
 ; 
 ; mkdir src
 ;
-mkdir03:lda     #$9D                            ; 162F
-        ldx     #$19                            ; 1631
-        brk     #$4B                            ; 1633
+mkdir03:lda     #$67                            ; 18CF
+        ldx     #$1C                            ; 18D1
+        brk     #$4B                            ; 18D3
 ; 
 ; mkdir #$1234, TELEMON
 ;
-mkdir11:lda     #$34                            ; 1635
-        ldx     #$12                            ; 1637
-        jsr     XMKDIR_ROUTINE                  ; 1639
+mkdir11:lda     #$34                            ; 18D5
+        ldx     #$12                            ; 18D7
+        jsr     XMKDIR_ROUTINE                  ; 18D9
 ; 
 ; mkdir (ptr1), TELEMON
 ;
-mkdir12:lda     ptr1                            ; 163C
-        ldx     ptr1+1                          ; 163F
-        jsr     XMKDIR_ROUTINE                  ; 1642
+mkdir12:lda     ptr1                            ; 18DC
+        ldx     ptr1+1                          ; 18DF
+        jsr     XMKDIR_ROUTINE                  ; 18E2
 ; 
 ; mkdir src, TELEMON
 ;
-mkdir13:lda     #$9D                            ; 1645
-        ldx     #$19                            ; 1647
-        jsr     XMKDIR_ROUTINE                  ; 1649
+mkdir13:lda     #$67                            ; 18E5
+        ldx     #$1C                            ; 18E7
+        jsr     XMKDIR_ROUTINE                  ; 18E9
 ; 
 ; init_argv dst, AY
 ;
 init_argv01:
-        sta     RESB                            ; 164C
-        sty     RESB+1                          ; 164E
-        lda     #$A7                            ; 1650
-        ldy     #$19                            ; 1652
-        sta     RES                             ; 1654
-        sty     RES+1                           ; 1656
-        jsr     _init_argv                      ; 1658
-        tax                                     ; 165B
-        sta     _argc                           ; 165C
-        lda     RES                             ; 165F
-        ldy     RES+1                           ; 1661
-        sta     _argv                           ; 1663
-        sty     _argv+1                         ; 1666
+        sta     RESB                            ; 18EC
+        sty     RESB+1                          ; 18EE
+        lda     #$71                            ; 18F0
+        ldy     #$1C                            ; 18F2
+        sta     RES                             ; 18F4
+        sty     RES+1                           ; 18F6
+        jsr     _init_argv                      ; 18F8
+        tax                                     ; 18FB
+        sta     _argc                           ; 18FC
+        lda     RES                             ; 18FF
+        ldy     RES+1                           ; 1901
+        sta     _argv                           ; 1903
+        sty     _argv+1                         ; 1906
 ; 
 ; init_argv dst, src
 ;
 init_argv02:
-        lda     #$A7                            ; 1669
-        ldy     #$19                            ; 166B
-        sta     RES                             ; 166D
-        sty     RES+1                           ; 166F
-        lda     #$9D                            ; 1671
-        ldy     #$19                            ; 1673
-        sta     RESB                            ; 1675
-        sty     RESB+1                          ; 1677
-        jsr     _init_argv                      ; 1679
-        tax                                     ; 167C
-        sta     _argc                           ; 167D
-        lda     RES                             ; 1680
-        ldy     RES+1                           ; 1682
-        sta     _argv                           ; 1684
-        sty     _argv+1                         ; 1687
+        lda     #$71                            ; 1909
+        ldy     #$1C                            ; 190B
+        sta     RES                             ; 190D
+        sty     RES+1                           ; 190F
+        lda     #$67                            ; 1911
+        ldy     #$1C                            ; 1913
+        sta     RESB                            ; 1915
+        sty     RESB+1                          ; 1917
+        jsr     _init_argv                      ; 1919
+        tax                                     ; 191C
+        sta     _argc                           ; 191D
+        lda     RES                             ; 1920
+        ldy     RES+1                           ; 1922
+        sta     _argv                           ; 1924
+        sty     _argv+1                         ; 1927
 ; 
 ; init_argv dst, (ptr1)
 ;
 init_argv03:
-        lda     #$A7                            ; 168A
-        ldy     #$19                            ; 168C
-        sta     RES                             ; 168E
-        sty     RES+1                           ; 1690
-        lda     ptr1                            ; 1692
-        ldy     ptr1+1                          ; 1695
-        sta     RESB                            ; 1698
-        sty     RESB+1                          ; 169A
-        jsr     _init_argv                      ; 169C
-        tax                                     ; 169F
-        sta     _argc                           ; 16A0
-        lda     RES                             ; 16A3
-        ldy     RES+1                           ; 16A5
-        sta     _argv                           ; 16A7
-        sty     _argv+1                         ; 16AA
+        lda     #$71                            ; 192A
+        ldy     #$1C                            ; 192C
+        sta     RES                             ; 192E
+        sty     RES+1                           ; 1930
+        lda     ptr1                            ; 1932
+        ldy     ptr1+1                          ; 1935
+        sta     RESB                            ; 1938
+        sty     RESB+1                          ; 193A
+        jsr     _init_argv                      ; 193C
+        tax                                     ; 193F
+        sta     _argc                           ; 1940
+        lda     RES                             ; 1943
+        ldy     RES+1                           ; 1945
+        sta     _argv                           ; 1947
+        sty     _argv+1                         ; 194A
 ; 
 ; init_argv AY, src
 ;
 init_argv11:
-        sta     RES                             ; 16AD
-        sty     RES+1                           ; 16AF
-        lda     #$9D                            ; 16B1
-        ldy     #$19                            ; 16B3
-        sta     RESB                            ; 16B5
-        sty     RESB+1                          ; 16B7
-        jsr     _init_argv                      ; 16B9
-        tax                                     ; 16BC
-        sta     _argc                           ; 16BD
-        lda     RES                             ; 16C0
-        ldy     RES+1                           ; 16C2
-        sta     _argv                           ; 16C4
-        sty     _argv+1                         ; 16C7
+        sta     RES                             ; 194D
+        sty     RES+1                           ; 194F
+        lda     #$67                            ; 1951
+        ldy     #$1C                            ; 1953
+        sta     RESB                            ; 1955
+        sty     RESB+1                          ; 1957
+        jsr     _init_argv                      ; 1959
+        tax                                     ; 195C
+        sta     _argc                           ; 195D
+        lda     RES                             ; 1960
+        ldy     RES+1                           ; 1962
+        sta     _argv                           ; 1964
+        sty     _argv+1                         ; 1967
 ; 
 ; init_argv AY, (ptr1)
 ;
 init_argv12:
-        sta     RES                             ; 16CA
-        sty     RES+1                           ; 16CC
-        lda     ptr1                            ; 16CE
-        ldy     ptr1+1                          ; 16D1
-        sta     RESB                            ; 16D4
-        sty     RESB+1                          ; 16D6
-        jsr     _init_argv                      ; 16D8
-        tax                                     ; 16DB
-        sta     _argc                           ; 16DC
-        lda     RES                             ; 16DF
-        ldy     RES+1                           ; 16E1
-        sta     _argv                           ; 16E3
-        sty     _argv+1                         ; 16E6
+        sta     RES                             ; 196A
+        sty     RES+1                           ; 196C
+        lda     ptr1                            ; 196E
+        ldy     ptr1+1                          ; 1971
+        sta     RESB                            ; 1974
+        sty     RESB+1                          ; 1976
+        jsr     _init_argv                      ; 1978
+        tax                                     ; 197B
+        sta     _argc                           ; 197C
+        lda     RES                             ; 197F
+        ldy     RES+1                           ; 1981
+        sta     _argv                           ; 1983
+        sty     _argv+1                         ; 1986
 ; 
 ; init_argv (ptr2), AY
 ;
 init_argv21:
-        sta     RESB                            ; 16E9
-        sty     RESB+1                          ; 16EB
-        lda     ptr2                            ; 16ED
-        ldy     ptr2+1                          ; 16F0
-        sta     RES                             ; 16F3
-        sty     RES+1                           ; 16F5
-        jsr     _init_argv                      ; 16F7
-        tax                                     ; 16FA
-        sta     _argc                           ; 16FB
-        lda     RES                             ; 16FE
-        ldy     RES+1                           ; 1700
-        sta     _argv                           ; 1702
-        sty     _argv+1                         ; 1705
+        sta     RESB                            ; 1989
+        sty     RESB+1                          ; 198B
+        lda     ptr2                            ; 198D
+        ldy     ptr2+1                          ; 1990
+        sta     RES                             ; 1993
+        sty     RES+1                           ; 1995
+        jsr     _init_argv                      ; 1997
+        tax                                     ; 199A
+        sta     _argc                           ; 199B
+        lda     RES                             ; 199E
+        ldy     RES+1                           ; 19A0
+        sta     _argv                           ; 19A2
+        sty     _argv+1                         ; 19A5
 ; 
 ; init_argv (ptr2), src
 ;
 init_argv22:
-        lda     ptr2                            ; 1708
-        ldy     ptr2+1                          ; 170B
-        sta     RES                             ; 170E
-        sty     RES+1                           ; 1710
-        lda     #$9D                            ; 1712
-        ldy     #$19                            ; 1714
-        sta     RESB                            ; 1716
-        sty     RESB+1                          ; 1718
-        jsr     _init_argv                      ; 171A
-        tax                                     ; 171D
-        sta     _argc                           ; 171E
-        lda     RES                             ; 1721
-        ldy     RES+1                           ; 1723
-        sta     _argv                           ; 1725
-        sty     _argv+1                         ; 1728
+        lda     ptr2                            ; 19A8
+        ldy     ptr2+1                          ; 19AB
+        sta     RES                             ; 19AE
+        sty     RES+1                           ; 19B0
+        lda     #$67                            ; 19B2
+        ldy     #$1C                            ; 19B4
+        sta     RESB                            ; 19B6
+        sty     RESB+1                          ; 19B8
+        jsr     _init_argv                      ; 19BA
+        tax                                     ; 19BD
+        sta     _argc                           ; 19BE
+        lda     RES                             ; 19C1
+        ldy     RES+1                           ; 19C3
+        sta     _argv                           ; 19C5
+        sty     _argv+1                         ; 19C8
 ; 
 ; init_argv (ptr2), (ptr1)
 ;
 init_argv23:
-        lda     ptr2                            ; 172B
-        ldy     ptr2+1                          ; 172E
-        sta     RES                             ; 1731
-        sty     RES+1                           ; 1733
-        lda     ptr1                            ; 1735
-        ldy     ptr1+1                          ; 1738
-        sta     RESB                            ; 173B
-        sty     RESB+1                          ; 173D
-        jsr     _init_argv                      ; 173F
-        tax                                     ; 1742
-        sta     _argc                           ; 1743
-        lda     RES                             ; 1746
-        ldy     RES+1                           ; 1748
-        sta     _argv                           ; 174A
-        sty     _argv+1                         ; 174D
+        lda     ptr2                            ; 19CB
+        ldy     ptr2+1                          ; 19CE
+        sta     RES                             ; 19D1
+        sty     RES+1                           ; 19D3
+        lda     ptr1                            ; 19D5
+        ldy     ptr1+1                          ; 19D8
+        sta     RESB                            ; 19DB
+        sty     RESB+1                          ; 19DD
+        jsr     _init_argv                      ; 19DF
+        tax                                     ; 19E2
+        sta     _argc                           ; 19E3
+        lda     RES                             ; 19E6
+        ldy     RES+1                           ; 19E8
+        sta     _argv                           ; 19EA
+        sty     _argv+1                         ; 19ED
 ; 
 ; get_argv
 ;
 get_argv01:
-        jsr     _get_argv                       ; 1750
+        jsr     _get_argv                       ; 19F0
 ; 
 ; cursor on
 ;
 cursor01:
-        ldx     #$00                            ; 1753
-        brk     #$35                            ; 1755
+        ldx     #$00                            ; 19F3
+        brk     #$35                            ; 19F5
 ; 
 ; cursor ON
 ;
 cursor02:
-        ldx     #$00                            ; 1757
-        brk     #$35                            ; 1759
+        ldx     #$00                            ; 19F7
+        brk     #$35                            ; 19F9
 ; 
 ; cursor off
 ;
 cursor03:
-        ldx     #$00                            ; 175B
-        brk     #$34                            ; 175D
+        ldx     #$00                            ; 19FB
+        brk     #$34                            ; 19FD
 ; 
 ; cursor OFF
 ;
 cursor04:
-        ldx     #$00                            ; 175F
-        brk     #$34                            ; 1761
+        ldx     #$00                            ; 19FF
+        brk     #$34                            ; 1A01
 ; 
 ; check_regs AX
 ;
 check_regs01:
-        cpx     #$00                            ; 1763
-        bne     check_regs02                    ; 1765
-        cmp     #$00                            ; 1767
-        bne     check_regs02                    ; 1769
-        rts                                     ; 176B
+        cpx     #$00                            ; 1A03
+        bne     check_regs02                    ; 1A05
+        cmp     #$00                            ; 1A07
+        bne     check_regs02                    ; 1A09
+        rts                                     ; 1A0B
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs AY
 ;
 check_regs02:
-        cpy     #$00                            ; 176C
-        bne     check_regs03                    ; 176E
-        cmp     #$00                            ; 1770
-        bne     check_regs03                    ; 1772
-        rts                                     ; 1774
+        cpy     #$00                            ; 1A0C
+        bne     check_regs03                    ; 1A0E
+        cmp     #$00                            ; 1A10
+        bne     check_regs03                    ; 1A12
+        rts                                     ; 1A14
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs XA
 ;
 check_regs03:
-        cpx     #$00                            ; 1775
-        bne     check_regs04                    ; 1777
-        cmp     #$00                            ; 1779
-        bne     check_regs04                    ; 177B
-        rts                                     ; 177D
+        cpx     #$00                            ; 1A15
+        bne     check_regs04                    ; 1A17
+        cmp     #$00                            ; 1A19
+        bne     check_regs04                    ; 1A1B
+        rts                                     ; 1A1D
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs XY
 ;
 check_regs04:
-        cpx     #$00                            ; 177E
-        bne     check_regs05                    ; 1780
-        cpy     #$00                            ; 1782
-        bne     check_regs05                    ; 1784
-        rts                                     ; 1786
+        cpx     #$00                            ; 1A1E
+        bne     check_regs05                    ; 1A20
+        cpy     #$00                            ; 1A22
+        bne     check_regs05                    ; 1A24
+        rts                                     ; 1A26
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs YA
 ;
 check_regs05:
-        cpy     #$00                            ; 1787
-        bne     check_regs06                    ; 1789
-        cmp     #$00                            ; 178B
-        bne     check_regs06                    ; 178D
-        rts                                     ; 178F
+        cpy     #$00                            ; 1A27
+        bne     check_regs06                    ; 1A29
+        cmp     #$00                            ; 1A2B
+        bne     check_regs06                    ; 1A2D
+        rts                                     ; 1A2F
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs YX
 ;
 check_regs06:
-        cpx     #$00                            ; 1790
-        bne     check_regs11                    ; 1792
-        cpy     #$00                            ; 1794
-        bne     check_regs11                    ; 1796
-        rts                                     ; 1798
+        cpx     #$00                            ; 1A30
+        bne     check_regs11                    ; 1A32
+        cpy     #$00                            ; 1A34
+        bne     check_regs11                    ; 1A36
+        rts                                     ; 1A38
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs AX, msg
 ;
 check_regs11:
-        cpx     #$00                            ; 1799
-        bne     check_regs12                    ; 179B
-        cmp     #$00                            ; 179D
-        bne     check_regs12                    ; 179F
-        lda     #$B5                            ; 17A1
-        ldy     #$19                            ; 17A3
-        brk     #$14                            ; 17A5
-        rts                                     ; 17A7
+        cpx     #$00                            ; 1A39
+        bne     check_regs12                    ; 1A3B
+        cmp     #$00                            ; 1A3D
+        bne     check_regs12                    ; 1A3F
+        lda     #$7F                            ; 1A41
+        ldy     #$1C                            ; 1A43
+        brk     #$14                            ; 1A45
+        sec                                     ; 1A47
+        ldy     #$00                            ; 1A48
+        tya                                     ; 1A4A
+        rts                                     ; 1A4B
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs AY, msg
 ;
 check_regs12:
-        cpy     #$00                            ; 17A8
-        bne     check_regs13                    ; 17AA
-        cmp     #$00                            ; 17AC
-        bne     check_regs13                    ; 17AE
-        lda     #$B5                            ; 17B0
-        ldy     #$19                            ; 17B2
-        brk     #$14                            ; 17B4
-        rts                                     ; 17B6
+        cpy     #$00                            ; 1A4C
+        bne     check_regs13                    ; 1A4E
+        cmp     #$00                            ; 1A50
+        bne     check_regs13                    ; 1A52
+        lda     #$7F                            ; 1A54
+        ldy     #$1C                            ; 1A56
+        brk     #$14                            ; 1A58
+        sec                                     ; 1A5A
+        ldy     #$00                            ; 1A5B
+        tya                                     ; 1A5D
+        rts                                     ; 1A5E
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs XA, msg
 ;
 check_regs13:
-        cpx     #$00                            ; 17B7
-        bne     check_regs14                    ; 17B9
-        cmp     #$00                            ; 17BB
-        bne     check_regs14                    ; 17BD
-        lda     #$B5                            ; 17BF
-        ldy     #$19                            ; 17C1
-        brk     #$14                            ; 17C3
-        rts                                     ; 17C5
+        cpx     #$00                            ; 1A5F
+        bne     check_regs14                    ; 1A61
+        cmp     #$00                            ; 1A63
+        bne     check_regs14                    ; 1A65
+        lda     #$7F                            ; 1A67
+        ldy     #$1C                            ; 1A69
+        brk     #$14                            ; 1A6B
+        sec                                     ; 1A6D
+        ldy     #$00                            ; 1A6E
+        tya                                     ; 1A70
+        rts                                     ; 1A71
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs XY, msg
 ;
 check_regs14:
-        cpx     #$00                            ; 17C6
-        bne     check_regs15                    ; 17C8
-        cpy     #$00                            ; 17CA
-        bne     check_regs15                    ; 17CC
-        lda     #$B5                            ; 17CE
-        ldy     #$19                            ; 17D0
-        brk     #$14                            ; 17D2
-        rts                                     ; 17D4
+        cpx     #$00                            ; 1A72
+        bne     check_regs15                    ; 1A74
+        cpy     #$00                            ; 1A76
+        bne     check_regs15                    ; 1A78
+        lda     #$7F                            ; 1A7A
+        ldy     #$1C                            ; 1A7C
+        brk     #$14                            ; 1A7E
+        sec                                     ; 1A80
+        ldy     #$00                            ; 1A81
+        tya                                     ; 1A83
+        rts                                     ; 1A84
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs YA, msg
 ;
 check_regs15:
-        cpy     #$00                            ; 17D5
-        bne     check_regs16                    ; 17D7
-        cmp     #$00                            ; 17D9
-        bne     check_regs16                    ; 17DB
-        lda     #$B5                            ; 17DD
-        ldy     #$19                            ; 17DF
-        brk     #$14                            ; 17E1
-        rts                                     ; 17E3
+        cpy     #$00                            ; 1A85
+        bne     check_regs16                    ; 1A87
+        cmp     #$00                            ; 1A89
+        bne     check_regs16                    ; 1A8B
+        lda     #$7F                            ; 1A8D
+        ldy     #$1C                            ; 1A8F
+        brk     #$14                            ; 1A91
+        sec                                     ; 1A93
+        ldy     #$00                            ; 1A94
+        tya                                     ; 1A96
+        rts                                     ; 1A97
 
 ; ----------------------------------------------------------------------------
 ; 
 ; check_regs YX, msg
 ;
 check_regs16:
-        cpx     #$00                            ; 17E4
-        bne     check_regs21                    ; 17E6
-        cpy     #$00                            ; 17E8
-        bne     check_regs21                    ; 17EA
-        lda     #$B5                            ; 17EC
-        ldy     #$19                            ; 17EE
-        brk     #$14                            ; 17F0
-        rts                                     ; 17F2
+        cpx     #$00                            ; 1A98
+        bne     check_regs21                    ; 1A9A
+        cpy     #$00                            ; 1A9C
+        bne     check_regs21                    ; 1A9E
+        lda     #$7F                            ; 1AA0
+        ldy     #$1C                            ; 1AA2
+        brk     #$14                            ; 1AA4
+        sec                                     ; 1AA6
+        ldy     #$00                            ; 1AA7
+        tya                                     ; 1AA9
+        rts                                     ; 1AAA
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs AX, , var
+; check_regs AX, , $01
 ;
 check_regs21:
-        cpx     #$00                            ; 17F3
-        bne     check_regs22                    ; 17F5
-        cmp     #$00                            ; 17F7
-        bne     check_regs22                    ; 17F9
-        lda     $5678                           ; 17FB
-        rts                                     ; 17FE
+        cpx     #$00                            ; 1AAB
+        bne     check_regs22                    ; 1AAD
+        cmp     #$00                            ; 1AAF
+        bne     check_regs22                    ; 1AB1
+        ldy     #$00                            ; 1AB3
+        lda     #$01                            ; 1AB5
+        rts                                     ; 1AB7
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs AY, , var
+; check_regs AY, , $01
 ;
 check_regs22:
-        cpy     #$00                            ; 17FF
-        bne     check_regs23                    ; 1801
-        cmp     #$00                            ; 1803
-        bne     check_regs23                    ; 1805
-        lda     $5678                           ; 1807
-        rts                                     ; 180A
+        cpy     #$00                            ; 1AB8
+        bne     check_regs23                    ; 1ABA
+        cmp     #$00                            ; 1ABC
+        bne     check_regs23                    ; 1ABE
+        ldy     #$00                            ; 1AC0
+        lda     #$01                            ; 1AC2
+        rts                                     ; 1AC4
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs XA, , var
+; check_regs XA, , $01
 ;
 check_regs23:
-        cpx     #$00                            ; 180B
-        bne     check_regs24                    ; 180D
-        cmp     #$00                            ; 180F
-        bne     check_regs24                    ; 1811
-        lda     $5678                           ; 1813
-        rts                                     ; 1816
+        cpx     #$00                            ; 1AC5
+        bne     check_regs24                    ; 1AC7
+        cmp     #$00                            ; 1AC9
+        bne     check_regs24                    ; 1ACB
+        ldy     #$00                            ; 1ACD
+        lda     #$01                            ; 1ACF
+        rts                                     ; 1AD1
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs XY, , var
+; check_regs XY, , $01
 ;
 check_regs24:
-        cpx     #$00                            ; 1817
-        bne     check_regs25                    ; 1819
-        cpy     #$00                            ; 181B
-        bne     check_regs25                    ; 181D
-        lda     $5678                           ; 181F
-        rts                                     ; 1822
+        cpx     #$00                            ; 1AD2
+        bne     check_regs25                    ; 1AD4
+        cpy     #$00                            ; 1AD6
+        bne     check_regs25                    ; 1AD8
+        ldy     #$00                            ; 1ADA
+        lda     #$01                            ; 1ADC
+        rts                                     ; 1ADE
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs YA, , var
+; check_regs YA, , $01
 ;
 check_regs25:
-        cpy     #$00                            ; 1823
-        bne     check_regs26                    ; 1825
-        cmp     #$00                            ; 1827
-        bne     check_regs26                    ; 1829
-        lda     $5678                           ; 182B
-        rts                                     ; 182E
+        cpy     #$00                            ; 1ADF
+        bne     check_regs26                    ; 1AE1
+        cmp     #$00                            ; 1AE3
+        bne     check_regs26                    ; 1AE5
+        ldy     #$00                            ; 1AE7
+        lda     #$01                            ; 1AE9
+        rts                                     ; 1AEB
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs YX, , var
+; check_regs YX, , $01
 ;
 check_regs26:
-        cpx     #$00                            ; 182F
-        bne     check_regs31                    ; 1831
-        cpy     #$00                            ; 1833
-        bne     check_regs31                    ; 1835
-        lda     $5678                           ; 1837
-        rts                                     ; 183A
+        cpx     #$00                            ; 1AEC
+        bne     check_regs31                    ; 1AEE
+        cpy     #$00                            ; 1AF0
+        bne     check_regs31                    ; 1AF2
+        ldy     #$00                            ; 1AF4
+        lda     #$01                            ; 1AF6
+        rts                                     ; 1AF8
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs AX, msg, var
+; check_regs AX, msg, $01
 ;
 check_regs31:
-        cpx     #$00                            ; 183B
-        bne     check_regs32                    ; 183D
-        cmp     #$00                            ; 183F
-        bne     check_regs32                    ; 1841
-        lda     #$B5                            ; 1843
-        ldy     #$19                            ; 1845
-        brk     #$14                            ; 1847
-        lda     $5678                           ; 1849
-        rts                                     ; 184C
+        cpx     #$00                            ; 1AF9
+        bne     check_regs32                    ; 1AFB
+        cmp     #$00                            ; 1AFD
+        bne     check_regs32                    ; 1AFF
+        lda     #$7F                            ; 1B01
+        ldy     #$1C                            ; 1B03
+        brk     #$14                            ; 1B05
+        sec                                     ; 1B07
+        ldy     #$00                            ; 1B08
+        lda     #$01                            ; 1B0A
+        rts                                     ; 1B0C
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs AY, msg, var
+; check_regs AY, msg, $01
 ;
 check_regs32:
-        cpy     #$00                            ; 184D
-        bne     check_regs33                    ; 184F
-        cmp     #$00                            ; 1851
-        bne     check_regs33                    ; 1853
-        lda     #$B5                            ; 1855
-        ldy     #$19                            ; 1857
-        brk     #$14                            ; 1859
-        lda     $5678                           ; 185B
-        rts                                     ; 185E
+        cpy     #$00                            ; 1B0D
+        bne     check_regs33                    ; 1B0F
+        cmp     #$00                            ; 1B11
+        bne     check_regs33                    ; 1B13
+        lda     #$7F                            ; 1B15
+        ldy     #$1C                            ; 1B17
+        brk     #$14                            ; 1B19
+        sec                                     ; 1B1B
+        ldy     #$00                            ; 1B1C
+        lda     #$01                            ; 1B1E
+        rts                                     ; 1B20
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs XA, msg, var
+; check_regs XA, msg, $01
 ;
 check_regs33:
-        cpx     #$00                            ; 185F
-        bne     check_regs34                    ; 1861
-        cmp     #$00                            ; 1863
-        bne     check_regs34                    ; 1865
-        lda     #$B5                            ; 1867
-        ldy     #$19                            ; 1869
-        brk     #$14                            ; 186B
-        lda     $5678                           ; 186D
-        rts                                     ; 1870
+        cpx     #$00                            ; 1B21
+        bne     check_regs34                    ; 1B23
+        cmp     #$00                            ; 1B25
+        bne     check_regs34                    ; 1B27
+        lda     #$7F                            ; 1B29
+        ldy     #$1C                            ; 1B2B
+        brk     #$14                            ; 1B2D
+        sec                                     ; 1B2F
+        ldy     #$00                            ; 1B30
+        lda     #$01                            ; 1B32
+        rts                                     ; 1B34
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs XY, msg, var
+; check_regs XY, msg, $01
 ;
 check_regs34:
-        cpx     #$00                            ; 1871
-        bne     check_regs35                    ; 1873
-        cpy     #$00                            ; 1875
-        bne     check_regs35                    ; 1877
-        lda     #$B5                            ; 1879
-        ldy     #$19                            ; 187B
-        brk     #$14                            ; 187D
-        lda     $5678                           ; 187F
-        rts                                     ; 1882
+        cpx     #$00                            ; 1B35
+        bne     check_regs35                    ; 1B37
+        cpy     #$00                            ; 1B39
+        bne     check_regs35                    ; 1B3B
+        lda     #$7F                            ; 1B3D
+        ldy     #$1C                            ; 1B3F
+        brk     #$14                            ; 1B41
+        sec                                     ; 1B43
+        ldy     #$00                            ; 1B44
+        lda     #$01                            ; 1B46
+        rts                                     ; 1B48
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs YA, msg, var
+; check_regs YA, msg, $01
 ;
 check_regs35:
-        cpy     #$00                            ; 1883
-        bne     check_regs36                    ; 1885
-        cmp     #$00                            ; 1887
-        bne     check_regs36                    ; 1889
-        lda     #$B5                            ; 188B
-        ldy     #$19                            ; 188D
-        brk     #$14                            ; 188F
-        lda     $5678                           ; 1891
-        rts                                     ; 1894
+        cpy     #$00                            ; 1B49
+        bne     check_regs36                    ; 1B4B
+        cmp     #$00                            ; 1B4D
+        bne     check_regs36                    ; 1B4F
+        lda     #$7F                            ; 1B51
+        ldy     #$1C                            ; 1B53
+        brk     #$14                            ; 1B55
+        sec                                     ; 1B57
+        ldy     #$00                            ; 1B58
+        lda     #$01                            ; 1B5A
+        rts                                     ; 1B5C
 
 ; ----------------------------------------------------------------------------
 ; 
-; check_regs YX, msg, var
+; check_regs YX, msg, $01
 ;
 check_regs36:
-        cpx     #$00                            ; 1895
-        bne     SDK_imm_or_ind_or_abs01         ; 1897
-        cpy     #$00                            ; 1899
-        bne     SDK_imm_or_ind_or_abs01         ; 189B
-        lda     #$B5                            ; 189D
-        ldy     #$19                            ; 189F
-        brk     #$14                            ; 18A1
-        lda     $5678                           ; 18A3
-        rts                                     ; 18A6
+        cpx     #$00                            ; 1B5D
+        bne     SDK_imm_or_ind_or_abs01         ; 1B5F
+        cpy     #$00                            ; 1B61
+        bne     SDK_imm_or_ind_or_abs01         ; 1B63
+        lda     #$7F                            ; 1B65
+        ldy     #$1C                            ; 1B67
+        brk     #$14                            ; 1B69
+        sec                                     ; 1B6B
+        ldy     #$00                            ; 1B6C
+        lda     #$01                            ; 1B6E
+        rts                                     ; 1B70
 
 ; ----------------------------------------------------------------------------
 ; 
 ; SDK_imm_or_ind_or_abs #$1234
 ;
 SDK_imm_or_ind_or_abs01:
-        lda     #$34                            ; 18A7
+        lda     #$34                            ; 1B71
 ; 
 ; SDK_imm_or_ind_or_abs (ptr1)
 ;
 SDK_imm_or_ind_or_abs02:
-        lda     ptr1                            ; 18A9
-        ldy     ptr1+1                          ; 18AC
+        lda     ptr1                            ; 1B73
+        ldy     ptr1+1                          ; 1B76
 ; 
 ; SDK_imm_or_ind_or_abs var
 ;
 SDK_imm_or_ind_or_abs03:
-        lda     #$78                            ; 18AF
-        ldy     #$56                            ; 18B1
+        lda     #$78                            ; 1B79
+        ldy     #$56                            ; 1B7B
 ; 
 ; SDK_imm_or_ind_or_abs $1234
 ;
 SDK_imm_or_ind_or_abs04:
-        lda     #$34                            ; 18B3
-        ldy     #$12                            ; 18B5
+        lda     #$34                            ; 1B7D
+        ldy     #$12                            ; 1B7F
 ; 
 ; SDK_get_AY #$1234
 ;
 SDK_get_AY01:
-        lda     #$34                            ; 18B7
-        ldy     #$12                            ; 18B9
+        lda     #$34                            ; 1B81
+        ldy     #$12                            ; 1B83
 ; 
 ; SDK_get_AY (ptr1)
 ;
 SDK_get_AY02:
-        lda     ptr1                            ; 18BB
-        ldy     ptr1+1                          ; 18BE
+        lda     ptr1                            ; 1B85
+        ldy     ptr1+1                          ; 1B88
 ; 
 ; SDK_get_AY var
 ;
 SDK_get_AY03:
-        lda     #$78                            ; 18C1
-        ldy     #$56                            ; 18C3
+        lda     #$78                            ; 1B8B
+        ldy     #$56                            ; 1B8D
 ; 
 ; SDK_get_AY $1234
 ;
 SDK_get_AY04:
-        lda     #$34                            ; 18C5
-        ldy     #$12                            ; 18C7
+        lda     #$34                            ; 1B8F
+        ldy     #$12                            ; 1B91
 ; 
 ; SDK_get_AX #$1234
 ;
 SDK_get_AX01:
-        lda     #$34                            ; 18C9
-        ldx     #$12                            ; 18CB
+        lda     #$34                            ; 1B93
+        ldx     #$12                            ; 1B95
 ; 
 ; SDK_get_AX (ptr1)
 ;
 SDK_get_AX02:
-        lda     ptr1                            ; 18CD
-        ldx     ptr1+1                          ; 18D0
+        lda     ptr1                            ; 1B97
+        ldx     ptr1+1                          ; 1B9A
 ; 
 ; SDK_get_AX var
 ;
 SDK_get_AX03:
-        lda     #$78                            ; 18D3
-        ldx     #$56                            ; 18D5
+        lda     #$78                            ; 1B9D
+        ldx     #$56                            ; 1B9F
 ; 
 ; SDK_get_AX $1234
 ;
 SDK_get_AX04:
-        lda     #$34                            ; 18D7
-        ldx     #$12                            ; 18D9
+        lda     #$34                            ; 1BA1
+        ldx     #$12                            ; 1BA3
 ; 
 ; SDK_call_function func, $1234
 ;
 SDK_call_function01:
-        lda     #$34                            ; 18DB
-        ldy     #$12                            ; 18DD
-        sta     RESB                            ; 18DF
-        sty     RESB+1                          ; 18E1
-        jsr     func                            ; 18E3
+        lda     #$34                            ; 1BA5
+        ldy     #$12                            ; 1BA7
+        sta     RESB                            ; 1BA9
+        sty     RESB+1                          ; 1BAB
+        jsr     func                            ; 1BAD
 ; 
 ; SDK_call_function func, dst
 ;
 SDK_call_function02:
-        lda     #$A7                            ; 18E6
-        ldy     #$19                            ; 18E8
-        sta     RESB                            ; 18EA
-        sty     RESB+1                          ; 18EC
-        jsr     func                            ; 18EE
+        lda     #$71                            ; 1BB0
+        ldy     #$1C                            ; 1BB2
+        sta     RESB                            ; 1BB4
+        sty     RESB+1                          ; 1BB6
+        jsr     func                            ; 1BB8
 ; 
 ; SDK_call_function func, (ptr2)
 ;
 SDK_call_function03:
-        lda     ptr2                            ; 18F1
-        ldy     ptr2+1                          ; 18F4
-        sta     RESB                            ; 18F7
-        sty     RESB+1                          ; 18F9
-        jsr     func                            ; 18FB
+        lda     ptr2                            ; 1BBB
+        ldy     ptr2+1                          ; 1BBE
+        sta     RESB                            ; 1BC1
+        sty     RESB+1                          ; 1BC3
+        jsr     func                            ; 1BC5
 ; 
 ; SDK_call_function func, dst, $1234
 ;
 SDK_call_function11:
-        lda     #$34                            ; 18FE
-        ldy     #$12                            ; 1900
-        sta     RES                             ; 1902
-        sty     RES+1                           ; 1904
-        lda     #$A7                            ; 1906
-        ldy     #$19                            ; 1908
-        sta     RESB                            ; 190A
-        sty     RESB+1                          ; 190C
-        jsr     func                            ; 190E
+        lda     #$34                            ; 1BC8
+        ldy     #$12                            ; 1BCA
+        sta     RES                             ; 1BCC
+        sty     RES+1                           ; 1BCE
+        lda     #$71                            ; 1BD0
+        ldy     #$1C                            ; 1BD2
+        sta     RESB                            ; 1BD4
+        sty     RESB+1                          ; 1BD6
+        jsr     func                            ; 1BD8
 ; 
 ; SDK_call_function func, dst, src
 ;
 SDK_call_function12:
-        lda     #$9D                            ; 1911
-        ldy     #$19                            ; 1913
-        sta     RES                             ; 1915
-        sty     RES+1                           ; 1917
-        lda     #$A7                            ; 1919
-        ldy     #$19                            ; 191B
-        sta     RESB                            ; 191D
-        sty     RESB+1                          ; 191F
-        jsr     func                            ; 1921
+        lda     #$67                            ; 1BDB
+        ldy     #$1C                            ; 1BDD
+        sta     RES                             ; 1BDF
+        sty     RES+1                           ; 1BE1
+        lda     #$71                            ; 1BE3
+        ldy     #$1C                            ; 1BE5
+        sta     RESB                            ; 1BE7
+        sty     RESB+1                          ; 1BE9
+        jsr     func                            ; 1BEB
 ; 
 ; SDK_call_function func, dst, (ptr1)
 ;
 SDK_call_function13:
-        lda     ptr1                            ; 1924
-        ldy     ptr1+1                          ; 1927
-        sta     RES                             ; 192A
-        sty     RES+1                           ; 192C
-        lda     #$A7                            ; 192E
-        ldy     #$19                            ; 1930
-        sta     RESB                            ; 1932
-        sty     RESB+1                          ; 1934
-        jsr     func                            ; 1936
+        lda     ptr1                            ; 1BEE
+        ldy     ptr1+1                          ; 1BF1
+        sta     RES                             ; 1BF4
+        sty     RES+1                           ; 1BF6
+        lda     #$71                            ; 1BF8
+        ldy     #$1C                            ; 1BFA
+        sta     RESB                            ; 1BFC
+        sty     RESB+1                          ; 1BFE
+        jsr     func                            ; 1C00
 ; 
 ; SDK_call_function func, , $1234
 ;
 SDK_call_function21:
-        lda     #$34                            ; 1939
-        ldy     #$12                            ; 193B
-        sta     RES                             ; 193D
-        sty     RES+1                           ; 193F
-        jsr     func                            ; 1941
+        lda     #$34                            ; 1C03
+        ldy     #$12                            ; 1C05
+        sta     RES                             ; 1C07
+        sty     RES+1                           ; 1C09
+        jsr     func                            ; 1C0B
 ; 
 ; SDK_call_function func, , src
 ;
 SDK_call_function22:
-        lda     #$9D                            ; 1944
-        ldy     #$19                            ; 1946
-        sta     RES                             ; 1948
-        sty     RES+1                           ; 194A
-        jsr     func                            ; 194C
+        lda     #$67                            ; 1C0E
+        ldy     #$1C                            ; 1C10
+        sta     RES                             ; 1C12
+        sty     RES+1                           ; 1C14
+        jsr     func                            ; 1C16
 ; 
 ; SDK_call_function func, , (ptr1)
 ;
 SDK_call_function23:
-        lda     ptr1                            ; 194F
-        ldy     ptr1+1                          ; 1952
-        sta     RES                             ; 1955
-        sty     RES+1                           ; 1957
-        jsr     func                            ; 1959
+        lda     ptr1                            ; 1C19
+        ldy     ptr1+1                          ; 1C1C
+        sta     RES                             ; 1C1F
+        sty     RES+1                           ; 1C21
+        jsr     func                            ; 1C23
 ; 
 ; SDK_call_function func, (ptr2), $1234
 ;
 SDK_call_function31:
-        lda     #$34                            ; 195C
-        ldy     #$12                            ; 195E
-        sta     RES                             ; 1960
-        sty     RES+1                           ; 1962
-        lda     ptr2                            ; 1964
-        ldy     ptr2+1                          ; 1967
-        sta     RESB                            ; 196A
-        sty     RESB+1                          ; 196C
-        jsr     func                            ; 196E
+        lda     #$34                            ; 1C26
+        ldy     #$12                            ; 1C28
+        sta     RES                             ; 1C2A
+        sty     RES+1                           ; 1C2C
+        lda     ptr2                            ; 1C2E
+        ldy     ptr2+1                          ; 1C31
+        sta     RESB                            ; 1C34
+        sty     RESB+1                          ; 1C36
+        jsr     func                            ; 1C38
 ; 
 ; SDK_call_function func, (ptr2), src
 ;
 SDK_call_function32:
-        lda     #$9D                            ; 1971
-        ldy     #$19                            ; 1973
-        sta     RES                             ; 1975
-        sty     RES+1                           ; 1977
-        lda     ptr2                            ; 1979
-        ldy     ptr2+1                          ; 197C
-        sta     RESB                            ; 197F
-        sty     RESB+1                          ; 1981
-        jsr     func                            ; 1983
+        lda     #$67                            ; 1C3B
+        ldy     #$1C                            ; 1C3D
+        sta     RES                             ; 1C3F
+        sty     RES+1                           ; 1C41
+        lda     ptr2                            ; 1C43
+        ldy     ptr2+1                          ; 1C46
+        sta     RESB                            ; 1C49
+        sty     RESB+1                          ; 1C4B
+        jsr     func                            ; 1C4D
 ; 
 ; SDK_call_function func, (ptr2), (ptr1)
 ;
 SDK_call_function33:
-        lda     ptr1                            ; 1986
-        ldy     ptr1+1                          ; 1989
-        sta     RES                             ; 198C
-        sty     RES+1                           ; 198E
-        lda     ptr2                            ; 1990
-        ldy     ptr2+1                          ; 1993
-        sta     RESB                            ; 1996
-        sty     RESB+1                          ; 1998
-        jsr     func                            ; 199A
-src:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 199D
-        .byte   $00,$00                         ; 19A5
-dst:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 19A7
-        .byte   $00,$00                         ; 19AF
+        lda     ptr1                            ; 1C50
+        ldy     ptr1+1                          ; 1C53
+        sta     RES                             ; 1C56
+        sty     RES+1                           ; 1C58
+        lda     ptr2                            ; 1C5A
+        ldy     ptr2+1                          ; 1C5D
+        sta     RESB                            ; 1C60
+        sty     RESB+1                          ; 1C62
+        jsr     func                            ; 1C64
 ; ----------------------------------------------------------------------------
-ptr1:   .addr   L0000                           ; 19B1
-ptr2:   .addr   L0000                           ; 19B3
+src:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 1C67
+        .byte   $00,$00                         ; 1C6F
+dst:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 1C71
+        .byte   $00,$00                         ; 1C79
 ; ----------------------------------------------------------------------------
-msg:    .byte   "Erreur"                        ; 19B5
-        .byte   $00                             ; 19BB
+ptr1:   .addr   L0000                           ; 1C7B
+ptr2:   .addr   L0000                           ; 1C7D
 ; ----------------------------------------------------------------------------
-_argc:  .byte   $00                             ; 19BC
-_argv:  .addr   L0000                           ; 19BD
+msg:    .byte   "Erreur"                        ; 1C7F
+        .byte   $00                             ; 1C85
+; ----------------------------------------------------------------------------
+_argc:  .byte   $00                             ; 1C86
+_argv:  .addr   L0000                           ; 1C87
