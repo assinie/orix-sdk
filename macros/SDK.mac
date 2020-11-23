@@ -542,19 +542,30 @@
 		print oom_msg_ptr, NOSAVE
 
 		sec
-		ldy #$00
 
 		.if (.not .blank({fail_value}))
-			lda #fail_value
+			SDK_get_AY fail_value
+
+			; Si mode immediat, on force Y à 0
+			.if SDK::inst_mode = 1
+				ldy #$00
+			.endif
+			;ldy #>(fail_value)
+			;lda #<(fail_value)
 		.else
+			ldy #$00
 			tya
 		.endif
 
-;	.endif
 	.elseif (.not .blank({fail_value}))
-;	.if (.not .blank({fail_value}))
-		ldy #$00
-		lda #fail_value
+		SDK_get_AY fail_value
+
+		; Si mode immediat, on force Y à 0
+		.if SDK::inst_mode = 1
+			ldy #$00
+		.endif
+		;ldy #>(fail_value)
+		;lda #<(fail_value)
 	.endif
 
 		rts
