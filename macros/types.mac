@@ -1,0 +1,70 @@
+; Si non activé, il faut ajouter un ':' aprés les .ident()
+.feature labels_without_colons
+
+;----------------------------------------------------------------------
+; Macros
+;----------------------------------------------------------------------
+.define unsigned
+.define typedef
+
+.macro char arg
+	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
+;		.out .string(.left(1,{arg}))
+;		.out ".byte"
+;		.out .string(.mid(2,1,{arg}))
+
+		; /!\ ATTENTION: comportement différent de .byte au sein d'un
+		; .struct ou en dehors.
+		; .byte 2 ->
+		;	- dans .struct, reserve 2 octets.
+		;	- hors .struct reserve un octet avec la valeur 2
+		; .ident(.string(.left(1,{arg}))) .byte .mid(2,1,{arg})
+
+		.ident(.string(.left(1,{arg}))) .res .mid(2,1,{arg})
+	.else
+		; /!\ .byte sans argument est valide dans .struct mais
+		; nécessite un argument en dehors d'un .struct
+		; .ident(.string(arg)) .byte
+		.ident(.string(arg)) .res 1
+	.endif
+.endmacro
+
+.macro short arg
+	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
+		; Cf remarque dans la macro char
+		; .ident(.string(.left(1,{arg}))) .word .mid(2,1,{arg})
+		.ident(.string(.left(1,{arg}))) .res 2*.mid(2,1,{arg})
+	.else
+		; Cf remarque dans la macro char
+		; .ident(.string(arg)) .word
+		.ident(.string(arg)) .res 2
+	.endif
+.endmacro
+
+.macro long arg
+	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
+		; Cf remarque dans la macro char
+		; .ident(.string(.left(1,{arg}))) .dword .mid(2,1,{arg})
+		.ident(.string(.left(1,{arg}))) .res 4*.mid(2,1,{arg})
+	.else
+		; Cf remarque dans la macro char
+		;.ident(.string(arg)) .dword
+		.ident(.string(arg)) .res 4
+	.endif
+.endmacro
+
+.macro struct st_name, ptr
+	; /!\ Nepeut pas être utiliser dans un .struct/.endsctruct
+	; A priori, .repeat, .out,.. ne sont pas utilisables dans .struct/.endstruct
+	.if (.match(.mid(1,1,{ptr}), [) .and .match(.right(1,{ptr}), {]}))
+		.repeat .mid(2,1,{ptr}), I
+			.ident(.sprintf("%s%d", .string(.left(1,{ptr})), I)) .tag st_name
+;			.ident(.sprintf("%s%d", .string(.left(1,{ptr})), I)) .res .sizeof(st_name)
+		.endrep
+	.else
+		.ident(.string(arg)) .tag st_name
+	.endif
+
+.endmacro
+
+
