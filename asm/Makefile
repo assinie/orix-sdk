@@ -2,7 +2,7 @@
 # Spécifique au Projet
 # LIB
 
-CC65PATH = ../../../cc65/bin
+CC65PATH = ../../cc65/bin
 PROJECT = orix-sdk
 BUILDPATH = ../build/lib
 
