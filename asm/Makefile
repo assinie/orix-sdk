@@ -2,7 +2,6 @@
 # Spécifique au Projet
 # LIB
 
-CC65PATH = ../../cc65/bin
 PROJECT = orix-sdk
 BUILDPATH = ../build/lib
 
@@ -21,20 +20,28 @@ VERBOSE ?= 0
 # Définition des outils
 #
 
-AS = $(CC65PATH)/ca65
-LD = $(CC65PATH)/ld65
-AR = $(CC65PATH)/ar65
+ifeq ($(CC65_HOME),)
+	CC = cc65
+	AS = ca65
+	LD = ld65
+	AR = ar65
+else
+	CC = $(CC65_HOME)/cc65
+	AS = $(CC65_HOME)/ca65
+	LD = $(CC65_HOME)/ld65
+	AR = $(CC65_HOME)/ar65
+endif
 
 #
 # Définition des options pour les outils
 #
 
 ifeq ($(DEBUG),yes)
-	ASFLAGS = -t telestrat -I $(BUILDPATH) -I $(SDK_PATH) -I $(SHELL_PATH) -I $(KERNEL_PATH) -D VERBOSE_LEVEL=$(VERBOSE) -D DEBUG --list-bytes 0 -l $(BUILDPATH)/$(PROJECT).lst --debug-info
-	LDFLAGS = -t telestrat -Ln $(BUILDPATH)/$(PROJECT).ca.sym -m $(BUILDPATH)/$(PROJECT).map
+	ASFLAGS = -t telestrat -I $(BUILD_PATH) -I $(SDK_PATH) -I $(SHELL_PATH) -I $(KERNEL_PATH) -D VERBOSE_LEVEL=$(VERBOSE) -D DEBUG --list-bytes 0 -l $(BUILD_PATH)/$(PROJECT).lst --debug-info
+	LDFLAGS = -t telestrat -Ln $(BUILD_PATH)/$(PROJECT).ca.sym -m $(BUILD_PATH)/$(PROJECT).map
 	ARFLAGS =
 else
-	ASFLAGS = -t telestrat -I $(BUILDPATH) -I $(SDK_PATH) -I $(SHELL_PATH) -I $(KERNEL_PATH) -D VERBOSE_LEVEL=$(VERBOSE)
+	ASFLAGS = -t telestrat -I $(BUILD_PATH) -I $(SDK_PATH) -I $(SHELL_PATH) -I $(KERNEL_PATH) -D VERBOSE_LEVEL=$(VERBOSE)
 	LDFLAGS = -t telestrat
 	ARFLAGS = v
 endif
@@ -45,36 +52,36 @@ endif
 #
 
 SRC = $(wildcard *.s)
-OBJS= $(addprefix $(BUILDPATH)/, $(patsubst %.s,%.o, $(SRC)))
+OBJS= $(addprefix $(BUILD_PATH)/, $(patsubst %.s,%.o, $(SRC)))
 LIB = $(PROJECT).lib
 
-all: $(BUILDPATH)/$(LIB)
+all: $(BUILD_PATH)/$(LIB)
 
 
-$(BUILDPATH)/%.o: %.s
+$(BUILD_PATH)/%.o: %.s
 	@echo "AS target: $@ member: $% 1st prereq: $< stem: $*"
 	@echo "  newer: $? all prereq: $^"
 	$(AS) $(ASFLAGS) -o $@ $<
 
-$(BUILDPATH)/$(LIB): $(OBJS)
+$(BUILD_PATH)/$(LIB): $(OBJS)
 	@echo "build lib target: $@ member: $% 1st prereq: $< stem: $*"
 	@echo "  newer: $? all prereq: $^"
 	$(AR) $(ARFLAGS) r $@ $?
 
 configure:
-	@echo "Create $(BUILDPATH)/build.inc file"
-	@mkdir -p $(BUILDPATH)
-	@#date +'.define __DATE__ "__DATE__"'           > $(BUILDPATH)/build.inc
-	@date +'.define __DATE__ "%F %R"'               > $(BUILDPATH)/build.inc
-	@echo  ".define __VERSION__ \"${VERSION}\""     >> $(BUILDPATH)/build.inc
+	@echo "Create $(BUILD_PATH)/build.inc file"
+	@mkdir -p $(BUILD_PATH)
+	@#date +'.define __DATE__ "__DATE__"'           > $(BUILD_PATH)/build.inc
+	@date +'.define __DATE__ "%F %R"'               > $(BUILD_PATH)/build.inc
+	@echo  ".define __VERSION__ \"${VERSION}\""     >> $(BUILD_PATH)/build.inc
 
 
 .PHONY: clean mrproper
 
 
 clean:
-	cd $(BUILDPATH) && rm -f *.o
+	cd $(BUILD_PATH) && rm -f *.o
 
 
 mrproper: clean
-	cd $(BUILDPATH) && rm -f $(LIB) *.lst *.sym .depend build.inc
+	cd $(BUILD_PATH) && rm -f $(LIB) *.lst *.sym .depend build.inc
