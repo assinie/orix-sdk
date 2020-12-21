@@ -3,7 +3,7 @@
 # LIB
 
 PROJECT = orix-sdk
-BUILDPATH = ../build/lib
+BUILD_PATH = ../build/lib
 
 KERNEL_PATH = ../../orix-software/
 SHELL_PATH = ../../orix-software/
