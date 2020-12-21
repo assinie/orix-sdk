@@ -26,10 +26,10 @@ ifeq ($(CC65_HOME),)
 	LD = ld65
 	AR = ar65
 else
-	CC = $(CC65_HOME)/cc65
-	AS = $(CC65_HOME)/ca65
-	LD = $(CC65_HOME)/ld65
-	AR = $(CC65_HOME)/ar65
+	CC = $(CC65_HOME)/bin/cc65
+	AS = $(CC65_HOME)/bin/ca65
+	LD = $(CC65_HOME)/bin/ld65
+	AR = $(CC65_HOME)/bin/ar65
 endif
 
 #
