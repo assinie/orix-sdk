@@ -198,10 +198,10 @@
 	.endif
 
 	.if (.not .blank({oom_msg_ptr}))
-		check_regs AY, oom_msg_ptr, fail_value
+		check_regs AY, 0, oom_msg_ptr, fail_value
 
 	.elseif (.not .blank({fail_value}))
-		check_regs AY, oom_msg_ptr, fail_value
+		check_regs AY, 0, oom_msg_ptr, fail_value
 	.endif
 
 	.if (.not .blank({ptr}))
@@ -278,10 +278,10 @@
 
 
 	.if (.not .blank({oom_msg_ptr}))
-		check_regs AY, oom_msg_ptr, fail_value
+		check_regs AX, $ff, oom_msg_ptr, fail_value
 
 	.elseif (.not .blank({fail_value}))
-		check_regs AY, oom_msg_ptr, fail_value
+		check_regs AX, $ff, oom_msg_ptr, fail_value
 	.endif
 
 	.if (.not .blank({ptr}))
@@ -505,32 +505,39 @@
 ; check_regs
 ;
 ; usage:
-;	check_regs regs [,oom_msg_ptr] [,fail_value]
+;	check_regs regs [,err_value] [,oom_msg_ptr] [,fail_value]
 ;
 ; Note:
 ;	regs is one of: AX, AY, XY, XA, YA, YX
 ;
-; Check regs pair, display oom_msg_ptr and return if regs pairs is null
+; Check regs pair, display oom_msg_ptr and return if regs pairs is err_value
 ;----------------------------------------------------------------------
-.macro check_regs regs, oom_msg_ptr, fail_value
+.macro check_regs regs, err_value, oom_msg_ptr, fail_value
 	.local exit
+	.local error
+
+	.if .not .blank(err_value)
+		error .set err_value
+	.else
+		error .set 0
+	.endif
 
 	.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
-		cpy #$00
+		cpy #error
 		bne exit
-		cmp #$00
+		cmp #error
 		bne exit
 
 	.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
-		cpx #$00
+		cpx #error
 		bne exit
-		cmp #$00
+		cmp #error
 		bne exit
 
 	.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
-		cpx #$00
+		cpx #error
 		bne exit
-		cpy #$00
+		cpy #error
 		bne exit
 
 	.else
@@ -553,7 +560,7 @@
 			;ldy #>(fail_value)
 			;lda #<(fail_value)
 		.else
-			ldy #$00
+			ldy #$ff
 			tya
 		.endif
 

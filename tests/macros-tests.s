@@ -760,12 +760,12 @@ cursor04
 ; check_regs
 ;
 ; usage:
-;	check_regs regs [, oom_msg_ptr] [, fail_value]
+;	check_regs regs [,err_value] [,oom_msg_ptr] [,fail_value]
 ;
 ; Note:
 ;	regs is one of: AX, AY, XY, XA, YA, YX
 ;
-; Check regs pair and display oom_msg_ptr and return if regs pairs is null
+; Check regs pair, display oom_msg_ptr and return if regs pairs is err_value
 ;----------------------------------------------------------------------
 check_regs01
 	check_regs AX
@@ -788,62 +788,82 @@ check_regs06
 	;----------------------------------------------------------------------
 
 check_regs11
-	check_regs AX, msg
+	check_regs AX, $ff
 
 check_regs12
-	check_regs AY, msg
+	check_regs AY, $ff
 
 check_regs13
-	check_regs XA, msg
+	check_regs XA, $ff
 
 check_regs14
-	check_regs XY, msg
+	check_regs XY, $ff
 
 check_regs15
-	check_regs YA, msg
+	check_regs YA, $ff
 
 check_regs16
-	check_regs YX, msg
+	check_regs YX, $ff
 
 	;----------------------------------------------------------------------
 
 check_regs21
-	check_regs AX, , $01
+	check_regs AX, , msg
 
 check_regs22
-	check_regs AY, , $01
+	check_regs AY, , msg
 
 check_regs23
-	check_regs XA, , $01
+	check_regs XA, , msg
 
 check_regs24
-	check_regs XY, , $01
+	check_regs XY, , msg
 
 check_regs25
-	check_regs YA, , $01
+	check_regs YA, , msg
 
 check_regs26
-	check_regs YX, , $01
+	check_regs YX, , msg
 
 	;----------------------------------------------------------------------
 
 check_regs31
-	check_regs AX, msg, $01
+	check_regs AX, , , $01
 
 check_regs32
-	check_regs AY, msg, $01
+	check_regs AY, , , $01
 
 check_regs33
-	check_regs XA, msg, $01
+	check_regs XA, , , $01
 
 check_regs34
-	check_regs XY, msg, $01
+	check_regs XY, , , $01
 
 check_regs35
-	check_regs YA, msg, $01
+	check_regs YA, , , $01
 
 check_regs36
-	check_regs YX, msg, $01
+	check_regs YX, , , $01
+
+	;----------------------------------------------------------------------
+
+check_regs41
+	check_regs AX, , msg, $01
+
+check_regs42
+	check_regs AY, , msg, $01
+
+check_regs43
+	check_regs XA, , msg, $01
+
+check_regs44
+	check_regs XY, , msg, $01
+
+check_regs45
+	check_regs YA, , msg, $01
+
+check_regs46
+	check_regs YX, , msg, $01
 
 
 ;======================================================================

@@ -1,24 +1,77 @@
+;======================================================================
+;
+;			Extensions assembleur 6502
+;
+;======================================================================
 .include "macros/sdk.mac"
 
+;----------------------------------------------------------------------
+; bge destination
+;
+; Branch if Greater or Equal (unsigned)
+;
+;----------------------------------------------------------------------
 .macro bge label
 	bcs label
 .endmacro
 
+
+;----------------------------------------------------------------------
+; blt destination
+;
+; Branch if Less Than (unsigned)
+;
+;----------------------------------------------------------------------
 .macro blt label
 	bcc label
 .endmcaro
 
+
+;----------------------------------------------------------------------
+; Load AY
+;
+; lday address
+; Load AY with the word at address/address+1
+;
+; Sortie:
+;        A: address
+;        Y: address+1
+;	 P: Modifié en fonction de (address+1)
+;----------------------------------------------------------------------
 .macro lday operand
 	; SDK_get_AY operand
+	; php
 	lda address
 	ldy address+1
+	; plp
 .endmacro
 
+
+;----------------------------------------------------------------------
+; Store AY
+;
+; stay address
+; Store AY to address/address+1
+;
+; Entrée:
+;        A: value
+;        Y: value+1
+
+; Sortie:
+;----------------------------------------------------------------------
 .macro stay address
 	sta address
 	sty address+1
 .endmacro
 
+;----------------------------------------------------------------------
+; exg re1, reg2
+;
+; EXchanGe values of reg1 and re2
+;
+; Sortie:
+;	P: Conservé
+;----------------------------------------------------------------------
 .macro exg r1, r2
 	; Exchange register r1 and register r2
 	;
@@ -149,6 +202,26 @@
 
 .endmacro
 
+
+;----------------------------------------------------------------------
+; swap re1, reg2
+;
+; Alias for exg reg1, reg2
+;----------------------------------------------------------------------
+.macro swap r1, r2
+	exg r1,r2
+.endmacro
+
+
+;----------------------------------------------------------------------
+; move_w destination, source
+;
+; Move word at address pointed by source to address pointed by destination
+;
+; Sortie:
+;        A: Modifié
+;        P: Modifié
+;----------------------------------------------------------------------
 .macro move_w dest, src
 	;php		; Sauvegarde de A & P
 	;pha
@@ -160,6 +233,11 @@
 	;plp
 .endmacro
 
+
+;----------------------------------------------------------------------
+;
+;
+;----------------------------------------------------------------------
 	.code
 	MODULE _start, _end_module, _start
 

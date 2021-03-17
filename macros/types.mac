@@ -1,3 +1,8 @@
+;======================================================================
+;
+;			Simulation des déclarations "C"
+;
+;======================================================================
 ; Si non activé, il faut ajouter un ':' aprés les .ident()
 .feature labels_without_colons
 
@@ -7,6 +12,10 @@
 .define unsigned
 .define typedef
 
+;----------------------------------------------------------------------
+; char var_name
+; char array_name[value]
+;----------------------------------------------------------------------
 .macro char arg
 	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
 ;		.out .string(.left(1,{arg}))
@@ -29,6 +38,11 @@
 	.endif
 .endmacro
 
+
+;----------------------------------------------------------------------
+; short var_name
+; short array_name[value]
+;----------------------------------------------------------------------
 .macro short arg
 	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
 		; Cf remarque dans la macro char
@@ -41,6 +55,11 @@
 	.endif
 .endmacro
 
+
+;----------------------------------------------------------------------
+; long var_name
+; long array_name[value]
+;----------------------------------------------------------------------
 .macro long arg
 	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
 		; Cf remarque dans la macro char
@@ -53,6 +72,10 @@
 	.endif
 .endmacro
 
+
+;----------------------------------------------------------------------
+; struct struc_name, struct_ptr
+;----------------------------------------------------------------------
 .macro struct st_name, ptr
 	; /!\ Nepeut pas être utiliser dans un .struct/.endsctruct
 	; A priori, .repeat, .out,.. ne sont pas utilisables dans .struct/.endstruct
