@@ -173,7 +173,7 @@
 ;	malloc value
 ;
 ; Note:
-;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
+;	- if parameter 'ptr' is present, store resulting AX in ptr &ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
 ;		'oom_msg_ptr' and return if AY is null (ie malloc error)
 ;
@@ -206,7 +206,7 @@
 
 	.if (.not .blank({ptr}))
 		sta ptr
-		sty ptr+1
+		stx ptr+1
 	.endif
 
 .endmacro
@@ -234,7 +234,7 @@
 
 	.else
 		; assume absolute
-		; .out "Aboslute mode"
+		; .out "Absolute mode"
 		.error "error: indirect mode only"
 	.endif
 
@@ -342,20 +342,18 @@
 
 	.else
 		; assume absolute
-		; .out "Aboslute mode"
+		; .out "Absolute mode"
 		.error "error: indirect mode only"
 	.endif
 
 	.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
 		;lda fp
 		;ldy fp+1
-		jsr XFREE_ROUTINE
 		jsr XCLOSE_ROUTINE
 
 	.else
 		;lda fp
 		;ldy fp+1
-		.byte $00, XFREE
 		.byte $00, XCLOSE
 
 	.endif
