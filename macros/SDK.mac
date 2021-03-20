@@ -116,10 +116,15 @@
 
 	.elseif (.match(.left(1, {str}), {(}) )
 		;.out "Mode: indirect"
-		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
-			jsr XWSTR0_ROUTINE
+		.if (.match(.right(1,{str}), {)}))
+
+			.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+				jsr XWSTR0_ROUTINE
+			.else
+				.byte $00, XWSTR0
+			.endif
 		.else
-			.byte $00, XWSTR0
+			.error "error: ')' missing"
 		.endif
 
 	.else
@@ -172,7 +177,7 @@
 ; Note:
 ;	- if parameter 'ptr' is present, store resulting AX in ptr &ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
-;		'oom_msg_ptr' and return if AY is null (ie malloc error)
+;		'oom_msg_ptr' and return if AX is null (ie malloc error)
 ;
 ; Call XMALLOC function
 ;
@@ -239,9 +244,9 @@
 ;
 ; note:
 ;	- file may be: (ptr), address
-;	- if parameter 'ptr' is present, store resulting AY in ptr & ptr+1
+;	- if parameter 'ptr' is present, store resulting AX in ptr & ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
-;		'oom_msg_ptr' and return if AY is null (ie malloc error)
+;		'oom_msg_ptr' and return if AX is $FFFF (ie XOPEN error)
 ;
 ; Call XOPEN function
 ;----------------------------------------------------------------------
@@ -273,7 +278,7 @@
 
 	.if (.not .blank({ptr}))
 		sta ptr
-		sty ptr+1
+		stx ptr+1
 	.endif
 
 .endmacro

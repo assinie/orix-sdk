@@ -1,5 +1,5 @@
 ; da65 V2.19 - Git 59c58acbe
-; Created:    2021-03-20 15:45:52
+; Created:    2021-03-20 18:07:25
 ; Input file: macros-tests
 ; Page:       1
 
@@ -805,7 +805,7 @@ fopen11:lda     #$34                            ; 13C9
         ldy     #$01                            ; 13CD
         brk     #$30                            ; 13CF
         sta     ptr1                            ; 13D1
-        sty     ptr1+1                          ; 13D4
+        stx     ptr1+1                          ; 13D4
 ;
 ; fopen (ptr1), O_RDONLY, , ptr1
 ;
@@ -814,7 +814,7 @@ fopen12:lda     ptr1                            ; 13D7
         ldy     #$01                            ; 13DD
         brk     #$30                            ; 13DF
         sta     ptr1                            ; 13E1
-        sty     ptr1+1                          ; 13E4
+        stx     ptr1+1                          ; 13E4
 ;
 ; fopen src, O_RDONLY, , ptr1
 ;
@@ -823,7 +823,7 @@ fopen13:lda     #$88                            ; 13E7
         ldy     #$01                            ; 13EB
         brk     #$30                            ; 13ED
         sta     ptr1                            ; 13EF
-        sty     ptr1+1                          ; 13F2
+        stx     ptr1+1                          ; 13F2
 ;
 ; fopen #$1234, O_RDONLY, , , msg
 ;
@@ -953,7 +953,7 @@ fopen41:lda     #$34                            ; 1489
 
 ; ----------------------------------------------------------------------------
 L14A4:  sta     ptr1                            ; 14A4
-        sty     ptr1+1                          ; 14A7
+        stx     ptr1+1                          ; 14A7
 ;
 ; fopen (ptr1), O_RDONLY, , ptr1, msg
 ;
@@ -975,7 +975,7 @@ fopen42:lda     ptr1                            ; 14AA
 
 ; ----------------------------------------------------------------------------
 L14C7:  sta     ptr1                            ; 14C7
-        sty     ptr1+1                          ; 14CA
+        stx     ptr1+1                          ; 14CA
 ;
 ; fopen src, O_RDONLY, , ptr1, msg
 ;
@@ -997,7 +997,7 @@ fopen43:lda     #$88                            ; 14CD
 
 ; ----------------------------------------------------------------------------
 L14E8:  sta     ptr1                            ; 14E8
-        sty     ptr1+1                          ; 14EB
+        stx     ptr1+1                          ; 14EB
 ;
 ; fopen #$1234, O_RDONLY, , ptr1 , msg, $EC
 ;
@@ -1019,7 +1019,7 @@ fopen44:lda     #$34                            ; 14EE
 
 ; ----------------------------------------------------------------------------
 L150A:  sta     ptr1                            ; 150A
-        sty     ptr1+1                          ; 150D
+        stx     ptr1+1                          ; 150D
 ;
 ; fopen (ptr1), O_RDONLY, , ptr1, msg, $EC
 ;
@@ -1041,7 +1041,7 @@ fopen45:lda     ptr1                            ; 1510
 
 ; ----------------------------------------------------------------------------
 L152E:  sta     ptr1                            ; 152E
-        sty     ptr1+1                          ; 1531
+        stx     ptr1+1                          ; 1531
 ;
 ; fopen src, O_RDONLY, , ptr1, msg, $EC
 ;
@@ -1063,7 +1063,7 @@ fopen46:lda     #$88                            ; 1534
 
 ; ----------------------------------------------------------------------------
 L1550:  sta     ptr1                            ; 1550
-        sty     ptr1+1                          ; 1553
+        stx     ptr1+1                          ; 1553
 ;
 ; fopen #$1234, O_RDONLY, , ptr1 , , $EC
 ;
@@ -1081,7 +1081,7 @@ fopen47:lda     #$34                            ; 1556
 
 ; ----------------------------------------------------------------------------
 L156B:  sta     ptr1                            ; 156B
-        sty     ptr1+1                          ; 156E
+        stx     ptr1+1                          ; 156E
 ;
 ; fopen (ptr1), O_RDONLY, , ptr1, , $EC
 ;
@@ -1099,7 +1099,7 @@ fopen48:lda     ptr1                            ; 1571
 
 ; ----------------------------------------------------------------------------
 L1588:  sta     ptr1                            ; 1588
-        sty     ptr1+1                          ; 158B
+        stx     ptr1+1                          ; 158B
 ;
 ; fopen src, O_RDONLY, , ptr1, , $EC
 ;
@@ -1117,7 +1117,7 @@ fopen49:lda     #$88                            ; 158E
 
 ; ----------------------------------------------------------------------------
 L15A3:  sta     ptr1                            ; 15A3
-        sty     ptr1+1                          ; 15A6
+        stx     ptr1+1                          ; 15A6
 ;
 ; fopen #$1234, O_RDONLY, TELEMON
 ;
@@ -1147,7 +1147,7 @@ fopen61:lda     #$34                            ; 15C6
         ldy     #$01                            ; 15CA
         jsr     XOPEN_ROUTINE                   ; 15CC
         sta     ptr1                            ; 15CF
-        sty     ptr1+1                          ; 15D2
+        stx     ptr1+1                          ; 15D2
 ;
 ; fopen (ptr1), O_RDONLY, TELEMON, ptr1
 ;
@@ -1156,7 +1156,7 @@ fopen62:lda     ptr1                            ; 15D5
         ldy     #$01                            ; 15DB
         jsr     XOPEN_ROUTINE                   ; 15DD
         sta     ptr1                            ; 15E0
-        sty     ptr1+1                          ; 15E3
+        stx     ptr1+1                          ; 15E3
 ;
 ; fopen src, O_RDONLY, TELEMON, ptr1
 ;
@@ -1165,7 +1165,7 @@ fopen63:lda     #$88                            ; 15E6
         ldy     #$01                            ; 15EA
         jsr     XOPEN_ROUTINE                   ; 15EC
         sta     ptr1                            ; 15EF
-        sty     ptr1+1                          ; 15F2
+        stx     ptr1+1                          ; 15F2
 ;
 ; fopen #$1234, O_RDONLY, TELEMON, , msg
 ;
@@ -1355,7 +1355,7 @@ fopen81:lda     #$34                            ; 16E8
 
 ; ----------------------------------------------------------------------------
 L1704:  sta     ptr1                            ; 1704
-        sty     ptr1+1                          ; 1707
+        stx     ptr1+1                          ; 1707
 ;
 ; fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg
 ;
@@ -1377,7 +1377,7 @@ fopen82:lda     ptr1                            ; 170A
 
 ; ----------------------------------------------------------------------------
 L1728:  sta     ptr1                            ; 1728
-        sty     ptr1+1                          ; 172B
+        stx     ptr1+1                          ; 172B
 ;
 ; fopen src, O_RDONLY, TELEMON, ptr1, msg
 ;
@@ -1399,7 +1399,7 @@ fopen83:lda     #$88                            ; 172E
 
 ; ----------------------------------------------------------------------------
 L174A:  sta     ptr1                            ; 174A
-        sty     ptr1+1                          ; 174D
+        stx     ptr1+1                          ; 174D
 ;
 ; fopen #$1234, O_RDONLY, TELEMON, ptr1, msg, $EC
 ;
@@ -1421,7 +1421,7 @@ fopen84:lda     #$34                            ; 1750
 
 ; ----------------------------------------------------------------------------
 L176D:  sta     ptr1                            ; 176D
-        sty     ptr1+1                          ; 1770
+        stx     ptr1+1                          ; 1770
 ;
 ; fopen (ptr1), O_RDONLY, TELEMON, ptr1, msg, $EC
 ;
@@ -1443,7 +1443,7 @@ fopen85:lda     ptr1                            ; 1773
 
 ; ----------------------------------------------------------------------------
 L1792:  sta     ptr1                            ; 1792
-        sty     ptr1+1                          ; 1795
+        stx     ptr1+1                          ; 1795
 ;
 ; fopen src, O_RDONLY, TELEMON, ptr1, msg, $EC
 ;
@@ -1465,7 +1465,7 @@ fopen86:lda     #$88                            ; 1798
 
 ; ----------------------------------------------------------------------------
 L17B5:  sta     ptr1                            ; 17B5
-        sty     ptr1+1                          ; 17B8
+        stx     ptr1+1                          ; 17B8
 ;
 ; fopen #$1234, O_RDONLY, TELEMON, ptr1, , $EC
 ;
@@ -1483,7 +1483,7 @@ fopen87:lda     #$34                            ; 17BB
 
 ; ----------------------------------------------------------------------------
 L17D1:  sta     ptr1                            ; 17D1
-        sty     ptr1+1                          ; 17D4
+        stx     ptr1+1                          ; 17D4
 ;
 ; fopen (ptr1), O_RDONLY, TELEMON, ptr1, , $EC
 ;
@@ -1501,7 +1501,7 @@ fopen88:lda     ptr1                            ; 17D7
 
 ; ----------------------------------------------------------------------------
 L17EF:  sta     ptr1                            ; 17EF
-        sty     ptr1+1                          ; 17F2
+        stx     ptr1+1                          ; 17F2
 ;
 ; fopen src, O_RDONLY, TELEMON, ptr1, , $EC
 ;
@@ -1519,7 +1519,7 @@ fopen89:lda     #$88                            ; 17F5
 
 ; ----------------------------------------------------------------------------
 L180B:  sta     ptr1                            ; 180B
-        sty     ptr1+1                          ; 180E
+        stx     ptr1+1                          ; 180E
 ;
 ; fread #$1234, #$1234, dummy, dummy
 ;
