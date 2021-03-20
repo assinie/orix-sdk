@@ -20,13 +20,13 @@
 */
 
 /*
-range { start $1C67; end $1C70; name "src"; type bytetable; };
-range { start $1C71; end $1C7A; name "dst"; type bytetable; };
-range { start $1C7B; end $1C7C; name "ptr1"; type addrtable; };
-range { start $1C7D; end $1C7E; name "ptr2"; type addrtable; };
-range { start $1C7F; end $1C85; name "msg"; type texttable; };
-label { addr $1C86; name "_argc"; };
-range { start $1C87; end $1C88; name "_argv"; type addrtable; };
+range { start $1CD7; end $1CE0; name "src"; type bytetable; };
+range { start $1CE1; end $1CEA; name "dst"; type bytetable; };
+range { start $1CEB; end $1CEC; name "ptr1"; type addrtable; };
+range { start $1CED; end $1CEE; name "ptr2"; type addrtable; };
+range { start $1CEF; end $1CF5; name "msg"; type texttable; };
+label { addr $1CF6; name "_argc"; };
+range { start $1CF7; end $1CF8; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -50,6 +50,11 @@ range { start $1C87; end $1C88; name "_argv"; type addrtable; };
 	XMKDIR = $4b
 	XMALLOC = $5b
 	XFREE = $62
+
+	; Path Management
+	XGETCWD  = $48          ; Get current CWD
+	XPUTCWD  = $49          ; Chdir
+
 
 	O_RDONLY = $01
 
@@ -111,6 +116,12 @@ XMKDIR_ROUTINE
 	rts
 
 XFREE_ROUTINE
+	rts
+
+XGETCWD_ROUTINE
+	rts
+
+XPUTCWD_ROUTINE
 	rts
 
 
@@ -636,10 +647,10 @@ fclose02
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	mkdir ptr
+;	mkdir ptr [,TELEMON]
 ;
 ; note:
-;	str may be: (ptr), address
+;	ptr may be: (ptr), address
 ;
 ; Call XMKDIR function
 ;----------------------------------------------------------------------
@@ -662,6 +673,62 @@ mkdir12
 
 mkdir13
 	mkdir src, TELEMON
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	chdir ptr [,TELEMON]
+;
+; note:
+;	ptr may be: (ptr), address
+;
+; Call XPUTCWD function
+;----------------------------------------------------------------------
+chdir01
+	chdir #$1234
+
+chdir02
+	chdir (ptr1)
+
+chdir03
+	chdir src
+
+	;----------------------------------------------------------------------
+
+chdir11
+	chdir #$1234, TELEMON
+
+chdir12
+	chdir (ptr1), TELEMON
+
+chdir13
+	chdir src, TELEMON
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	getcwd ptr [,TELEMON]
+;
+; note:
+;	ptr may be: ptr, address
+;
+; Call XGETCWD function
+;----------------------------------------------------------------------
+getcwd01
+	getcwd ptr1
+
+getcwd02
+	getcwd $5678
+
+	;----------------------------------------------------------------------
+
+getcwd11
+	getcwd ptr1, TELEMON
+
+getcwd12
+	getcwd $5678, TELEMON
 
 
 ;======================================================================
