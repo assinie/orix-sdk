@@ -105,9 +105,8 @@
 
 
 	SDK_imm_or_ind_or_abs str
-	;SDK::inst_mode .set $01
 
-	.if SDK::inst_mode = 1
+	.if (.match (.left (1, {str}), #))
 		;.out "Mode: immediat"
 		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
 			jsr XWR0_ROUTINE
@@ -115,7 +114,7 @@
 			.byte $00, XWR0
 		.endif
 
-	.elseif SDK::inst_mode = 2
+	.elseif (.match(.left(1, {str}), {(}) )
 		;.out "Mode: indirect"
 		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
 			jsr XWSTR0_ROUTINE
@@ -123,7 +122,7 @@
 			.byte $00, XWSTR0
 		.endif
 
-	.elseif SDK::inst_mode = 3
+	.else
 		;.out "Mode:absolu"
 		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
 			jsr XWSTR0_ROUTINE
@@ -131,8 +130,6 @@
 			.byte $00, XWSTR0
 		.endif
 
-	.else
-		.error .sprintf("Incorrect mode: %s", .string(str))
 	.endif
 
 
@@ -185,17 +182,7 @@
 	;SDK_imm_or_ind_or_abs size
 	SDK_get_AY size
 
-	;----------------------------------------------------------
-	;		   Le mode immediat n'accepte qu'une valeur
-	;		   sur 1 octet.
-	;----------------------------------------------------------
-	.if SDK::inst_mode = $01
-		ldy #$00
-	.endif
-
-	.if SDK::inst_mode <> $ff
-		.byte $00, XMALLOC
-	.endif
+	.byte $00, XMALLOC
 
 	.if (.not .blank({oom_msg_ptr}))
 		check_regs AY, 0, oom_msg_ptr, fail_value
@@ -551,10 +538,6 @@
 		.if (.not .blank({fail_value}))
 			SDK_get_AY fail_value
 
-			; Si mode immediat, on force Y à 0
-			.if SDK::inst_mode = 1
-				ldy #$00
-			.endif
 			;ldy #>(fail_value)
 			;lda #<(fail_value)
 		.else
@@ -565,10 +548,6 @@
 	.elseif (.not .blank({fail_value}))
 		SDK_get_AY fail_value
 
-		; Si mode immediat, on force Y à 0
-		.if SDK::inst_mode = 1
-			ldy #$00
-		.endif
 		;ldy #>(fail_value)
 		;lda #<(fail_value)
 	.endif

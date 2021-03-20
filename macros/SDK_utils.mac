@@ -1,5 +1,4 @@
 .scope SDK
-	inst_mode .set $ff
 
 	;----------------------------------------------------------------------
 	; accept:
@@ -8,12 +7,9 @@
 	;		   - address	-> lda #<address / ldy #>address
 	;----------------------------------------------------------------------
 	.macro SDK_imm_or_ind_or_abs arg
-		SDK::inst_mode .set $ff
 
 		.if (.match (.left (1, {arg}), #))
 			; .out "Immediate mode"
-
-			SDK::inst_mode .set $01
 
 			lda #< ( .right (.tcount ({arg})-1, {arg}) )
 
@@ -21,8 +17,6 @@
 			; Indirect
 			.if (.match(.right(1,{arg}), {)}))
 				; .out"Indirect mode"
-
-				SDK::inst_mode .set $02
 
 				lda 0+(.mid (1,.tcount ({arg})-2, {arg}))
 				ldy 1+(.mid (1,.tcount ({arg})-2, {arg}))
@@ -34,8 +28,6 @@
 		.else
 			; assume absolute
 			; .out "Absolute mode"
-
-			SDK::inst_mode .set $03
 
 			lda #<(arg)
 			ldy #>(arg)
@@ -51,12 +43,9 @@
 	;		   - address	-> lda #<address / ldy #>address
 	;----------------------------------------------------------------------
 	.macro SDK_get_AY param
-		SDK::inst_mode .set $ff
 
 		.if (.match (.left (1, {param}), #))
 			; .out "Immediate mode"
-
-			SDK::inst_mode .set $01
 
 			lda #< (.right(.tcount({param})-1, {param}))
 			ldy #> (.right(.tcount({param})-1, {param}))
@@ -65,8 +54,6 @@
 			; Indirect
 			.if (.match(.right(1,{param}), {)}))
 				; .out"Indirect mode"
-
-				SDK::inst_mode .set $02
 
 				lda 0+( .mid(1, .tcount({param})-2, {param}) )
 				ldy 1+( .mid(1, .tcount({param})-2, {param}) )
@@ -78,8 +65,6 @@
 		.else
 			; assume absolute
 			; .out "Aboslute mode"
-
-			SDK::inst_mode .set $03
 
 			lda #<(param)
 			ldy #>(param)
@@ -93,12 +78,8 @@
 	;		   - address	-> lda #<address / ldx #>address
 	;----------------------------------------------------------------------
 	.macro SDK_get_AX param
-		SDK::inst_mode .set $ff
-
 		.if (.match (.left (1, {param}), #))
 			; .out "Immediate mode"
-
-			SDK::inst_mode .set $01
 
 			lda #< (.right(.tcount({param})-1, {param}))
 			ldx #> (.right(.tcount({param})-1, {param}))
@@ -107,8 +88,6 @@
 			; Indirect
 			.if (.match(.right(1,{param}), {)}))
 				; .out"Indirect mode"
-
-				SDK::inst_mode .set $02
 
 				lda 0+( .mid(1, .tcount({param})-2, {param}) )
 				ldx 1+( .mid(1, .tcount({param})-2, {param}) )
@@ -120,8 +99,6 @@
 		.else
 			; assume absolute
 			; .out "Aboslute mode"
-
-			SDK::inst_mode .set $03
 
 			lda #<(param)
 			ldx #>(param)
