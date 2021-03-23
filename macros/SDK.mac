@@ -175,9 +175,9 @@
 ;	malloc value
 ;
 ; Note:
-;	- if parameter 'ptr' is present, store resulting AX in ptr &ptr+1
+;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
-;		'oom_msg_ptr' and return if AX is null (ie malloc error)
+;		'oom_msg_ptr' and return if AY is null (ie malloc error)
 ;
 ; Call XMALLOC function
 ;
@@ -198,7 +198,7 @@
 
 	.if (.not .blank({ptr}))
 		sta ptr
-		stx ptr+1
+		sty ptr+1
 	.endif
 
 .endmacro
