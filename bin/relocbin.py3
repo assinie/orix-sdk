@@ -40,13 +40,8 @@ def ReadHeader(ftap):
 	Header = {}
 
 	
-	b = ftap.read(1)
-	print(b)
-	if int.from_bytes(b,'little') == 1:
-		b = ftap.read(1) # Fetch 0
-		b = ftap.read(1)
-		if int.from_bytes(b,'little') == 111: # 111='o' this test is really crap 
-			b = ftap.read(2)
+      b = ftap.read(5)
+      if b == b'\x01\x00ori':
 			version = ftap.read(1) #version
 			cpu = ord(ftap.read(1))
 			ostype = ord(ftap.read(1))
