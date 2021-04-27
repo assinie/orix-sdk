@@ -219,7 +219,7 @@ def main():
 		print("Format 1 can be generated because it's not a relocatable format")
 		exit(1)
 
-	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, int(args.formatversion), args.color)
+      diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color)
 
 
 if __name__ == '__main__':
