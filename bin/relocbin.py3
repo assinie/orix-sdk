@@ -69,9 +69,7 @@ def ReadHeader(ftap):
 			print("Size %d : start : %d, end %d ",Header['size'],fileStartAdr,fileEndAdr)
 			return Header
 
-	Header['type'] = 'raw'
-	
-	return Header
+      return False
 
 def diff(file1, file2, output, formatversion, color):
 	i = 0
