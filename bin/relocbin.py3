@@ -208,7 +208,7 @@ def main():
 	parser.add_argument('binaryreferencefileversion1', type=str,  metavar='binaryreferencefileversion1', help='filename to diff')
 	# parser.add_argument('--output', '-o', type=argparse.FileType('wb'), default=sys.stdout, help='MAP filename')
 	parser.add_argument('outputfile', type=str, metavar='outputfile', help='Output binaryfile')
-	parser.add_argument('formatversion', type=str, metavar='formatversion', help='Format version ')
+      parser.add_argument('formatversion', type=int, choices=range(2, 4), metavar='formatversion', help='Format version ')
 	parser.add_argument('--color', '-c', default=False, action='store_true', help='Color output')
 	parser.add_argument('--version', '-v', action='version', version= '%%(prog)s v%s' % __version__)
 
