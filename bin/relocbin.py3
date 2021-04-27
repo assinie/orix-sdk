@@ -38,38 +38,35 @@ def CopyHeader(ftap,binary_version,map):
 
 def ReadHeader(ftap):
 	Header = {}
+	b = ftap.read(5)
+	if b == b'\x01\x00ori':
+		#version
+		version = ftap.read(1)
+		cpu = ord(ftap.read(1))
+		ostype = ord(ftap.read(1))
+		reserved = ftap.read(5) 
+		fType = ord(ftap.read(1))
+		fileStartAdrLow=ftap.read(1)
+		fileStartAdrHigh=ftap.read(1)
+					
+		fileStartAdr = ord(fileStartAdrHigh)*256 + ord(fileStartAdrLow)
+		fileEndAdr = ord(ftap.read(1))*256 + ord(ftap.read(1))
+		fileExecAdr = ord(ftap.read(1))*256 + ord(ftap.read(1))
 
-	
-      b = ftap.read(5)
-      if b == b'\x01\x00ori':
-			version = ftap.read(1) #version
-			cpu = ord(ftap.read(1))
-			ostype = ord(ftap.read(1))
-			reserved = ftap.read(5) 
-			fType = ord(ftap.read(1))
-			fileStartAdrLow=ftap.read(1)
-			fileStartAdrHigh=ftap.read(1)
-			print("fileStartAdrLow: ",fileStartAdrLow)
-			print("fileStartAdrHigh: ",fileStartAdrHigh)
-			
-			fileStartAdr = ord(fileStartAdrHigh)*256 + ord(fileStartAdrLow)
-			fileEndAdr = ord(ftap.read(1))*256 + ord(ftap.read(1))
-			fileExecAdr = ord(ftap.read(1))*256 + ord(ftap.read(1))
+		Header['os'] = ostype
+		Header['cpu'] = cpu
+		Header['type'] = fType
+		Header['start'] = fileStartAdr
+		Header['end'] = fileEndAdr
+		Header['exec'] = fileExecAdr
+		allsize=ftap.read()
+		Header['size'] = ftap.tell()-20
+		ftap.seek(20,0)
+		print("Orix file")
+		print("Size %d : start : %d, end %d ",Header['size'],fileStartAdr,fileEndAdr)
+		return Header
 
-			Header['os'] = ostype
-			Header['cpu'] = cpu
-			Header['type'] = fType
-			Header['start'] = fileStartAdr
-			Header['end'] = fileEndAdr
-			Header['exec'] = fileExecAdr
-			allsize=ftap.read()
-			Header['size'] = ftap.tell()-20
-			ftap.seek(20,0)
-			print("Orix file")
-			print("Size %d : start : %d, end %d ",Header['size'],fileStartAdr,fileEndAdr)
-			return Header
-
-      return False
+	return False
 
 def diff(file1, file2, output, formatversion, color):
 	i = 0
@@ -208,19 +205,13 @@ def main():
 	parser.add_argument('binaryreferencefileversion1', type=str,  metavar='binaryreferencefileversion1', help='filename to diff')
 	# parser.add_argument('--output', '-o', type=argparse.FileType('wb'), default=sys.stdout, help='MAP filename')
 	parser.add_argument('outputfile', type=str, metavar='outputfile', help='Output binaryfile')
-      parser.add_argument('formatversion', type=int, choices=range(2, 4), metavar='formatversion', help='Format version ')
+	parser.add_argument('formatversion', type=int, choices=range(2, 4), metavar='formatversion', help='Format version ')
 	parser.add_argument('--color', '-c', default=False, action='store_true', help='Color output')
 	parser.add_argument('--version', '-v', action='version', version= '%%(prog)s v%s' % __version__)
 
 	args = parser.parse_args()
 
-
-	if int(args.formatversion)==1:
-		print("Format 1 can be generated because it's not a relocatable format")
-		exit(1)
-
-      diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color)
-
+	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color)
 
 if __name__ == '__main__':
 	main()
