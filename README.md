@@ -13,13 +13,13 @@ Tools & Macros for Orix devs
 
 Relocbin is a script which convert a static binary (built with telestrat target and cfg included) into a relocatable binary format for orix
 
-You need to build your binary with normal telestrat target : 
+You need to build your binary with normal telestrat target :
 
-#cl65 -ttelestrat mysrc.c -o 800
+# cl65 -ttelestrat mysrc.c -o 800
 
 Then build again with your binary with the cfg in cfg/ folder of orix-sdk
 
-#cl65 --config cfg/telestrat_900.cfg mysrc.c -o 900
+# cl65 -ttelestrat --config cfg/telestrat_900.cfg mysrc.c -o 900
 
 usr now relocbin :
 
