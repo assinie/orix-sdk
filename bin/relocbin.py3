@@ -148,7 +148,6 @@ def diff(file1, file2, output, formatversion, color):
 				
 				if i % 8 == 0:
 					if output is not None:
-						print("Byte : ",bytes([o]))
 						#output.write(bytes([o]))
 						bitfield.append(bytes([o]))
 						bitfieldmap.append(o)
