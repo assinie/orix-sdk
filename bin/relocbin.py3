@@ -212,7 +212,7 @@ def main():
 
 	args = parser.parse_args()
 
-	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color,args.debug)
+	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color, args.debug)
 
 if __name__ == '__main__':
 	main()
