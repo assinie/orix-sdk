@@ -62,13 +62,12 @@ def ReadHeader(ftap):
 		allsize=ftap.read()
 		Header['size'] = ftap.tell()-20
 		ftap.seek(20,0)
-		print("Orix file")
-		print("Size %d : start : %d, end %d ",Header['size'],fileStartAdr,fileEndAdr)
+		print("Orix file, Size/start/end :",Header['size'],fileStartAdr,fileEndAdr)
 		return Header
 
 	return False
 
-def diff(file1, file2, output, formatversion, color):
+def diff(file1, file2, output, formatversion, color, debug):
 	i = 0
 	s1 = ""
 	s2 = ""
@@ -102,9 +101,9 @@ def diff(file1, file2, output, formatversion, color):
 			if Header1['size'] != Header2['size']:
 				print("Fichiers de tailles differentes (%s:%d, %s:%d)" % (f1.name,Header1['size'], f2.name, Header2['size']))
 				exit(1)
-
-			print('    |    M A P    |%-24s|%-24s' % (f1.name, f2.name))
-			print('____|_____________|________________________|________________________')
+			if debug:
+				print('    |    M A P    |%-24s|%-24s' % (f1.name, f2.name))
+				print('____|_____________|________________________|________________________')
 			o = 0
 			n = 0
 			map = ""
@@ -151,16 +150,18 @@ def diff(file1, file2, output, formatversion, color):
 						#output.write(bytes([o]))
 						bitfield.append(bytes([o]))
 						bitfieldmap.append(o)
-
-					print("%04X| %s %02X |%s|%s" % (i-8,map,o,s1,s2))
+					if debug:
+						print("%04X| %s %02X |%s|%s" % (i-8,map,o,s1,s2))
 					s1 = ""
 					s2 = ""
 					map = ""
 					o = 0
 				offset_start=offset_start+1
-				if offset_start>255:
-					print("Panic : can't generate a binary with this version")
-					exit()
+				# Not managed yet, but in the future, maybe !
+				if formatversion==3:
+					if offset_start>255:
+						print("Panic : can't generate a binary with this version")
+						exit()
 
 			if s1!= '':
 				if color:
@@ -169,11 +170,11 @@ def diff(file1, file2, output, formatversion, color):
 
 				# print("%*s %02X |%-24s|%-24s" % (8-(i%8), ' ',o,s1,s2))
 				print("%04X| %s%*s %02X |%-24s|%-24s" % (i-(i%8),map, 8-(i%8), ' ',o,s1,s2))
-
-			print('____|_____________|________________________|________________________')
-			print('                      Size         %6d' % i)
-			print('                      Differences  %6d' % n)
-			print('____________________________________________________________________')
+			if debug:
+				print('____|_____________|________________________|________________________')
+				print('                      Size         %6d' % i)
+				print('                      Differences  %6d' % n)
+				print('____________________________________________________________________')
 			# write end of file
 
 			end_byte=0
@@ -206,11 +207,12 @@ def main():
 	parser.add_argument('outputfile', type=str, metavar='outputfile', help='Output binaryfile')
 	parser.add_argument('formatversion', type=int, choices=range(2, 4), metavar='formatversion', help='Format version ')
 	parser.add_argument('--color', '-c', default=False, action='store_true', help='Color output')
+	parser.add_argument('--debug', '-d', default=False, action='store_true', help='Displays debug')
 	parser.add_argument('--version', '-v', action='version', version= '%%(prog)s v%s' % __version__)
 
 	args = parser.parse_args()
 
-	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color)
+	diff(args.binaryfileversion1, args.binaryreferencefileversion1, args.outputfile, args.formatversion, args.color,args.debug)
 
 if __name__ == '__main__':
 	main()
