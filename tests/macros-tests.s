@@ -10,7 +10,7 @@
  cl65 -t none -Ln macros-tests.ca.sym --listing macros-tests.lst --asm-include-dir ../ macros-tests.s
 
  # Génération du fichier .info
- sed -re '/LOCAL-MACRO/d; /__/d; s/al 00(.{4}) \.(.+)$$/\1 \2/' macros-tests.ca.sym | sort | sed -re 's/^([^ ]+) (.+)/label { addr $\1; name "\2"; };/; s/"(RES|RESB|PTR_READ_DEST|ptr1|ptr2|var|_argv)";/"\1"; size 2;/' > macros-tests.info
+ sed -re '/LOCAL-MACRO/d; /__/d; s/al 00(.{4}) \.(.+)$$/\1 \2/' macros-tests.ca.sym | sort | sed -re 's/^([^ ]+) (.+)/label { addr $\1; name "\2"; };/; s/"(RES|RESB|PTR_READ_DEST|ptr1|ptr2|fp|var|_argv)";/"\1"; size 2;/' > macros-tests.info
 
  # Ajout des commentaires au fichier .info
  sed -nre ':x /^[^ ]+[0-9]{2}$/ { N; s/\n//g ; bx ; } ; /^[^ ]+[0-9]{2}/p'  macros-tests.s | sed -re 's#(.+)\t(.+)$#s/"\1"/"\1"; comment "\\n; \2"\\n;/;#' | sed -f - -i macros-tests.info
@@ -20,13 +20,14 @@
 */
 
 /*
-range { start $1CD7; end $1CE0; name "src"; type bytetable; };
-range { start $1CE1; end $1CEA; name "dst"; type bytetable; };
-range { start $1CEB; end $1CEC; name "ptr1"; type addrtable; };
-range { start $1CED; end $1CEE; name "ptr2"; type addrtable; };
-range { start $1CEF; end $1CF5; name "msg"; type texttable; };
-label { addr $1CF6; name "_argc"; };
-range { start $1CF7; end $1CF8; name "_argv"; type addrtable; };
+range { start $1D97; end $1DA0; name "src"; type bytetable; };
+range { start $1DA1; end $1DAA; name "dst"; type bytetable; };
+range { start $1DAB; end $1DAC; name "ptr1"; type addrtable; };
+range { start $1DAD; end $1DAE; name "ptr2"; type addrtable; };
+range { start $1DAF; end $1DB0; name "fp"; type wordtable; };
+range { start $1DB1; end $1DB7; name "msg"; type texttable; };
+label { addr $1DB8; name "_argc"; };
+range { start $1DB9; end $1DBA; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -47,6 +48,7 @@ range { start $1CF7; end $1CF8; name "_argv"; type addrtable; };
 	XCOSCR = $34
 	XCSSCR = $35
 	XCLOSE = $3a
+	XFWRITE = $3b
 	XMKDIR = $4b
 	XMALLOC = $5b
 	XFREE = $62
@@ -78,6 +80,7 @@ range { start $1CF7; end $1CF8; name "_argv"; type addrtable; };
 	dst: .res 10, 0
 	ptr1: .res 2, 0
 	ptr2: .res 2, 0
+	fp: .res 2,0
 	msg: .asciiz "Erreur"
 
 
@@ -595,39 +598,84 @@ fopen89
 ; note:
 ;	ptr may be : (ptr), address
 ;	size may be: (ptr), address
+;	fp may be  : address, #value, {address,y}
 ;
 ; Call XFREAD function
 ;----------------------------------------------------------------------
 fread01
-	fread #$1234, #$1234, dummy, dummy
+	fread #$1234, #$1234, dummy, fp
 
 fread02
-	fread #$1234, (ptr2), dummy, dummy
+	fread #$1234, (ptr2), dummy, fp
 
 fread03
-	fread #$1234, var, dummy, dummy
+	fread #$1234, var, dummy, fp
 
 	;----------------------------------------------------------------------
 
 fread11
-	fread (ptr1), #$1234, dummy, dummy
+	fread (ptr1), #$1234, dummy, fp
 
 fread12
-	fread (ptr1), (ptr2), dummy, dummy
+	fread (ptr1), (ptr2), dummy, fp
 
 fread13
-	fread (ptr1), var, dummy, dummy
+	fread (ptr1), var, dummy, fp
 
 	;----------------------------------------------------------------------
 
 fread21
-	fread src, #$1234, dummy, dummy
+	fread src, #$1234, dummy, fp
 
 fread22
-	fread src, (ptr2), dummy, dummy
+	fread src, (ptr2), dummy, fp
 
 fread23
-	fread src, var, dummy, dummy
+	fread src, var, dummy, fp
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fwrite ptr, size, count, fp
+;
+; note:
+;	ptr may be : (ptr), address
+;	size may be: (ptr), address
+;	fp may be  : address, #value, {address,y}
+;
+; Call XFWRITE function
+;----------------------------------------------------------------------
+fwrite01
+	fwrite #$1234, #$1234, dummy, fp
+
+fwrite02
+	fwrite #$1234, (ptr2), dummy, fp
+
+fwrite03
+	fwrite #$1234, var, dummy, fp
+
+	;----------------------------------------------------------------------
+
+fwrite11
+	fwrite (ptr1), #$1234, dummy, fp
+
+fwrite12
+	fwrite (ptr1), (ptr2), dummy, fp
+
+fwrite13
+	fwrite (ptr1), var, dummy, fp
+
+	;----------------------------------------------------------------------
+
+fwrite21
+	fwrite src, #$1234, dummy, fp
+
+fwrite22
+	fwrite src, (ptr2), dummy, fp
+
+fwrite23
+	fwrite src, var, dummy, fp
 
 
 ;----------------------------------------------------------------------
