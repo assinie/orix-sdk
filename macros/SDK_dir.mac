@@ -1,0 +1,93 @@
+.ifndef SDK_DIR_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;				Dir
+	;======================================================================
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	mkdir ptr [,TELEMON]
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XMKDIR function
+	;----------------------------------------------------------------------
+	.macro mkdir ptr, option
+
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		; TODO:Reject immediate mode for ptr
+		SDK_get_AX ptr
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XMKDIR_ROUTINE
+
+		.else
+			.byte $00, XMKDIR
+
+		.endif
+
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	chdir ptr [,TELEMON]
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XPUTCWD function
+	;----------------------------------------------------------------------
+	.macro chdir ptr, option
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		SDK_get_AY ptr
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XPUTCWD_ROUTINE
+
+		.else
+			.byte $00, XPUTCWD
+
+		.endif
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	getcwd ptr [,TELEMON]
+	;
+	; note:
+	;	ptr may be: ptr, address
+	;
+	; Call XGETCWD function
+	;----------------------------------------------------------------------
+	.macro getcwd ptr, option
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XGETCWD_ROUTINE
+
+		.else
+			.byte $00, XGETCWD
+
+		.endif
+
+		.if (.not .blank({ptr}))
+			sta ptr
+			sty ptr+1
+		.endif
+
+	.endmacro
+
+	SDK_DIR_MAC = 1
+.endif

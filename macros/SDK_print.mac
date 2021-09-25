@@ -1,0 +1,111 @@
+.ifndef SDK_PRINT_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;				Print
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	print #byte [,TELEMON|NOSAVE]
+	;	print (pointer) [,TELEMON|NOSAVE]
+	;	print address [,TELEMON|NOSAVE]
+	;
+	; Option:
+	;	- TELEMON: when used within TELEMON bank
+	;	- NOSAVE : does not preserve A,X,Y registers
+	;
+	; Call XWSTR0 function
+	;
+	;----------------------------------------------------------------------
+	.macro print str, option
+		.if (.not .blank({option})) .and (.not .xmatch({option}, NOSAVE)) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [NOSAVE,TELEMON])", .string(option))
+		.endif
+
+		;.if (.not .blank({option})) .and .xmatch({option}, NOSAVE)
+		;	.out "Don't save regs values"
+		;.endif
+
+		.if .blank({option})
+			pha
+			txa
+			pha
+			tya
+			pha
+		.endif
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			pha
+			txa
+			pha
+			tya
+			pha
+
+			lda RES
+			pha
+			lda RES+1
+			pha
+		.endif
+
+
+		SDK_imm_or_ind_or_abs str
+
+		.if (.match (.left (1, {str}), #))
+			;.out "Mode: immediat"
+			.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+				jsr XWR0_ROUTINE
+			.else
+				.byte $00, XWR0
+			.endif
+
+		.elseif (.match(.left(1, {str}), {(}) )
+			;.out "Mode: indirect"
+			.if (.match(.right(1,{str}), {)}))
+
+				.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+					jsr XWSTR0_ROUTINE
+				.else
+					.byte $00, XWSTR0
+				.endif
+			.else
+				.error "error: ')' missing"
+			.endif
+
+		.else
+			;.out "Mode:absolu"
+			.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+				jsr XWSTR0_ROUTINE
+			.else
+				.byte $00, XWSTR0
+			.endif
+
+		.endif
+
+
+		.if .blank({option})
+			pla
+			tay
+			pla
+			tax
+			pla
+		.endif
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			pla
+			sta RES+1
+			pla
+			sta RES
+
+			pla
+			tay
+			pla
+			tax
+			pla
+		.endif
+
+	.endmacro
+
+	SDK_PRINT_MAC = 1
+.endif

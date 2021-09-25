@@ -1,0 +1,170 @@
+.ifndef SDK_FILE_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;				File
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	fopen file, mode [,TELEMON] [,ptr] [,oom_msg_ptr] [,fail_value]
+	;
+	; note:
+	;	- file may be: (ptr), address
+	;	- if parameter 'ptr' is present, store resulting AX in ptr & ptr+1
+	;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
+	;		'oom_msg_ptr' and return if AX is $FFFF (ie XOPEN error)
+	;
+	; Call XOPEN function
+	;----------------------------------------------------------------------
+	.macro fopen file, mode, option, ptr, oom_msg_ptr, fail_value
+
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		; 'file' must be an address in normal RAM
+		.if (.match (.left (1, {file}), #))
+			.assert .mid(1, .tcount({file})-1, {file}) < $c000-1, error, "fopen() file must be < $C000"
+
+		.elseif (.match (.left (1, {file}), {(}))
+			;.assert .mid(1,1,{file}) < $c000-1, warning, "fopen() file must be < $C000"
+			;.assert * > *, warning, "fopen() file must be < $C000"
+
+		.else
+			.assert file < $c000-1, error, "fopen() file must be < $C000"
+		.endif
+
+		;.elseif .not (.match (.left (1, {file}), {(}))
+		;	.assert file < $c000-1, error, "fopen() file must be < $C000"
+		;.endif
+
+		; TODO: Reject immediate mode
+		SDK_get_AX file
+
+		; TODO: Accept absolute & indirect mode
+		ldy #(mode)
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XOPEN_ROUTINE
+		.else
+			.byte $00, XOPEN
+		.endif
+
+
+		.if (.not .blank({oom_msg_ptr}))
+			check_regs AX, $ff, oom_msg_ptr, fail_value
+
+		.elseif (.not .blank({fail_value}))
+			check_regs AX, $ff, oom_msg_ptr, fail_value
+		.endif
+
+		.if (.not .blank({ptr}))
+			sta ptr
+			stx ptr+1
+		.endif
+
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	fread ptr, size, count, fp
+	;
+	; note:
+	;	ptr may be : (ptr), address
+	;	size may be: (ptr), address
+	;	fp may be  : address, #value, {address,y}
+	;
+	; Call XFREAD function
+	;----------------------------------------------------------------------
+	.macro fread ptr, size, count, fp
+		; load X first in case of {address,y}
+		ldx fp
+
+		; TODO:Reject immediate mode for ptr
+		SDK_get_AY ptr
+		sta PTR_READ_DEST
+		sty PTR_READ_DEST+1
+
+		SDK_get_AY size
+
+		.byte $00, XFREAD
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	fwrite ptr, size, count, fp
+	;
+	; note:
+	;	ptr may be : (ptr), address
+	;	size may be: (ptr), address
+	;	fp may be  : address, #value, {address,y}
+	;
+	; Call XFWRITE function
+	;----------------------------------------------------------------------
+	.macro fwrite ptr, size, count, fp
+
+		; load X first in case of {address,y}
+		ldx fp
+
+		; TODO:Reject immediate mode for ptr
+		SDK_get_AY ptr
+		sta PTR_READ_DEST
+		sty PTR_READ_DEST+1
+
+		SDK_get_AY size
+
+		.byte $00, XFWRITE
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	fclose (fp) [,TELEMON]
+	;
+	; Call XCLOSE function
+	;----------------------------------------------------------------------
+	.macro fclose fp, option
+
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		.if (.match(.left(1, {fp}), {(}) )
+			; Indirect
+
+			.if (.match(.right(1,{fp}), {)}))
+				; .out"Indirect mode"
+
+				lda .mid (1,.tcount ({fp})-2, {fp})
+				ldy 1+(.mid (1,.tcount ({fp})-2, {fp}))
+
+			.else
+				.error "error: ')' missing"
+			.endif
+
+		.else
+			; assume absolute
+			; .out "Absolute mode"
+			.error "error: indirect mode only"
+		.endif
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			;lda fp
+			;ldy fp+1
+			jsr XCLOSE_ROUTINE
+
+		.else
+			;lda fp
+			;ldy fp+1
+			.byte $00, XCLOSE
+
+		.endif
+
+	.endmacro
+
+	SDK_FILE_MAC = 1
+.endif

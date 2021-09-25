@@ -1,0 +1,59 @@
+.ifndef SDK_STRING_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;			String functions
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	strcpy dest, src
+	;
+	; Call _strcpy function
+	;
+	; note:
+	;	dest: may be nothing, AY, (ptr), address
+	;	src : may be nothing, AY, (ptr), address
+	;----------------------------------------------------------------------
+	.macro strcpy dest, src
+		SDK_call_function _strcpy, {dest}, {src}
+	.endmacro
+
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	strcat dest, src
+	;
+	; Call _strcat function
+	;
+	; note:
+	;	dest: may be nothing, AY, (ptr), address
+	;	src : may be nothing, AY, (ptr), address
+	;----------------------------------------------------------------------
+	.macro strcat dest, src
+		SDK_call_function _strcat, {src}, {dest}
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	strlen str
+	;	strlen (ptr)
+	;
+	; Call _strlen function
+	;
+	;----------------------------------------------------------------------
+	.macro strlen str
+		; TODO: Reject immediate mode
+		SDK_get_AY str
+
+
+		sta RES
+		sty RES+1
+		jsr _strlen
+	.endmacro
+
+	SDK_STRING_MAC = 1
+.endif

@@ -1,211 +1,174 @@
-.scope SDK
+.ifndef SDK_UTILS_MAC
+	.scope SDK
 
-	;----------------------------------------------------------------------
-	; accept:
-	;		   - #byte	-> lda #arg
-	;		   - (pointer)	-> lda arg / ldy arg+1
-	;		   - address	-> lda #<address / ldy #>address
-	;----------------------------------------------------------------------
-	.macro SDK_imm_or_ind_or_abs arg
+		;----------------------------------------------------------------------
+		; accept:
+		;		   - #byte	-> lda #arg
+		;		   - (pointer)	-> lda arg / ldy arg+1
+		;		   - address	-> lda #<address / ldy #>address
+		;----------------------------------------------------------------------
+		.macro SDK_imm_or_ind_or_abs arg
 
-		.if (.match (.left (1, {arg}), #))
-			; .out "Immediate mode"
+			.if (.match (.left (1, {arg}), #))
+				; .out "Immediate mode"
 
-			lda #< ( .right (.tcount ({arg})-1, {arg}) )
+				lda #< ( .right (.tcount ({arg})-1, {arg}) )
 
-		.elseif (.match(.left(1, {arg}), {(}) )
-			; Indirect
-			.if (.match(.right(1,{arg}), {)}))
-				; .out"Indirect mode"
+			.elseif (.match(.left(1, {arg}), {(}) )
+				; Indirect
+				.if (.match(.right(1,{arg}), {)}))
+					; .out"Indirect mode"
 
-				lda 0+(.mid (1,.tcount ({arg})-2, {arg}))
-				ldy 1+(.mid (1,.tcount ({arg})-2, {arg}))
+					lda 0+(.mid (1,.tcount ({arg})-2, {arg}))
+					ldy 1+(.mid (1,.tcount ({arg})-2, {arg}))
 
-			.else
-				.error "error: ')' missing"
-			.endif
-
-		.else
-			; assume absolute
-			; .out "Absolute mode"
-
-			lda #<(arg)
-			ldy #>(arg)
-
-		.endif
-
-	.endmacro
-
-	;----------------------------------------------------------------------
-	; accept:
-	;		   - #word	-> lda #<arg / ldy #>arg
-	;		   - (pointer)	-> lda arg / ldy arg+1
-	;		   - address	-> lda #<address / ldy #>address
-	;----------------------------------------------------------------------
-	.macro SDK_get_AY param
-
-		.if (.match (.left (1, {param}), #))
-			; .out "Immediate mode"
-
-			lda #< (.right(.tcount({param})-1, {param}))
-			ldy #> (.right(.tcount({param})-1, {param}))
-
-		.elseif (.match(.left(1, {param}), {(}) )
-			; Indirect
-			.if (.match(.right(1,{param}), {)}))
-				; .out"Indirect mode"
-
-				lda 0+( .mid(1, .tcount({param})-2, {param}) )
-				ldy 1+( .mid(1, .tcount({param})-2, {param}) )
+				.else
+					.error "error: ')' missing"
+				.endif
 
 			.else
-				.error "error: ')' missing"
+				; assume absolute
+				; .out "Absolute mode"
+
+				lda #<(arg)
+				ldy #>(arg)
+
 			.endif
 
-		.else
-			; assume absolute
-			; .out "Aboslute mode"
+		.endmacro
 
-			lda #<(param)
-			ldy #>(param)
-		.endif
-	.endmacro
+		;----------------------------------------------------------------------
+		; accept:
+		;		   - #word	-> lda #<arg / ldy #>arg
+		;		   - (pointer)	-> lda arg / ldy arg+1
+		;		   - address	-> lda #<address / ldy #>address
+		;----------------------------------------------------------------------
+		.macro SDK_get_AY param
 
-	;----------------------------------------------------------------------
-	; accept:
-	;		   - #word	-> lda #<arg / ldx #>arg
-	;		   - (pointer)	-> lda arg / ldx arg+1
-	;		   - address	-> lda #<address / ldx #>address
-	;----------------------------------------------------------------------
-	.macro SDK_get_AX param
-		.if (.match (.left (1, {param}), #))
-			; .out "Immediate mode"
+			.if (.match (.left (1, {param}), #))
+				; .out "Immediate mode"
 
-			lda #< (.right(.tcount({param})-1, {param}))
-			ldx #> (.right(.tcount({param})-1, {param}))
+				lda #< (.right(.tcount({param})-1, {param}))
+				ldy #> (.right(.tcount({param})-1, {param}))
 
-		.elseif (.match(.left(1, {param}), {(}) )
-			; Indirect
-			.if (.match(.right(1,{param}), {)}))
-				; .out"Indirect mode"
+			.elseif (.match(.left(1, {param}), {(}) )
+				; Indirect
+				.if (.match(.right(1,{param}), {)}))
+					; .out"Indirect mode"
 
-				lda 0+( .mid(1, .tcount({param})-2, {param}) )
-				ldx 1+( .mid(1, .tcount({param})-2, {param}) )
+					lda 0+( .mid(1, .tcount({param})-2, {param}) )
+					ldy 1+( .mid(1, .tcount({param})-2, {param}) )
+
+				.else
+					.error "error: ')' missing"
+				.endif
 
 			.else
-				.error "error: ')' missing"
+				; assume absolute
+				; .out "Aboslute mode"
+
+				lda #<(param)
+				ldy #>(param)
 			.endif
+		.endmacro
 
-		.else
-			; assume absolute
-			; .out "Aboslute mode"
+		;----------------------------------------------------------------------
+		; accept:
+		;		   - #word	-> lda #<arg / ldx #>arg
+		;		   - (pointer)	-> lda arg / ldx arg+1
+		;		   - address	-> lda #<address / ldx #>address
+		;----------------------------------------------------------------------
+		.macro SDK_get_AX param
+			.if (.match (.left (1, {param}), #))
+				; .out "Immediate mode"
 
-			lda #<(param)
-			ldx #>(param)
-		.endif
-	.endmacro
+				lda #< (.right(.tcount({param})-1, {param}))
+				ldx #> (.right(.tcount({param})-1, {param}))
 
-	;----------------------------------------------------------------------
-	; Place les paramètres dans RES et RESB puis appelle la fonction func
-	;
-	; dest -> RESB
-	; src  -> RES
-	;
-	; Si dest/src n'est pas indiqué, la valeur de RESB/RES n'est pas modifiée
-	; Si dest/src est 'AY', on place la valeur des registres AY dans RESB/RES
-	; Si func n'est pas indiqué, seuls RES et RESB sont mis à jour et il
-	; n'y aura pas d'appel vers une fonction.
-	;
-	;----------------------------------------------------------------------
-	.macro SDK_call_function func, dest, src
+			.elseif (.match(.left(1, {param}), {(}) )
+				; Indirect
+				.if (.match(.right(1,{param}), {)}))
+					; .out"Indirect mode"
 
-		; .out .sprintf("--- START %s ---", .string(func))
+					lda 0+( .mid(1, .tcount({param})-2, {param}) )
+					ldx 1+( .mid(1, .tcount({param})-2, {param}) )
 
-		.if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
-			.warning .sprintf("%s: no src nor dest", .string(func))
-			; .error "strcpy: src == dest"
-			; .fatal "strcpy: src == dest"
-		.else
+				.else
+					.error "error: ')' missing"
+				.endif
 
-			.if ( .xmatch({src}, {dest}) )
-				.warning .sprintf("%s: src == dest", .string(func))
+			.else
+				; assume absolute
+				; .out "Aboslute mode"
+
+				lda #<(param)
+				ldx #>(param)
+			.endif
+		.endmacro
+
+		;----------------------------------------------------------------------
+		; Place les paramètres dans RES et RESB puis appelle la fonction func
+		;
+		; dest -> RESB
+		; src  -> RES
+		;
+		; Si dest/src n'est pas indiqué, la valeur de RESB/RES n'est pas modifiée
+		; Si dest/src est 'AY', on place la valeur des registres AY dans RESB/RES
+		; Si func n'est pas indiqué, seuls RES et RESB sont mis à jour et il
+		; n'y aura pas d'appel vers une fonction.
+		;
+		;----------------------------------------------------------------------
+		.macro SDK_call_function func, dest, src
+
+			; .out .sprintf("--- START %s ---", .string(func))
+
+			.if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
+				.warning .sprintf("%s: no src nor dest", .string(func))
 				; .error "strcpy: src == dest"
 				; .fatal "strcpy: src == dest"
 			.else
 
-				;----------------------------------------------------------
-				; Si 'dest' est 'AY'
-				; donc il faut mettre à jour RESB maintenant
-				; sinon AY sera écrasé par le traitement de 'src'
-				;----------------------------------------------------------
-				.if ( .xmatch({dest}, AY) )
-					; .out .sprintf("%s: AY is dest", .string(func))
-					; .warning "strcpy:  AY is dest"
-					sta RESB
-					sty RESB+1
-				.endif
+				.if ( .xmatch({src}, {dest}) )
+					.warning .sprintf("%s: src == dest", .string(func))
+					; .error "strcpy: src == dest"
+					; .fatal "strcpy: src == dest"
+				.else
 
-				;.if ( .blank({dest}) )
-				;	.out "strcpy: preserve RESB (dest)"
-				;	; .warning "strcpy: implicit dest"
-				;	sta RESB
-				;	sty RESB+1
-				;.endif
-
-				;----------------------------------------------------------
-				;		   Traitement du paramètre 'src'
-				;----------------------------------------------------------
-				.if ( .not .blank({src}) )
-					.if ( .xmatch({src}, AY) )
-						; .out .sprintf("%s: AY is src", .string(func))
-						; Rien à faire ici, les STA/STY sont faits plus bas
-
-					.elseif ( .match(.left(1, {src}), {(}) )
-						; Indirect
-
-						.if ( .match(.right(1,{src}), {)}) )
-							; .out"Indirect mode"
-
-							lda .mid(1,.tcount ({src})-2, {src})
-							ldy 1+( .mid (1,.tcount ({src})-2, {src}) )
-						.else
-							.error .sprintf("%s: Need ')'", .string(func))
-						.endif
-
-					.else
-						; assume absolute
-						; .out "Aboslute mode"
-						lda #<(src)
-						ldy #>(src)
+					;----------------------------------------------------------
+					; Si 'dest' est 'AY'
+					; donc il faut mettre à jour RESB maintenant
+					; sinon AY sera écrasé par le traitement de 'src'
+					;----------------------------------------------------------
+					.if ( .xmatch({dest}, AY) )
+						; .out .sprintf("%s: AY is dest", .string(func))
+						; .warning "strcpy:  AY is dest"
+						sta RESB
+						sty RESB+1
 					.endif
 
-					sta RES
-					sty RES+1
-				.else
-					.out .sprintf("%s: preserve RES (src)", .string(func))
-					; .warning "strcpy: implicit src"
+					;.if ( .blank({dest}) )
+					;	.out "strcpy: preserve RESB (dest)"
+					;	; .warning "strcpy: implicit dest"
+					;	sta RESB
+					;	sty RESB+1
+					;.endif
 
-				.endif
+					;----------------------------------------------------------
+					;		   Traitement du paramètre 'src'
+					;----------------------------------------------------------
+					.if ( .not .blank({src}) )
+						.if ( .xmatch({src}, AY) )
+							; .out .sprintf("%s: AY is src", .string(func))
+							; Rien à faire ici, les STA/STY sont faits plus bas
 
-				; sta RES
-				; sty RES+1
-
-				;----------------------------------------------------------
-				;		   Traitement du paramètre 'dest'
-				;----------------------------------------------------------
-				.if ( .not .blank({dest}) )
-					.if ( .xmatch({dest}, AY) )
-						; Rien à faire ici, déjà traité au début de la macro
-
-					.else
-						.if ( .match(.left(1, {dest}), {(}) )
+						.elseif ( .match(.left(1, {src}), {(}) )
 							; Indirect
 
-							.if ( .match(.right(1,{dest}), {)}) )
+							.if ( .match(.right(1,{src}), {)}) )
 								; .out"Indirect mode"
 
-								lda .mid(1,.tcount ({dest})-2, {dest})
-								ldy 1+( .mid (1,.tcount ({dest})-2, {dest}) )
+								lda .mid(1,.tcount ({src})-2, {src})
+								ldy 1+( .mid (1,.tcount ({src})-2, {src}) )
 							.else
 								.error .sprintf("%s: Need ')'", .string(func))
 							.endif
@@ -213,33 +176,147 @@
 						.else
 							; assume absolute
 							; .out "Aboslute mode"
-							lda #<(dest)
-							ldy #>(dest)
+							lda #<(src)
+							ldy #>(src)
 						.endif
 
-						sta RESB
-						sty RESB+1
+						sta RES
+						sty RES+1
+					.else
+						.out .sprintf("%s: preserve RES (src)", .string(func))
+						; .warning "strcpy: implicit src"
+
 					.endif
-				.else
-					.out .sprintf("%s: preserve RESB (dest)", .string(func))
-					; .warning "strcpy: implicit dest"
+
+					; sta RES
+					; sty RES+1
+
+					;----------------------------------------------------------
+					;		   Traitement du paramètre 'dest'
+					;----------------------------------------------------------
+					.if ( .not .blank({dest}) )
+						.if ( .xmatch({dest}, AY) )
+							; Rien à faire ici, déjà traité au début de la macro
+
+						.else
+							.if ( .match(.left(1, {dest}), {(}) )
+								; Indirect
+
+								.if ( .match(.right(1,{dest}), {)}) )
+									; .out"Indirect mode"
+
+									lda .mid(1,.tcount ({dest})-2, {dest})
+									ldy 1+( .mid (1,.tcount ({dest})-2, {dest}) )
+								.else
+									.error .sprintf("%s: Need ')'", .string(func))
+								.endif
+
+							.else
+								; assume absolute
+								; .out "Aboslute mode"
+								lda #<(dest)
+								ldy #>(dest)
+							.endif
+
+							sta RESB
+							sty RESB+1
+						.endif
+					.else
+						.out .sprintf("%s: preserve RESB (dest)", .string(func))
+						; .warning "strcpy: implicit dest"
+					.endif
+
+					.if ( .not .blank({func}) )
+						; .out "--- OK ---"
+						jsr func
+					.else
+						.fatal "--- NO CALL ---"
+					.endif
+
+				; .if ( .xmatch({src}, {dest}) )
 				.endif
 
-				.if ( .not .blank({func}) )
-					; .out "--- OK ---"
-					jsr func
-				.else
-					.fatal "--- NO CALL ---"
-				.endif
-
-			; .if ( .xmatch({src}, {dest}) )
+			; .if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
 			.endif
 
-		; .if ( ( .blank({src}) ) .and ( .blank({dest}) ) )
-		.endif
+			; .out "--- END ---"
 
-		; .out "--- END ---"
+		.endmacro
 
-	.endmacro
+		;======================================================================
+		;			Pointer functions
+		;======================================================================
+		;----------------------------------------------------------------------
+		; check_regs
+		;
+		; usage:
+		;	check_regs regs [,err_value] [,oom_msg_ptr] [,fail_value]
+		;
+		; Note:
+		;	regs is one of: AX, AY, XY, XA, YA, YX
+		;
+		; Check regs pair, display oom_msg_ptr and return if regs pairs is err_value
+		;----------------------------------------------------------------------
+		.macro check_regs regs, err_value, oom_msg_ptr, fail_value
+			.local exit
+			.local error
 
-.endscope
+			.if .not .blank(err_value)
+				error .set err_value
+			.else
+				error .set 0
+			.endif
+
+			.if ( .xmatch({regs}, AY) .or .xmatch({regs}, YA))
+				cpy #error
+				bne exit
+				cmp #error
+				bne exit
+
+			.elseif ( .xmatch({regs}, AX) .or .xmatch({regs}, XA))
+				cpx #error
+				bne exit
+				cmp #error
+				bne exit
+
+			.elseif ( .xmatch({regs}, XY) .or .xmatch({regs}, YX))
+				cpx #error
+				bne exit
+				cpy #error
+				bne exit
+
+			.else
+				.error .sprintf("Unknown registers: %s (must be 'AX', 'XA', 'AY', 'YA', 'XY', 'YX')", .string(regs))
+			.endif
+
+
+			.if (.not .blank({oom_msg_ptr}))
+				print oom_msg_ptr, NOSAVE
+
+				sec
+
+				.if (.not .blank({fail_value}))
+					SDK_get_AY fail_value
+
+					;ldy #>(fail_value)
+					;lda #<(fail_value)
+				.else
+					ldy #$ff
+					tya
+				.endif
+
+			.elseif (.not .blank({fail_value}))
+				SDK_get_AY fail_value
+
+				;ldy #>(fail_value)
+				;lda #<(fail_value)
+			.endif
+
+				rts
+			exit:
+		.endmacro
+
+	.endscope
+
+	SDK_UTILS_MAC = 1
+.endif
