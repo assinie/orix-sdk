@@ -20,14 +20,14 @@
 */
 
 /*
-range { start $1D97; end $1DA0; name "src"; type bytetable; };
-range { start $1DA1; end $1DAA; name "dst"; type bytetable; };
-range { start $1DAB; end $1DAC; name "ptr1"; type addrtable; };
-range { start $1DAD; end $1DAE; name "ptr2"; type addrtable; };
-range { start $1DAF; end $1DB0; name "fp"; type wordtable; };
-range { start $1DB1; end $1DB7; name "msg"; type texttable; };
-label { addr $1DB8; name "_argc"; };
-range { start $1DB9; end $1DBA; name "_argv"; type addrtable; };
+range { start $1EB7; end $1EC0; name "src"; type bytetable; };
+range { start $1EC1; end $1ECA; name "dst"; type bytetable; };
+range { start $1ECB; end $1ECC; name "ptr1"; type addrtable; };
+range { start $1ECD; end $1ECE; name "ptr2"; type addrtable; };
+range { start $1ECF; end $1ED0; name "fp"; type wordtable; };
+range { start $1ED1; end $1ED7; name "msg"; type texttable; };
+label { addr $1ED8; name "_argc"; };
+range { start $1ED9; end $1EDA; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -354,6 +354,8 @@ print25
 ; usage:
 ;	malloc size [,ptr] [,oom_msg_ptr] [,fail_value]
 ;
+;	malloc
+;	malloc AY
 ;	malloc #$0100
 ;	malloc (ptr)
 ;	malloc value
@@ -366,42 +368,101 @@ print25
 ; Call XMALLOC function
 ;
 ;----------------------------------------------------------------------
+
 malloc01
-	malloc #$1234
+	malloc
 
 malloc02
-	malloc #$1234, ptr1
+	malloc , ptr1
 
 malloc03
-	malloc #$1234, ptr1, msg
+	malloc , ptr1, msg
 
 malloc04
-	malloc #$1234, , msg
+	malloc , , msg
 
-malloc05
-	malloc var
-
-malloc06
-	malloc (ptr1)
 
 	;----------------------------------------------------------------------
 
 malloc11
-	malloc #$1234, , , $12
+	malloc , , , $12
 
 malloc12
-	malloc #$1234, ptr1, , $12
+	malloc , ptr1, , $12
 
 malloc13
-	malloc #$1234, ptr1, msg, $12
+	malloc , ptr1, msg, $12
 
 malloc14
+	malloc , , msg, $12
+
+	;----------------------------------------------------------------------
+
+malloc21
+	malloc AY
+
+malloc22
+	malloc AY, ptr1
+
+malloc23
+	malloc AY, ptr1, msg
+
+malloc24
+	malloc AY, , msg
+
+
+	;----------------------------------------------------------------------
+
+malloc31
+	malloc AY, , , $12
+
+malloc32
+	malloc AY, ptr1, , $12
+
+malloc33
+	malloc AY, ptr1, msg, $12
+
+malloc34
+	malloc AY, , msg, $12
+
+	;----------------------------------------------------------------------
+
+malloc41
+	malloc #$1234
+
+malloc42
+	malloc #$1234, ptr1
+
+malloc43
+	malloc #$1234, ptr1, msg
+
+malloc44
+	malloc #$1234, , msg
+
+malloc45
+	malloc var
+
+malloc46
+	malloc (ptr1)
+
+	;----------------------------------------------------------------------
+
+malloc51
+	malloc #$1234, , , $12
+
+malloc52
+	malloc #$1234, ptr1, , $12
+
+malloc53
+	malloc #$1234, ptr1, msg, $12
+
+malloc54
 	malloc #$1234, , msg, $12
 
-malloc15
+malloc55
 	malloc var, , , $12
 
-malloc16
+malloc56
 	malloc (ptr1), , , $12
 
 ;----------------------------------------------------------------------
