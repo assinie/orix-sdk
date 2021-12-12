@@ -1,0 +1,29 @@
+.ifndef SDK_DISPLAY_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;				Display
+	;======================================================================
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	cursor ON|OFF
+	;
+	; Call XCSSCR/XCOSCR functions
+	;----------------------------------------------------------------------
+	.macro cursor mode
+		.if (.xmatch(.string(mode), .string(ON)) .or .xmatch(.string(mode), .string(on)))
+			ldx #$00
+			.byte $00, XCSSCR
+
+		.elseif (.xmatch(.string(mode), .string(OFF)) .or .xmatch(.string(mode), .string(off)))
+			ldx #$00
+			.byte $00, XCOSCR
+
+		.else
+			.error .sprintf("Unknown parameter value: %s (must be on or off)", .string(mode))
+		.endif
+	.endmacro
+
+	SDK_DISPLAY_MAC = 1
+.endif
