@@ -1,5 +1,5 @@
 ; da65 V2.19 - Git 203c4da15
-; Created:    2021-12-13 15:29:52
+; Created:    2021-12-13 15:58:49
 ; Input file: macros-tests
 ; Page:       1
 
@@ -2323,7 +2323,7 @@ getmainarg_05:
 getmainarg_06:
         brk     #$2E                            ; 1C4E
         sta     dst                             ; 1C50
-        sty     L2015                           ; 1C53
+        sty     dst+1                           ; 1C53
 ; 
 ; getmainarg #2
 ;
@@ -2365,7 +2365,7 @@ getmainarg_16:
         ldx     #$02                            ; 1C74
         brk     #$2E                            ; 1C76
         sta     dst                             ; 1C78
-        sty     L2015                           ; 1C7B
+        sty     dst+1                           ; 1C7B
 ; 
 ; getmainarg _argc
 ;
@@ -2407,7 +2407,7 @@ getmainarg_26:
         ldx     _argc                           ; 1CA1
         brk     #$2E                            ; 1CA4
         sta     dst                             ; 1CA6
-        sty     L2015                           ; 1CA9
+        sty     dst+1                           ; 1CA9
 ; 
 ; getmainarg X, AY, AY
 ;
@@ -2419,7 +2419,7 @@ getmainarg_31:
 getmainarg_32:
         brk     #$2E                            ; 1CAE
         sta     dst                             ; 1CB0
-        sty     L2015                           ; 1CB3
+        sty     dst+1                           ; 1CB3
 ; 
 ; getmainarg X, (ptr1), AY
 ;
@@ -2435,7 +2435,7 @@ getmainarg_34:
         ldy     ptr1+1                          ; 1CC1
         brk     #$2E                            ; 1CC4
         sta     dst                             ; 1CC6
-        sty     L2015                           ; 1CC9
+        sty     dst+1                           ; 1CC9
 ; 
 ; getmainarg X, _argv, AY
 ;
@@ -2451,7 +2451,7 @@ getmainarg_36:
         ldy     #$20                            ; 1CD4
         brk     #$2E                            ; 1CD6
         sta     dst                             ; 1CD8
-        sty     L2015                           ; 1CDB
+        sty     dst+1                           ; 1CDB
 ; 
 ; getmainarg #2, AY, AY
 ;
@@ -2465,7 +2465,7 @@ getmainarg_42:
         ldx     #$02                            ; 1CE2
         brk     #$2E                            ; 1CE4
         sta     dst                             ; 1CE6
-        sty     L2015                           ; 1CE9
+        sty     dst+1                           ; 1CE9
 ; 
 ; getmainarg #2, (ptr1), AY
 ;
@@ -2483,7 +2483,7 @@ getmainarg_44:
         ldy     ptr1+1                          ; 1CFB
         brk     #$2E                            ; 1CFE
         sta     dst                             ; 1D00
-        sty     L2015                           ; 1D03
+        sty     dst+1                           ; 1D03
 ; 
 ; getmainarg #2, _argv, AY
 ;
@@ -2501,7 +2501,7 @@ getmainarg_46:
         ldy     #$20                            ; 1D12
         brk     #$2E                            ; 1D14
         sta     dst                             ; 1D16
-        sty     L2015                           ; 1D19
+        sty     dst+1                           ; 1D19
 ; 
 ; getmainarg _argc, AY, AY
 ;
@@ -2515,7 +2515,7 @@ getmainarg_52:
         ldx     _argc                           ; 1D21
         brk     #$2E                            ; 1D24
         sta     dst                             ; 1D26
-        sty     L2015                           ; 1D29
+        sty     dst+1                           ; 1D29
 ; 
 ; getmainarg _argc, (ptr1), AY
 ;
@@ -2533,7 +2533,7 @@ getmainarg_54:
         ldy     ptr1+1                          ; 1D3D
         brk     #$2E                            ; 1D40
         sta     dst                             ; 1D42
-        sty     L2015                           ; 1D45
+        sty     dst+1                           ; 1D45
 ; 
 ; getmainarg _argc, _argv, AY
 ;
@@ -2551,7 +2551,7 @@ getmainarg_56:
         ldy     #$20                            ; 1D56
         brk     #$2E                            ; 1D58
         sta     dst                             ; 1D5A
-        sty     L2015                           ; 1D5D
+        sty     dst+1                           ; 1D5D
 ; 
 ; cursor on
 ;
@@ -3195,9 +3195,8 @@ SDK_call_function33:
         jsr     func                            ; 2007
 src:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 200A
         .byte   $00,$00                         ; 2012
-dst:    .byte   $00                             ; 2014
-L2015:  .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 2015
-        .byte   $00                             ; 201D
+dst:    .byte   $00,$00,$00,$00,$00,$00,$00,$00 ; 2014
+        .byte   $00,$00                         ; 201C
 ; ----------------------------------------------------------------------------
 ptr1:   .addr   L0000                           ; 201E
 ptr2:   .addr   L0000                           ; 2020

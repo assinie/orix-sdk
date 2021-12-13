@@ -20,14 +20,28 @@
 */
 
 /*
-range { start $1EB7; end $1EC0; name "src"; type bytetable; };
-range { start $1EC1; end $1ECA; name "dst"; type bytetable; };
-range { start $1ECB; end $1ECC; name "ptr1"; type addrtable; };
-range { start $1ECD; end $1ECE; name "ptr2"; type addrtable; };
-range { start $1ECF; end $1ED0; name "fp"; type wordtable; };
-range { start $1ED1; end $1ED7; name "msg"; type texttable; };
-label { addr $1ED8; name "_argc"; };
-range { start $1ED9; end $1EDA; name "_argv"; type addrtable; };
+label { addr $200A; name "src"; size 10;};
+range { start $200A; end $2013; name "src"; type bytetable; };
+
+label { addr $2014; name "dst"; size 10;};
+range { start $2014; end $201D; name "dst"; type bytetable; };
+
+label { addr $201E; name "ptr1"; size 2; };
+range { start $201E; end $201F; name "ptr1"; type addrtable; };
+
+label { addr $2020; name "ptr2"; size 2; };
+range { start $2020; end $2021; name "ptr2"; type addrtable; };
+
+label { addr $2022; name "fp"; size 2; };
+range { start $2022; end $2023; name "fp"; type wordtable; };
+
+label { addr $2024; name "msg"; size 6;};
+range { start $2024; end $202A; name "msg"; type texttable; };
+
+label { addr $202B; name "_argc"; };
+
+label { addr $202C; name "_argv"; size 2; };
+range { start $202C; end $202D; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
