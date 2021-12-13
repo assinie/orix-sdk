@@ -4,132 +4,156 @@
 ; Inline version
 ;======================================================================
 
-;----------------------------------------------------------------------
-; strncpy(src, dest, n)
-;
-; Sortie:
-;        A: 0 et Z=1 si copie effectuée, inchangé si non
-;        X: 0
-;        Y: Longueur réellement copiée
-;----------------------------------------------------------------------
+.ifndef SDK_STRNXXX_MAC
 
-.macro strncpy src, dest, n
+    ;----------------------------------------------------------------------
+    ; Usage:
+    ;	strncpy src, dest, n
+    ;
+    ; Sortie:
+    ;        A: 0 et Z=1 si copie effectuée, inchangé si non
+    ;        X: 0
+    ;        Y: Longueur réellement copiée
+    ;----------------------------------------------------------------------
 
-        ldy #$00
-        ldx n
-	beq *+12          ; beq @eos
+    .macro strncpy src, dest, n
+	    .local @loop, @end, @eos
 
-    ;@loop:
-        lda (src),y
-        sta (dest),y
-        beq *+9           ; beq @end
-        iny
-        dex
-        bne *-8           ; bne @loop
+            ldy #$00
+            ldx n
+	        beq @eos            ; Nombre de caractères à copier nul
 
-    ;@eos:
-        txa
-        sta (dest),y
+        @loop:
+            lda (src),y
+            sta (dest),y
+            beq @end            ; beq @end
+            iny
+            dex
+            bne @loop           ; bne @loop
 
-    ;@end:
+        @eos:
+            txa                 ; Force un nul pour le dernier caractère
+            sta (dest),y
 
-.endmacro
+        @end:
 
-
-;----------------------------------------------------------------------
-; strncat(src, dest, n)
-;
-; Sortie:
-;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine src ou dest si erreur)
-;        X: 0 si OK
-;        Y: Longueur de la chaine réellement concaténée (src)
-;
-;        C: 0 si OK, 1 si dest fait plus de 255 caractères
-;
-;     dest: Adresse de début de la concaténation (fin de dest initial)
-;
-; ATTENTION:
-;        Aucun test n'est effectué pour savoir si strlen(dest)+strlen(src) > 255
-;        Peut donc produire une chaîne non utilisable par strnxxx()
-;----------------------------------------------------------------------
-.macro strncat src, dest, n
-        clc               ; Indique aucune erreur (au cas ou strlen(src) == 0)
-
-        ;
-        ; Recalculer les sauts si strlen est modifié
-        ;
-        ldy #$00
-        lda (src),y
-        beq *+$2a         ; beq @end          ; Chaine source vide
-
-; strcat
-;        strlen src
-;        bcs *+$2a         ; bcs @end          ; Overflow
-;        tya               ; X :=len(src)
-;        tax
-
-        strlen dest
-        bcs *+$1f         ; bcs @end          ; Overflow
-
-        ; lda dest+1      ; Sauvegarde de dest
-        ; pha             ; ATTENTION: recalculer les destinations des beq/bcs/...
-        ; lda dest        ; si on active cette option
-        ; pha
-
-        tya               ; Calcul de l'adresse de fin de dest
-        adc dest
-        sta dest
-        bcc *+4
-        inc dest+1        ; Suppose que (dest) peut être modifié
-
-	ldx n
-
-        ldy #$00          ; Concatenation
-    ; @loop:
-        lda (src),y
-        sta (dest),y
-        beq *+10           ; beq @end
-        iny
-        dex
-        bne *-8           ; bne @loop
-        txa
-        sta (dest),y
-
-        clc               ; Pas d'erreur
-
-        ; pla             ; Restaure dest
-        ; sta dest        ; ATTENTION: recalculer les destinations des beq/bcs/...
-        ; pla             ; si on active cette option
-        ; sta dest+1
-        ; txa             ; <=> lda #$00
-    ; @end:
-.endmacro
+    .endmacro
 
 
-;----------------------------------------------------------------------
-; strlen(str)
-;
-; Sortie:
-;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine si erreur)
-;        X: Inchangé
-;        Y: Longueur de la chaine
-;
-;        C: 0 si OK, 1 si la chaine fait plus de 255 caractères
-;----------------------------------------------------------------------
-.macro strlen str
-        clc
+    ;----------------------------------------------------------------------
+    ; Usage:
+    ;	strncat src, dest, n [, option]
+    ;
+    ;       option: si présent, ne conserve pas la valeur de dest intacte
+    ;
+    ; Sortie:
+    ;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine src ou dest si erreur)
+    ;        X: 0 si OK
+    ;        Y: Longueur de la chaine réellement concaténée (src)
+    ;
+    ;        C: 0 si OK, 1 si dest fait plus de 255 caractères
+    ;
+    ;     dest: si option est présent => Adresse de début de la concaténation (fin de dest initial)
+    ;           si option est absent => Inchangé (Cf strncat du C)
+    ;
+    ; ATTENTION:
+    ;        Aucun test n'est effectué pour savoir si strlen(dest)+strlen(src) > 255
+    ;        Peut donc produire une chaîne non utilisable par strnxxx()
+    ;----------------------------------------------------------------------
+    .macro strncat src, dest, n, option
+	    .local @concat, @end, @loop, @eos
 
-        ldy #$00
-    ; @loop:
-        lda (str),y
-        beq *+6           ; beq @end
-        iny
-        bne *-5           ; @loop
-        sec               ; Overflow
-    ; @end:
+            clc               ; Indique aucune erreur (au cas ou strlen(src) == 0)
 
-.endmacro
+            ;
+            ; Recalculer les sauts si strlen est modifié
+            ;
+            ldy #$00
+            lda (src),y
+            beq @end            ; Chaine source vide
 
-;----------------------------------------------------------------------
-;
-;----------------------------------------------------------------------
+    ; strcat
+    ;        strlen2 src
+    ;        bcs @end          ; Overflow
+    ;        tya               ; X :=len(src)
+    ;        tax
+
+            strlen2 dest
+            bcs @end            ; Overflow
+
+            .if .blank({option})
+                lda dest+1      ; Sauvegarde de dest
+                pha             ; ATTENTION: recalculer les destinations des beq/bcs/...
+                lda dest        ; si on active cette option
+                pha
+            .endif
+
+            tya                 ; Calcul de l'adresse de fin de dest
+            adc dest
+            sta dest
+            bcc @concat
+            inc dest+1          ; Suppose que (dest) peut être modifié
+
+        @concat:
+	        ldx n               ; Concatenation
+
+            ldy #$00
+        @loop:
+            lda (src),y
+            sta (dest),y
+            beq @eos
+            iny
+            dex
+            bne @loop
+            txa                 ; Force un nul pour le dernier caractère
+            sta (dest),y
+
+        @eos:
+            clc                 ; Pas d'erreur
+
+            .if .blank({option})
+                pla             ; Restaure dest
+                sta dest        ; ATTENTION: recalculer les destinations des beq/bcs/...
+                pla             ; si on active cette option
+                sta dest+1
+                txa             ; <=> lda #$00
+            .endif
+
+        @end:
+
+    .endmacro
+
+
+    ;----------------------------------------------------------------------
+    ; Usage:
+    ;	strlen2 str
+    ;
+    ; Sortie:
+    ;        A: 0 et Z=1 si pas d'erreur (256ième caractère de la chaine si erreur)
+    ;        X: Inchangé
+    ;        Y: Longueur de la chaine
+    ;
+    ;        C: 0 si OK, 1 si la chaine fait plus de 255 caractères
+    ;----------------------------------------------------------------------
+    .macro strlen2 str
+	    .local @loop, @end
+
+            clc
+
+            ldy #$00
+        @loop:
+            lda (str),y
+            beq @end          ; beq @end
+            iny
+            bne @loop         ; @loop
+            sec               ; Overflow
+        @end:
+
+    .endmacro
+
+    ;----------------------------------------------------------------------
+    ;
+    ;----------------------------------------------------------------------
+    SDK_STRNXXX_MAC = 1
+
+.endif
