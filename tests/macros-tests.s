@@ -57,6 +57,9 @@ range { start $1ED9; end $1EDA; name "_argv"; type addrtable; };
 	XGETCWD  = $48          ; Get current CWD
 	XPUTCWD  = $49          ; Chdir
 
+	; Main args
+	XMAINARGS = $2c
+	XGETARGV = $2e
 
 	O_RDONLY = $01
 
@@ -902,6 +905,183 @@ init_argv23
 ;----------------------------------------------------------------------
 get_argv01
 	get_argv
+
+
+;======================================================================
+;			Main arguments
+;======================================================================
+
+;----------------------------------------------------------------------
+; initmainargs
+;
+; usage:
+;	initmainargs ptr_mainargs, value_address
+;
+; note:
+;       ptr_mainargs : may be nothing, AY, address
+;       value_address: may be nothing, X, address
+;
+;----------------------------------------------------------------------
+initmainargs_01
+	initmainargs
+
+initmainargs_02
+	initmainargs AY
+
+initmainargs_03
+	initmainargs _argv
+
+	;----------------------------------------------------------------------
+
+initmainargs_11
+	initmainargs , X
+
+initmainargs_12
+	initmainargs AY, X
+
+initmainargs_13
+	initmainargs _argv, X
+
+	;----------------------------------------------------------------------
+
+initmainargs_21
+	initmainargs , _argc
+
+initmainargs_22
+	initmainargs AY, _argc
+
+initmainargs_23
+	initmainargs _argv, _argc
+
+
+;----------------------------------------------------------------------
+; getmainarg
+;
+; usage:
+;	getmainarg id_arg, ptr_arg, out_ptr
+;
+; note:
+;	id_arg : may be X, #value, address
+;       ptr_arg: may be nothing, AY, (ptr), address
+;       out_ptr: may be nothing, AY, address
+;
+;----------------------------------------------------------------------
+getmainarg_01
+	getmainarg X
+
+getmainarg_02
+	getmainarg X, AY
+
+getmainarg_03
+	getmainarg X, (ptr1)
+
+getmainarg_04
+	getmainarg X, _argv
+
+getmainarg_05
+	getmainarg X, ,AY
+
+getmainarg_06
+	getmainarg X, , dst
+
+	;----------------------------------------------------------------------
+getmainarg_11
+	getmainarg #2
+
+getmainarg_12
+	getmainarg #2, AY
+
+getmainarg_13
+	getmainarg #2, (ptr1)
+
+getmainarg_14
+	getmainarg #2, _argv
+
+getmainarg_15
+	getmainarg #2, , AY
+
+getmainarg_16
+	getmainarg #2, , dst
+
+	;----------------------------------------------------------------------
+
+getmainarg_21
+	getmainarg _argc
+
+getmainarg_22
+	getmainarg _argc, AY
+
+getmainarg_23
+	getmainarg _argc, (ptr1)
+
+getmainarg_24
+	getmainarg _argc, _argv
+
+getmainarg_25
+	getmainarg _argc, , AY
+
+getmainarg_26
+	getmainarg _argc, , dst
+
+	;----------------------------------------------------------------------
+
+getmainarg_31
+	getmainarg X, AY, AY
+
+getmainarg_32
+	getmainarg X, AY, dst
+
+getmainarg_33
+	getmainarg X, (ptr1), AY
+
+getmainarg_34
+	getmainarg X, (ptr1), dst
+
+getmainarg_35
+	getmainarg X, _argv, AY
+
+getmainarg_36
+	getmainarg X, _argv, dst
+
+	;----------------------------------------------------------------------
+
+getmainarg_41
+	getmainarg #2, AY, AY
+
+getmainarg_42
+	getmainarg #2, AY, dst
+
+getmainarg_43
+	getmainarg #2, (ptr1), AY
+
+getmainarg_44
+	getmainarg #2, (ptr1), dst
+
+getmainarg_45
+	getmainarg #2, _argv, AY
+
+getmainarg_46
+	getmainarg #2, _argv, dst
+
+	;----------------------------------------------------------------------
+
+getmainarg_51
+	getmainarg _argc, AY, AY
+
+getmainarg_52
+	getmainarg _argc, AY, dst
+
+getmainarg_53
+	getmainarg _argc, (ptr1), AY
+
+getmainarg_54
+	getmainarg _argc, (ptr1), dst
+
+getmainarg_55
+	getmainarg _argc, _argv, AY
+
+getmainarg_56
+	getmainarg _argc, _argv, dst
 
 
 ;======================================================================
