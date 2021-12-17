@@ -1,0 +1,75 @@
+.ifndef SDK_MAINARGS_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;			Main arguments
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	; initmainargs
+	;
+	; usage:
+	;	initmainargs [ptr_mainargs] [, value_address]
+	;
+	; note:
+	;       ptr_mainargs : may be nothing, AY, address
+	;       value_address: may be nothing, X, address
+	;
+        ; Call XMAINARGS function
+	;----------------------------------------------------------------------
+	.macro initmainargs ptr_mainargs, value_address
+
+		.byte $00, XMAINARGS
+
+		.if ( (.not .blank({ptr_mainargs})) .and (.not (.xmatch({ptr_mainargs},AY) .or .xmatch({ptr_mainargs}, ay))) )
+			sta ptr_mainargs
+			sty ptr_mainargs+1
+		.endif
+
+		.if ( (.not .blank({value_address})) .and (.not (.xmatch({value_address}, X) .or .xmatch({value_address}, x))) )
+			stx value_address
+		.endif
+	.endmacro
+
+	;----------------------------------------------------------------------
+	; getmainarg
+	;
+	; usage:
+	;	getmainarg id_arg [, ptr_arg] [, out_ptr]
+	;
+	; note:
+	;	id_arg : may be X, #value, address
+	;       ptr_arg: may be nothing, AY, (ptr), address
+	;       out_ptr: may be nothing, address
+	;
+        ; Call XGETARGV function
+	;----------------------------------------------------------------------
+	.macro getmainarg id_arg, ptr_arg, output_ptr
+
+		.if ( (.not .xmatch({id_arg}, X)) .and (.not .xmatch({id_arg}, x)) )
+			.if (.match (.left (1, {id_arg}), #))
+				ldx #(.right(.tcount({id_arg})-1, {id_arg}))
+			.else
+				ldx id_arg
+			.endif
+		.endif
+
+		.if ( .blank({ptr_arg}) )
+;			.warning .sprintf("getmainarg: no ptr_arg")
+		.else
+			; TODO: Reject immediate mode
+			.if ( .not (.xmatch({ptr_arg},AY) .or .xmatch({ptr_arg}, ay)) )
+				SDK_get_AY ptr_arg
+			.endif
+		.endif
+
+		.byte $00, XGETARGV
+
+		.if ( (.not .blank({output_ptr})) .and (.not (.xmatch({output_ptr},AY) .or .xmatch({output_ptr}, ay))) )
+			sta output_ptr
+			sty output_ptr+1
+		.endif
+	.endmacro
+
+	SDK_MAINARGS_MAC = 1
+.endif
