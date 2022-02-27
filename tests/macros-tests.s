@@ -371,13 +371,14 @@ print25
 ; usage:
 ;	malloc size [,ptr] [,oom_msg_ptr] [,fail_value]
 ;
-;	malloc
 ;	malloc AY
 ;	malloc #$0100
 ;	malloc (ptr)
 ;	malloc value
 ;
 ; Note:
+;	- if parameter 'size' is 'AY', get size from AY registers
+;	  (A=LSB, Y=MSB)
 ;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
 ;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
 ;		'oom_msg_ptr' and return if AY is null (ie malloc error)
@@ -387,99 +388,70 @@ print25
 ;----------------------------------------------------------------------
 
 malloc01
-	malloc
-
-malloc02
-	malloc , ptr1
-
-malloc03
-	malloc , ptr1, msg
-
-malloc04
-	malloc , , msg
-
-
-	;----------------------------------------------------------------------
-
-malloc11
-	malloc , , , $12
-
-malloc12
-	malloc , ptr1, , $12
-
-malloc13
-	malloc , ptr1, msg, $12
-
-malloc14
-	malloc , , msg, $12
-
-	;----------------------------------------------------------------------
-
-malloc21
 	malloc AY
 
-malloc22
+malloc02
 	malloc AY, ptr1
 
-malloc23
+malloc03
 	malloc AY, ptr1, msg
 
-malloc24
+malloc04
 	malloc AY, , msg
 
 
 	;----------------------------------------------------------------------
 
-malloc31
+malloc11
 	malloc AY, , , $12
 
-malloc32
+malloc12
 	malloc AY, ptr1, , $12
 
-malloc33
+malloc13
 	malloc AY, ptr1, msg, $12
 
-malloc34
+malloc14
 	malloc AY, , msg, $12
 
 	;----------------------------------------------------------------------
 
-malloc41
+malloc21
 	malloc #$1234
 
-malloc42
+malloc22
 	malloc #$1234, ptr1
 
-malloc43
+malloc23
 	malloc #$1234, ptr1, msg
 
-malloc44
+malloc24
 	malloc #$1234, , msg
 
-malloc45
+malloc25
 	malloc var
 
-malloc46
+malloc26
 	malloc (ptr1)
 
 	;----------------------------------------------------------------------
 
-malloc51
+malloc31
 	malloc #$1234, , , $12
 
-malloc52
+malloc32
 	malloc #$1234, ptr1, , $12
 
-malloc53
+malloc33
 	malloc #$1234, ptr1, msg, $12
 
-malloc54
+malloc34
 	malloc #$1234, , msg, $12
 
-malloc55
+malloc35
 	malloc var, , , $12
 
-malloc56
+malloc36
 	malloc (ptr1), , , $12
 
 ;----------------------------------------------------------------------
@@ -929,12 +901,13 @@ get_argv01
 ; initmainargs
 ;
 ; usage:
-;	initmainargs ptr_mainargs, value_address
+;	initmainargs [ptr_mainargs] [, value_address]
 ;
 ; note:
 ;       ptr_mainargs : may be nothing, AY, address
 ;       value_address: may be nothing, X, address
 ;
+; Call XMAINARGS function
 ;----------------------------------------------------------------------
 initmainargs_01
 	initmainargs
@@ -972,13 +945,14 @@ initmainargs_23
 ; getmainarg
 ;
 ; usage:
-;	getmainarg id_arg, ptr_arg, out_ptr
+;	getmainarg id_arg [, ptr_arg] [, out_ptr]
 ;
 ; note:
 ;	id_arg : may be X, #value, address
 ;       ptr_arg: may be nothing, AY, (ptr), address
 ;       out_ptr: may be nothing, AY, address
 ;
+; Call XGETARGV function
 ;----------------------------------------------------------------------
 getmainarg_01
 	getmainarg X

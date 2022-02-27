@@ -8,16 +8,15 @@
 	;----------------------------------------------------------------------
 	;
 	; usage:
-	;	malloc [size] [,ptr] [,oom_msg_ptr] [,fail_value]
+	;	malloc size [,ptr] [,oom_msg_ptr] [,fail_value]
 	;
-	;	malloc
 	;	malloc AY
 	;	malloc #$0100
 	;	malloc (ptr)
 	;	malloc value
 	;
 	; Note:
-	;	- if parameter 'size' is blank or 'AY', get size from AY registers
+	;	- if parameter 'size' is 'AY', get size from AY registers
 	;	  (A=LSB, Y=MSB)
 	;	- if parameter 'ptr' is present, store resulting AY in ptr &ptr+1
 	;	- if parameter 'oom_msg_ptr' is present, emit string pointed by
@@ -27,6 +26,10 @@
 	;
 	;----------------------------------------------------------------------
 	.macro malloc size, ptr, oom_msg_ptr, fail_value
+
+		.if ( .blank({size}) )
+			.error "malloc: mandatory argument 'size' missing"
+		.endif
 
 		.if ( (.not .blank({size})) .and (.not .xmatch({size}, AY)) .and (.not .xmatch({size}, ay)) )
 			;SDK_imm_or_ind_or_abs size

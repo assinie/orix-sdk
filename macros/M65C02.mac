@@ -282,18 +282,49 @@
 	; P : modified
 	;----------------------------------------------------------
 	.macro phx
+		.local cpu_a, cpu_p
+		; txa
+		; pha
+
+		; Version RAM avec sauvegarde de ACC et P dans le code
+		sta cpu_a
+		php
+		pla
+		sta cpu_p
 		txa
 		pha
+	cpu_p := *+1
+		lda #$00
+		pha
+	cpu_a := *+1
+		lda #$00
+		plp
 	.endmacro
 
 	;----------------------------------------------------------
 	;		   Instruction: phy
 	;
 	; Use A -> /!\ A := Y
+	; P : modified
 	;----------------------------------------------------------
 	.macro phy
+		.local cpu_a, cpu_p
+		; tya
+		; pha
+
+		; Version RAM avec sauvegarde de ACC et P dans le code
+		sta cpu_a
+		php
+		pla
+		sta cpu_p
 		tya
 		pha
+	cpu_p := *+1
+		lda #$00
+		pha
+	cpu_a := *+1
+		lda #$00
+		plp
 	.endmacro
 
 	;----------------------------------------------------------
@@ -302,8 +333,18 @@
 	; Use A -> /!\ A := X
 	;----------------------------------------------------------
 	.macro plx
+		.local cpu_a
+		; pla
+		; tax
+
+		; Version RAM avec sauvegarde de ACC dans le code
+		sta cpu_a
 		pla
 		tax
+		php
+	cpu_a := *+1
+		lda #$00
+		plp
 	.endmacro
 
 	;----------------------------------------------------------
@@ -312,8 +353,52 @@
 	; Use A -> /!\ A := Y
 	;----------------------------------------------------------
 	.macro ply
+		.local cpu_a
+		; pla
+		; tay
+
+		; Version RAM avec sauvegarde de ACC dans le code
+		sta cpu_a	; [4/3] (cpu_a absolu / zp)
 		pla
 		tay
+		php
+	cpu_a := *+1
+		lda #$00	; [2/3] (immadiat / zp)
+		plp
+	.endmacro
+
+	;----------------------------------------------------------
+	;		   Instruction: inc a
+	;
+	; Flags: N, Z
+	;----------------------------------------------------------
+	.macro ina
+		php		; [3]
+		clc		; [2]
+		adc #$01	; [2]
+		plp		; [4]
+		and #$ff	; [2] => 13 cycles
+
+		;sta cpu_a	; [3] (+1 si pas en zp)
+		;inc cpu_a	; [5] (+1 si pas en zp)
+		;lda cpu_a	; [3] (+1 si pas en zp) => 11/14 cycles
+	.endmacro
+
+	;----------------------------------------------------------
+	;		   Instruction: dec a
+	;
+	; Flags: N, Z
+	;----------------------------------------------------------
+	.macro dea
+		php
+		sec
+		sbc #$01
+		plp
+		and #$ff
+
+		;sta cpu_a	; [3]
+		;dec cpu_a	; [5]
+		;lda cpu_a	; [3] => 11/14 cycles
 	.endmacro
 .endif
 
