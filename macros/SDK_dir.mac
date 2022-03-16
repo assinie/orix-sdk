@@ -21,7 +21,7 @@
 		.endif
 
 		; TODO:Reject immediate mode for ptr
-		SDK_get_AX ptr
+		SDK_get_AY ptr
 
 		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
 			jsr XMKDIR_ROUTINE

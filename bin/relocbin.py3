@@ -11,7 +11,7 @@ import sys
 
 import argparse
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 # pprint(args)
 
@@ -176,8 +176,9 @@ def Createheader(header, version, size):
     newheader += bytes([header['end'] % 256, header['end'] // 256])
     newheader += bytes([header['size'] % 256, header['size'] // 256])
 
-    print(header)
-    print(newheader)
+    # print(header)
+    # print(newheader)
+
     return newheader
 
 
@@ -217,13 +218,14 @@ def diff(file1, file2, output, formatversion, color, verbose):
                     eprint("Différence d'adresses non multiple de 256 (%s:$%04x, %s:$%04x)" % (f1.name, header1['start'], f2.name, header2['start']))
                     exit(1)
 
-                print("Orix files:")
-                print("\t%s: size: %d, start: $%04x, end: $%04x " % (f1.name, header1['size'], header1['start'], header1['end']))
-                print("\t%s: size: %d, start: $%04x, end: $%04x " % (f2.name, header2['size'], header2['start'], header2['end']))
-                print()
+                if verbose:
+                    print("Orix files:")
+                    print("\t%s: size: %d, start: $%04x, end: $%04x " % (f1.name, header1['size'], header1['start'], header1['end']))
+                    print("\t%s: size: %d, start: $%04x, end: $%04x " % (f2.name, header2['size'], header2['start'], header2['end']))
+                    print()
 
-                print('    |    M A P    |%-24s|%-24s' % (f1.name, f2.name))
-                print('____|_____________|________________________|________________________')
+                    print('    |    M A P    |%-24s|%-24s' % (f1.name, f2.name))
+                    print('____|_____________|________________________|________________________')
 
                 o = 0
                 n = 0
@@ -240,7 +242,7 @@ def diff(file1, file2, output, formatversion, color, verbose):
 
                     if c1 != c2:
                         o += 2**(7 - i % 8)
-                        if output is not None:
+                        if (output is not None) and (formatversion in [None,3]):
                             offsetmap.append(offset_start)
 
                         offset_start = 1
@@ -273,7 +275,9 @@ def diff(file1, file2, output, formatversion, color, verbose):
                             # output.write(bytes([o]))
                             bitfieldmap.append(o)
 
-                        print("%04X| %s %02X |%s|%s" % (i - 8, map, o, s1, s2))
+                        if verbose:
+                            print("%04X| %s %02X |%s|%s" % (i - 8, map, o, s1, s2))
+
                         s1 = ""
                         s2 = ""
                         map = ""
@@ -281,24 +285,31 @@ def diff(file1, file2, output, formatversion, color, verbose):
 
                     offset_start = offset_start + 1
                     if offset_start > 255:
-                        eprint("Panic : can't generate a binary with this version")
-                        exit(1)
+                        if formatversion == 3:
+                            eprint("\nPanic : can't generate a binary with this version")
+                            exit(1)
+
+                        elif formatversion is None:
+                            formatversion = 2
 
                 # write last byte if any
                 if s1 != '':
-                    bitfieldmap.append(o)
+                    if output is not None:
+                        bitfieldmap.append(o)
 
                     if color:
                         # Ajustement necessaire a cause des \e[xxm
                         s1 += '%*s' % ((8 - (i % 8)) * 3, ' ')
 
-                    # print("%*s %02X |%-24s|%-24s" % (8-(i%8), ' ',o,s1,s2))
-                    print("%04X| %s%*s %02X |%-24s|%-24s" % (i - (i % 8), map, 8 - (i % 8), ' ', o, s1, s2))
+                    if verbose:
+                        # print("%*s %02X |%-24s|%-24s" % (8-(i%8), ' ',o,s1,s2))
+                        print("%04X| %s%*s %02X |%-24s|%-24s" % (i - (i % 8), map, 8 - (i % 8), ' ', o, s1, s2))
 
-                print('____|_____________|________________________|________________________')
-                print('                      Size         %6d' % i)
-                print('                      Differences  %6d' % n)
-                print('____________________________________________________________________')
+                if verbose:
+                    print('____|_____________|________________________|________________________')
+                    print('                      Size         %6d' % i)
+                    print('                      Differences  %6d' % n)
+                    print('____________________________________________________________________')
 
                 if formatversion in (None, 2):
                     print("Format 2 overhead: ", header1['size']//8 + (1 if header1['size'] % 8 else 0), len(bitfieldmap))
@@ -361,7 +372,7 @@ def main():
 
     diff(args.file1, args.file2, args.outputfile, args.formatversion, args.color, args.verbose)
 
-    print(args)
+    # print(args)
 
 
 if __name__ == '__main__':

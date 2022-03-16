@@ -121,7 +121,7 @@
 ;		.word end		; end of loading adress
 ;		.word exec		; starting adress
 		.word __MAIN_START__
-		.word __MAIN_LAST__
+		.word __MAIN_LAST__ - 1	; end of file
 ;		.word __MAIN_START__	; starting adress
 		.word exec
 .endmacro
