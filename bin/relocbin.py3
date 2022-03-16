@@ -245,7 +245,7 @@ def diff(file1, file2, output, formatversion, color, verbose):
                         if (output is not None) and (formatversion in [None,3]):
                             offsetmap.append(offset_start)
 
-                        offset_start = 1
+                        offset_start = 0
                         # Ordre inverse a cause de la boucle
                         # lda($00),x avec x=7 -> 0
                         # o += 2**(i%8)
