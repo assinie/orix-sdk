@@ -107,5 +107,28 @@
 
 	.endmacro
 
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	crlf [TELEMON]
+	;
+	; Option:
+	;	- TELEMON: when used within TELEMON bank
+	;
+	; Call XCRLF function
+	;
+	;----------------------------------------------------------------------
+	.macro crlf option
+		.if (.not .blank({option})) .and (.not .xmatch({option}, NOSAVE)) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [NOSAVE,TELEMON])", .string(option))
+		.endif
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XCRLF_ROUTINE
+		.else
+			.byte $00, XCRLF
+		.endif
+	.endmacro
+
 	SDK_PRINT_MAC = 1
 .endif

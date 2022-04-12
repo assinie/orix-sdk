@@ -20,28 +20,28 @@
 */
 
 /*
-label { addr $200A; name "src"; size 10;};
-range { start $200A; end $2013; name "src"; type bytetable; };
+label { addr $1FD7; name "src"; size 10; };
+range { start $1FD7; end $1FE0; name "src"; type bytetable; };
 
-label { addr $2014; name "dst"; size 10;};
-range { start $2014; end $201D; name "dst"; type bytetable; };
+label { addr $1FE1; name "dst"; size 10; };
+range { start $1FE1; end $1FEA; name "dst"; type bytetable; };
 
-label { addr $201E; name "ptr1"; size 2; };
-range { start $201E; end $201F; name "ptr1"; type addrtable; };
+label { addr $1FEB; name "ptr1"; size 2; };
+range { start $1FEB; end $1FEC; name "ptr1"; type addrtable; };
 
-label { addr $2020; name "ptr2"; size 2; };
-range { start $2020; end $2021; name "ptr2"; type addrtable; };
+label { addr $1FED; name "ptr2"; size 2; };
+range { start $1FED; end $1FEE; name "ptr2"; type addrtable; };
 
-label { addr $2022; name "fp"; size 2; };
-range { start $2022; end $2023; name "fp"; type wordtable; };
+label { addr $1FEF; name "fp"; size 2; };
+range { start $1FEF; end $1FF0; name "fp"; type wordtable; };
 
-label { addr $2024; name "msg"; size 6;};
-range { start $2024; end $202A; name "msg"; type texttable; };
+label { addr $1FF1; name "msg"; size 6; };
+range { start $1FF1; end $1FF6; name "msg"; type texttable; };
 
-label { addr $202B; name "_argc"; };
+label { addr $1FF8; name "_argc"; };
 
-label { addr $202C; name "_argv"; size 2; };
-range { start $202C; end $202D; name "_argv"; type addrtable; };
+label { addr $1FF9; name "_argv"; size 2; };
+range { start $1FF9; end $1FFA; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
@@ -57,15 +57,18 @@ range { start $202C; end $202D; name "_argv"; type addrtable; };
 ;----------------------------------------------------------------------
 	XWR0 = $10
 	XWSTR0 = $14
+	XCRLF = $25
 	XFREAD = $27
 	XOPEN = $30
 	XCOSCR = $34
 	XCSSCR = $35
 	XCLOSE = $3a
 	XFWRITE = $3b
+	XFSEEK = $3f
 	XMKDIR = $4b
 	XMALLOC = $5b
 	XFREE = $62
+	XFSEEK = $3f
 
 	; Path Management
 	XGETCWD  = $48          ; Get current CWD
@@ -85,6 +88,8 @@ range { start $202C; end $202D; name "_argv"; type addrtable; };
 .zeropage
 	RES: .res 2
 	RESB: .res 2
+
+	zptr: .res 2
 
 	PTR_READ_DEST  := $2C
 
@@ -740,6 +745,28 @@ fclose01
 
 fclose02
 	fclose (ptr1), TELEMON
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	fseek fp, offset, whence
+;
+; note:
+;	fp may be : (ptr), address
+;	offset may be: (ptr), address, constant
+;	whence may be  : address, #value
+;
+; Call XFSEEK function
+;----------------------------------------------------------------------
+fseek01
+	fseek fp, $12345678, 2
+
+fseek02
+	fseek fp, (zptr), 2
+
+fseek03
+	fseek fp, src, 2
 
 
 ;----------------------------------------------------------------------
