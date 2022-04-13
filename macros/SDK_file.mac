@@ -169,7 +169,7 @@
 	;----------------------------------------------------------------------
 	;
 	; usage:
-	;	fseek fp, offset, whence
+	;	fseek fp, offset, whence [, TELEMON]
 	;
 	; note:
 	;	fp may be : (ptr), address
@@ -248,6 +248,44 @@
 			.byte $00, XFSEEK
 		.endif
 
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	unlink filename [, TELEMON]
+	;
+	; note:
+	;	filename may be : (ptr), address
+	;
+	; Call XRM function
+	;----------------------------------------------------------------------
+	.macro unlink file, option
+		; sortie: A=0 -> OK, ENOENT -> fichier inexistant
+
+		.if (.not .blank({option})) .and (.not .xmatch({option}, TELEMON) )
+			.error .sprintf("Unknown option: '%s' (not in [TELEMON])", .string(option))
+		.endif
+
+		; 'file' must be an address in normal RAM
+		.if (.match (.left (1, {file}), #))
+			.assert .mid(1, .tcount({file})-1, {file}) < $c000-1, error, "unlink() file must be < $C000"
+
+		.elseif (.match (.left (1, {file}), {(}))
+			;.assert .mid(1,1,{file}) < $c000-1, warning, "unlink() file must be < $C000"
+			;.assert * > *, warning, "fopen() file must be < $C000"
+
+		.else
+			.assert file < $c000-1, error, "unlink() file must be < $C000"
+		.endif
+
+		SDK_get_AX file
+
+		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			jsr XRM_ROUTINE
+		.else
+			.byte $00, XRM
+		.endif
 	.endmacro
 
 	SDK_FILE_MAC = 1

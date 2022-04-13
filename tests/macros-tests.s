@@ -20,29 +20,34 @@
 */
 
 /*
-label { addr $1FD7; name "src"; size 10; };
-range { start $1FD7; end $1FE0; name "src"; type bytetable; };
+label { addr $1FE9; name "src"; size 10; };
+range { start $1FE9; end $1FF2; name "src"; type bytetable; };
 
-label { addr $1FE1; name "dst"; size 10; };
-range { start $1FE1; end $1FEA; name "dst"; type bytetable; };
+label { addr $1FF3; name "dst"; size 10; };
+range { start $1FF3; end $1FFC; name "dst"; type bytetable; };
 
-label { addr $1FEB; name "ptr1"; size 2; };
-range { start $1FEB; end $1FEC; name "ptr1"; type addrtable; };
+label { addr $1FFD; name "ptr1"; size 2; };
+range { start $1FFD; end $1FFE; name "ptr1"; type addrtable; };
 
-label { addr $1FED; name "ptr2"; size 2; };
-range { start $1FED; end $1FEE; name "ptr2"; type addrtable; };
+label { addr $1FFF; name "ptr2"; size 2; };
+range { start $1FFF; end $2000; name "ptr2"; type addrtable; };
 
-label { addr $1FEF; name "fp"; size 2; };
-range { start $1FEF; end $1FF0; name "fp"; type wordtable; };
+label { addr $2001; name "fp"; size 2; };
+range { start $2001; end $2002; name "fp"; type wordtable; };
 
-label { addr $1FF1; name "msg"; size 6; };
-range { start $1FF1; end $1FF6; name "msg"; type texttable; };
+label { addr $2003; name "msg"; size 6; };
+range { start $2003; end $2008; name "msg"; type texttable; };
 
-label { addr $1FF8; name "_argc"; };
+label { addr $200A; name "_argc"; };
 
-label { addr $1FF9; name "_argv"; size 2; };
-range { start $1FF9; end $1FFA; name "_argv"; type addrtable; };
+label { addr $200B; name "_argv"; size 2; };
+range { start $200B; end $200C; name "_argv"; type addrtable; };
 */
+
+;----------------------------------------------------------------------
+;                       cc65 includes
+;----------------------------------------------------------------------
+;.include "telestrat.inc"
 
 ;----------------------------------------------------------------------
 ;			Orix SDK includes
@@ -66,9 +71,9 @@ range { start $1FF9; end $1FFA; name "_argv"; type addrtable; };
 	XFWRITE = $3b
 	XFSEEK = $3f
 	XMKDIR = $4b
+	XRM = $4d
 	XMALLOC = $5b
 	XFREE = $62
-	XFSEEK = $3f
 
 	; Path Management
 	XGETCWD  = $48          ; Get current CWD
@@ -750,7 +755,7 @@ fclose02
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	fseek fp, offset, whence
+;	fseek fp, offset, whence [, TELEMON]
 ;
 ; note:
 ;	fp may be : (ptr), address
@@ -768,6 +773,22 @@ fseek02
 fseek03
 	fseek fp, src, 2
 
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	unlink filename [, TELEMON]
+;
+; note:
+;	filename may be : (ptr), address
+;
+; Call XRM function
+;----------------------------------------------------------------------
+unlink01
+	unlink src
+
+unlink02
+	unlink (ptr2)
 
 ;----------------------------------------------------------------------
 ;
