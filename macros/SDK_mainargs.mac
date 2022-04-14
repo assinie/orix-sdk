@@ -42,7 +42,7 @@
 	;       ptr_arg: may be nothing, AY, (ptr), address
 	;       out_ptr: may be nothing, address
 	;
-        ; Call XGETARGV function
+	; Call XGETARGV function
 	;----------------------------------------------------------------------
 	.macro getmainarg id_arg, ptr_arg, output_ptr
 

@@ -8,9 +8,9 @@
 	;----------------------------------------------------------------------
 	;
 	; usage:
-	;	print #byte [,TELEMON|NOSAVE]
-	;	print (pointer) [,TELEMON|NOSAVE]
-	;	print address [,TELEMON|NOSAVE]
+	;	print #byte [,TELEMON|SAVE]
+	;	print (pointer) [,TELEMON|SAVE]
+	;	print address [,TELEMON|SAVE]
 	;
 	; Option:
 	;	- TELEMON: when used within TELEMON bank
@@ -20,15 +20,19 @@
 	;
 	;----------------------------------------------------------------------
 	.macro print str, option
-		.if (.not .blank({option})) .and (.not .xmatch({option}, NOSAVE)) .and (.not .xmatch({option}, TELEMON) )
-			.error .sprintf("Unknown option: '%s' (not in [NOSAVE,TELEMON])", .string(option))
+		.if (.not .blank({option}))
+			.if .xmatch({option}, NOSAVE) .or .xmatch({option}, nosave)
+				.warning "print: NOSAVE option deprecated (default behaviour)"
+			.elseif (.not .xmatch({option}, SAVE)) .and (.not .xmatch({option}, save )) .and (.not .xmatch({option}, TELEMON)) .and (.not .xmatch({option}, telemon))
+				.error .sprintf("Unknown option: '%s' (not in [SAVE,TELEMON])", .string(option))
+			.endif
 		.endif
 
 		;.if (.not .blank({option})) .and .xmatch({option}, NOSAVE)
 		;	.out "Don't save regs values"
 		;.endif
 
-		.if .blank({option})
+		.if (.not .blank({option})) .and (.xmatch({option}, SAVE) .or .xmatch({option}, save))
 			pha
 			txa
 			pha
@@ -36,7 +40,7 @@
 			pha
 		.endif
 
-		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
 			pha
 			txa
 			pha
@@ -54,7 +58,7 @@
 
 		.if (.match (.left (1, {str}), #))
 			;.out "Mode: immediat"
-			.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
 				jsr XWR0_ROUTINE
 			.else
 				.byte $00, XWR0
@@ -64,7 +68,7 @@
 			;.out "Mode: indirect"
 			.if (.match(.right(1,{str}), {)}))
 
-				.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+				.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
 					jsr XWSTR0_ROUTINE
 				.else
 					.byte $00, XWSTR0
@@ -75,7 +79,7 @@
 
 		.else
 			;.out "Mode:absolu"
-			.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+			.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
 				jsr XWSTR0_ROUTINE
 			.else
 				.byte $00, XWSTR0
@@ -84,7 +88,7 @@
 		.endif
 
 
-		.if .blank({option})
+		.if (.not .blank({option})) .and (.xmatch({option}, SAVE) .or .xmatch({option}, save))
 			pla
 			tay
 			pla
@@ -92,7 +96,7 @@
 			pla
 		.endif
 
-		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
+		.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
 			pla
 			sta RES+1
 			pla

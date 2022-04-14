@@ -67,6 +67,8 @@ range { start $200B; end $200C; name "_argv"; type addrtable; };
 	XOPEN = $30
 	XCOSCR = $34
 	XCSSCR = $35
+	XSCROH = $37
+	XSCROB = $38
 	XCLOSE = $3a
 	XFWRITE = $3b
 	XFSEEK = $3f
@@ -312,48 +314,48 @@ strlen02
 ;----------------------------------------------------------------------
 ;
 ; usage:
-;	print #byte [,TELEMON|NOSAVE]
-;	print (pointer) [,TELEMON|NOSAVE]
-;	print address [,TELEMON|NOSAVE]
+;	print #byte [,TELEMON|SAVE]
+;	print (pointer) [,TELEMON|SAVE]
+;	print address [,TELEMON|SAVE]
 ;
 ; Option:
 ;	- TELEMON: when used within TELEMON bank
-;	- NOSAVE : does not preserve A,X,Y registers
+;	- SAVE : preserve A,X,Y registers
 ;
 ; Call XWSTR0 function
 ;
 ;----------------------------------------------------------------------
 print01
-	print #'A'
+	print #'A', SAVE
 
 print02
-	print #$41
+	print #$41, SAVE
 
 print03
-	print (ptr1)
+	print (ptr1), SAVE
 
 print04
-	print src
+	print src, SAVE
 
 print05
-	print $1234
+	print $1234, SAVE
 
 	;----------------------------------------------------------------------
 
 print11
-	print #'A', NOSAVE
+	print #'A'
 
 print12
-	print #$41, NOSAVE
+	print #$41
 
 print13
-	print (ptr1), NOSAVE
+	print (ptr1)
 
 print14
-	print src, NOSAVE
+	print src
 
 print15
-	print $1234, NOSAVE
+	print $1234
 
 	;----------------------------------------------------------------------
 
@@ -1121,7 +1123,7 @@ getmainarg_56
 
 
 ;======================================================================
-;				Misc
+;				Display
 ;======================================================================
 ;----------------------------------------------------------------------
 ;
@@ -1143,6 +1145,41 @@ cursor03
 
 cursor04
 	cursor OFF
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	scroll up|down [, [start] [, end]]
+;
+; note:
+;	start: optional, may be value, adress
+;	       empty: use X register
+;
+;	end  : optional, may be value, adress
+;	       empty: use Y register
+;
+; Call XCSCROB/XCSCROH functions
+;----------------------------------------------------------------------
+scroll01
+	scroll up, 1, 25
+
+scroll02
+	scroll up, ptr1, ptr2
+
+scroll03
+	scroll up
+
+	;----------------------------------------------------------------------
+
+scroll11
+	scroll down, 1, 25
+
+scroll12
+	scroll down, ptr1, ptr2
+
+scroll13
+	scroll down
 
 
 ;======================================================================

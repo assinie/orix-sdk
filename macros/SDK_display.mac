@@ -25,5 +25,49 @@
 		.endif
 	.endmacro
 
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	scroll up|down [, [start] [, end]]
+	;
+	; note:
+	;	start: optional, may be value, adress
+	;	       empty: use X register
+	;
+	;	end  : optional, may be value, adress
+	;	       empty: use Y register
+	;
+	; Call XCSCROB/XCSCROH functions
+	;----------------------------------------------------------------------
+	.macro scroll dir, start, end
+
+		.if .not .blank(start)
+			.if .const(start)
+				ldx #start
+			.else
+				ldx start
+			.endif
+		.endif
+
+		.if .not .blank(end)
+			.if .const(end)
+				ldy #end
+			.else
+				ldy end
+			.endif
+		.endif
+
+		.if (.xmatch(.string(dir), .string(UP)) .or .xmatch(.string(dir), .string(up)))
+			.byte $00, XSCROH
+
+		.elseif (.xmatch(.string(dir), .string(DOWN)) .or .xmatch(.string(dir), .string(down)))
+			.byte $00, XSCROB
+
+		.else
+			.error .sprintf("Unknown parameter value: %s (must be up or down)", .string(dir))
+		.endif
+
+	.endmacro
+
 	SDK_DISPLAY_MAC = 1
 .endif

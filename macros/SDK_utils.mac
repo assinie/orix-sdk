@@ -291,7 +291,7 @@
 
 
 			.if (.not .blank({oom_msg_ptr}))
-				print oom_msg_ptr, NOSAVE
+				print oom_msg_ptr
 
 				sec
 
