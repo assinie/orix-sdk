@@ -183,7 +183,12 @@
 
 		ldx whence
 
-		SDK_get_AY fp
+		.if .const(fp)
+			SDK_get_AY fp
+		.else
+			lda 0+(fp)
+			ldy 1+(fp)
+		.endif
 		sta RES
 		sty RES+1
 

@@ -1,0 +1,37 @@
+.ifndef SDK_PROCESS_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;				Process
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	exec command
+	;
+	; note:
+	;	command may be : (ptr), address
+	;
+	; Call XEXEC function
+	;----------------------------------------------------------------------
+	.macro exec command
+		; 'command' must be an address in normal RAM
+		.if (.match (.left (1, {command}), #))
+			.assert .mid(1, .tcount({command})-1, {command}) < $c000-1, error, "exec() command must be < $C000"
+
+		.elseif (.match (.left (1, {command}), {(}))
+			;.assert .mid(1,1,{command}) < $c000-1, warning, "exec() command must be < $C000"
+			;.assert * > *, warning, "fopen() command must be < $C000"
+
+		.else
+			.assert command < $c000-1, error, "exec() command must be < $C000"
+		.endif
+
+		SDK_get_AY command
+
+		.byte $00, XEXEC
+	.endmacro
+
+	SDK_PROCESS_MAC = 1
+.endif

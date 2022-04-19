@@ -5,3 +5,5 @@
 *.dep
 *.sym
 build/
+tmp/
+work/
