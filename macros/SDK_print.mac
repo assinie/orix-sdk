@@ -115,52 +115,9 @@
 
 	.endmacro
 
-	;----------------------------------------------------------------------
-	;
-	; usage:
-	;	crlf [TELEMON]
-	;
-	; Option:
-	;	- TELEMON: when used within TELEMON bank
-	;
-	; Call XCRLF function
-	;
-	;----------------------------------------------------------------------
-	.macro crlf option
-		.if (.not .blank({option})) .and (.not .xmatch({option}, NOSAVE)) .and (.not .xmatch({option}, TELEMON) )
-			.error .sprintf("Unknown option: '%s' (not in [NOSAVE,TELEMON])", .string(option))
-		.endif
-
-		.if (.not .blank({option})) .and .xmatch({option}, TELEMON)
-			jsr XCRLF_ROUTINE
-		.else
-			.byte $00, XCRLF
-		.endif
-	.endmacro
 
 	;----------------------------------------------------------------------
-	; usage:
-	;	cputc n
-	;	cputc 'c'
-	;	cputc
 	;
-	; note:
-	;	- no parameter: use the value of A register
-	;
-	; Alias for: print #'c'
-	;
-	; Call XWR0
 	;----------------------------------------------------------------------
-	.macro cputc char
-		.if .blank(char)
-			.byte $00, XWR0
-		.else
-			; pha
-			lda	#char
-			.byte $00, XWR0
-			; pla
-		.endif
-	.endmacro
-
 	SDK_PRINT_MAC = 1
 .endif

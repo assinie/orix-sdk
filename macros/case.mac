@@ -1,0 +1,114 @@
+.ifndef SDK_CASE_MAC
+
+	;----------------------------------------------------------------------
+	;			case / end_case
+	;----------------------------------------------------------------------
+
+	.scope _case_
+		n .set 0
+	.endscope
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	do_case
+	;	do_case var
+	;
+	;
+	; Start case/endcase flow control
+	;
+	;----------------------------------------------------------------------
+	.macro do_case var
+		_case_::n .set _case_::n+1
+
+		.ifnblank var
+			lda	var
+		.endif
+
+	.endmacro
+
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	case_of value, function
+	;	case_of {min, max}, function
+	;
+	;
+	; Call function if A register equals value or is in range [min, max]
+	; then jump after end_case statement
+	;----------------------------------------------------------------------
+	.macro case_of value, func
+		.local @skip, @in
+		.local nb_tokens
+
+		nb_tokens .set .tcount({value})
+
+		.if nb_tokens <> 3
+				cmp	#value
+				bne	@skip
+				jsr	func
+				jmp	.ident(.sprintf("_end_case_%d",_case_::n))
+
+		.else
+				cmp	#.left(1, {value})
+				bcc	@skip   ; out_inf
+
+				;cmp	#.right(1, {value})
+				;beq	@in
+				;bcs	@skip	; out_max
+				cmp	#.right(1, {value})+1
+				bcs	@skip	; out_max
+
+			@in:
+				;c=0 (in range)
+				;z=1 + c=1 (max)
+				;rts
+				jsr	func
+				jmp	.ident(.sprintf("_end_case_%d",_case_::n))
+
+			;out_inf
+			;	c=0
+			;	rts
+			;out_max
+			;	c=1
+			;	rts
+
+		.endif
+
+		@skip:
+
+	.endmacro
+
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	otherwise function
+	;
+	;
+	; Call function
+	;
+	;----------------------------------------------------------------------
+	.macro otherwise func
+		jsr	func
+	.endmacro
+
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	end_case
+	;
+	; End case/endcase flow control
+	;----------------------------------------------------------------------
+	.macro end_case
+		.ident(.sprintf("_end_case_%d",_case_::n)):
+	.endmacro
+
+
+	;----------------------------------------------------------------------
+	;
+	;----------------------------------------------------------------------
+	SDK_CASE_MAC = 1
+.endif
