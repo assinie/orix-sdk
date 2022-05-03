@@ -152,7 +152,7 @@ def Readheader(ftap):
         header['start'] = fileStartAdr
         header['end'] = fileEndAdr
         header['exec'] = fileExecAdr
-        header['size']  = header['end']-header['start']+1
+        header['size']  = header['end']-header['start']
 
         return header
 

@@ -33,6 +33,7 @@
 		;.endif
 
 		.if (.not .blank({option})) .and (.xmatch({option}, SAVE) .or .xmatch({option}, save))
+			php
 			pha
 			txa
 			pha
@@ -41,6 +42,7 @@
 		.endif
 
 		.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
+			php
 			pha
 			txa
 			pha
@@ -94,6 +96,7 @@
 			pla
 			tax
 			pla
+			plp
 		.endif
 
 		.if (.not .blank({option})) .and (.xmatch({option}, TELEMON) .or .xmatch({option}, telemon))
@@ -107,6 +110,7 @@
 			pla
 			tax
 			pla
+			plp
 		.endif
 
 	.endmacro
@@ -131,6 +135,30 @@
 			jsr XCRLF_ROUTINE
 		.else
 			.byte $00, XCRLF
+		.endif
+	.endmacro
+
+	;----------------------------------------------------------------------
+	; usage:
+	;	cputc n
+	;	cputc 'c'
+	;	cputc
+	;
+	; note:
+	;	- no parameter: use the value of A register
+	;
+	; Alias for: print #'c'
+	;
+	; Call XWR0
+	;----------------------------------------------------------------------
+	.macro cputc char
+		.if .blank(char)
+			.byte $00, XWR0
+		.else
+			; pha
+			lda	#char
+			.byte $00, XWR0
+			; pla
 		.endif
 	.endmacro
 
