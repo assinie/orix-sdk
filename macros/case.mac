@@ -3,9 +3,22 @@
 	;----------------------------------------------------------------------
 	;			case / end_case
 	;----------------------------------------------------------------------
+	;
+	; do_case var
+	;	case_of 1, function1
+	;	case_of 2, function2
+	;	case_of {3, 9}, functions3_9
+	;	case_of 10
+	;		lda	#$ff
+	;		jsr	subr1
+	;	otherwise func_other
+	; end_case
+	;----------------------------------------------------------------------
 
 	.scope _case_
-		n .set 0
+		id .set 0
+		item .set 0
+		cp_code .set $c9
 	.endscope
 
 	;----------------------------------------------------------------------
@@ -13,16 +26,32 @@
 	; usage:
 	;	do_case
 	;	do_case var
-	;
+	;	do_case A|X|Y
 	;
 	; Start case/endcase flow control
 	;
 	;----------------------------------------------------------------------
 	.macro do_case var
-		_case_::n .set _case_::n+1
+		_case_::id .set _case_::id+1
+		_case_::item .set 0
+		_case_::cp_code .set $c9
 
 		.ifnblank var
-			lda	var
+			.if .xmatch(var, A) .or .xmatch(var, a)
+				; cmp
+				_case_::cp_code .set $c9
+
+			.elseif .xmatch(var, X) .or .xmatch(var, x)
+				; cpx
+				_case_::cp_code .set $e0
+
+			.elseif .xmatch(var, Y) .or .xmatch(var, Y)
+				; cpy
+				_case_::cp_code .set $c0
+
+			.else
+				lda	var
+			.endif
 		.endif
 
 	.endmacro
@@ -35,7 +64,7 @@
 	;	case_of {min, max}, function
 	;
 	;
-	; Call function if A register equals value or is in range [min, max]
+	; Call function if A|X|Y register equals value or is in range [min, max]
 	; then jump after end_case statement
 	;----------------------------------------------------------------------
 	.macro case_of value, func
@@ -44,28 +73,49 @@
 
 		nb_tokens .set .tcount({value})
 
+		.if _case_::item
+			jmp	.ident(.sprintf("_end_case_%d",_case_::id))
+
+			.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item)):
+		.endif
+
+		_case_::item .set _case_::item+1
+
 		.if nb_tokens <> 3
-				cmp	#value
-				bne	@skip
+				; cmp	#value
+				.byte	_case_::cp_code, value
+				bne	.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item))
+
+			.ifnblank func
 				jsr	func
-				jmp	.ident(.sprintf("_end_case_%d",_case_::n))
+			.endif
 
 		.else
-				cmp	#.left(1, {value})
-				bcc	@skip   ; out_inf
+				; cmp	#.left(1, {value})
+				.byte	_case_::cp_code, .left(1, {value})
+				; bcc	@skip	; out_inf
+				bcc	.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item))
 
-				;cmp	#.right(1, {value})
+				; cmp	#.right(1, {value})
+				;.byte	_case_::cp_code, .right(1, {value})
 				;beq	@in
 				;bcs	@skip	; out_max
-				cmp	#.right(1, {value})+1
-				bcs	@skip	; out_max
+
+				; cmp	#.right(1, {value})+1
+				.byte	_case_::cp_code, .right(1, {value})+1
+				; bcs	@skip	; out_max
+				bcs	.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item))
 
 			@in:
 				;c=0 (in range)
 				;z=1 + c=1 (max)
 				;rts
+
+			.ifnblank func
 				jsr	func
-				jmp	.ident(.sprintf("_end_case_%d",_case_::n))
+			.endif
+
+				jmp	.ident(.sprintf("_end_case_%d",_case_::id))
 
 			;out_inf
 			;	c=0
@@ -76,7 +126,7 @@
 
 		.endif
 
-		@skip:
+		; @skip:
 
 	.endmacro
 
@@ -91,7 +141,17 @@
 	;
 	;----------------------------------------------------------------------
 	.macro otherwise func
-		jsr	func
+		.if _case_::item
+			jmp	.ident(.sprintf("_end_case_%d",_case_::id))
+			.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item)):
+
+			; Pour éviter que end_case ajoute le même label
+			_case_::item .set 0
+		.endif
+
+		.ifnblank func
+			jsr	func
+		.endif
 	.endmacro
 
 
@@ -103,7 +163,11 @@
 	; End case/endcase flow control
 	;----------------------------------------------------------------------
 	.macro end_case
-		.ident(.sprintf("_end_case_%d",_case_::n)):
+		.if _case_::item
+			.ident(.sprintf("_case_%d_%d",_case_::id, _case_::item)):
+		.endif
+
+		.ident(.sprintf("_end_case_%d",_case_::id)):
 	.endmacro
 
 

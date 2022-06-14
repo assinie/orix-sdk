@@ -13,8 +13,6 @@
 	; note:
 	;	- Keycode in A register and var if provided
 	;
-	; Alias for: print #'c'
-	;
 	; Call XWR0
 	;----------------------------------------------------------------------
 	.macro cgetc var
@@ -22,7 +20,7 @@
 			; WRD0 : n'attend pas la saisie et reviens immédiatement (INKEY$)
 			.byte $00, XRDW0
 
-		.ifnblank(var)
+		.ifnblank var
 			sta	var
 		.endif
 	.endmacro

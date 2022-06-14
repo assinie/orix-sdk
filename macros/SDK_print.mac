@@ -118,6 +118,48 @@
 
 	;----------------------------------------------------------------------
 	;
+	; usage:
+	;	prints "string"
+	;
+	; Ajoute la chaîne "string" dans le segment RODATA et lui attribue un
+	; label puis appelle XWSTR0 pour afficher la chaîne.
+	;
+	; Call XWSTR0
+	;----------------------------------------------------------------------
+	SDK::_str_label_ .set 0
+	SDK::_inline_ .set 0
+
+	.macro prints str
+		.local @suite
+
+		lda	#<.ident(.sprintf("_str%d", SDK::_str_label_))
+		ldy	#>.ident(.sprintf("_str%d", SDK::_str_label_))
+
+		.byte	$00, XWSTR0
+
+		.if SDK::_inline_
+			jmp	@suite
+
+			.ident(.sprintf("_str%d", SDK::_str_label_)):
+
+				.asciiz	str
+
+		.else
+			.pushseg
+				.segment "RODATA"
+					.ident(.sprintf("_str%d", SDK::_str_label_)):
+						.asciiz	str
+			.popseg
+		.endif
+
+		SDK::_str_label_ .set SDK::_str_label_ +1
+
+		@suite:
+
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
 	;----------------------------------------------------------------------
 	SDK_PRINT_MAC = 1
 .endif
