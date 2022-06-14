@@ -69,5 +69,34 @@
 
 	.endmacro
 
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	setscreen [text|hires]
+	;
+	; Call XTEXT/XHIRES functions
+	;----------------------------------------------------------------------
+	.macro setscreen mode
+		.if .blank(mode)
+			.error "setscreen: missing required mode"
+		.else
+
+			.if (.xmatch(.string(mode), "text")) .or (.xmatch(.string(mode), "TEXT"))
+				lda	#$00
+				.byte	$00, XTEXT
+
+			.elseif (.xmatch(.string(mode), "hires")) .or (.xmatch(.string(mode), "HIRES"))
+				lda	#$00
+				.byte	$00, XHIRES
+
+			.else
+				.error .sprintf("setscreen: unknown parameter value %s (must be text ou hires)", .string(mode))
+			.endif
+		.endif
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	;----------------------------------------------------------------------
 	SDK_DISPLAY_MAC = 1
 .endif
