@@ -18,7 +18,82 @@
 	KEY_UP     = $0B
 	KEY_RETURN = $0D
 	KEY_ESC    = $1B
+
 	KEY_DEL    = $7F
+
+	;----------------------------------------------------------------------
+	;				Ctrl codes
+	;----------------------------------------------------------------------
+	.enum
+		KEY_CTRL_A = $01
+		KEY_CTRL_B
+		KEY_CTRL_C
+		KEY_CTRL_D
+		KEY_CTRL_E
+		KEY_CTRL_F
+		KEY_CTRL_G
+		KEY_CTRL_H
+		KEY_CTRL_I
+		KEY_CTRL_J
+		KEY_CTRL_K
+		KEY_CTRL_L
+		KEY_CTRL_M
+		KEY_CTRL_N
+		KEY_CTRL_O
+		KEY_CTRL_P
+		KEY_CTRL_Q
+		KEY_CTRL_R
+		KEY_CTRL_S
+		KEY_CTRL_T
+		KEY_CTRL_U
+		KEY_CTRL_V
+		KEY_CTRL_W
+		KEY_CTRL_X
+		KEY_CTRL_Y
+		KEY_CTRL_Z
+		KEY_CTRL_LBRACKET
+		KEY_CTRL_BACKSLASH
+		KEY_CTRL_RBRACKET
+
+		KEY_CTRL_DEL = $1f
+	.endenum
+
+	;----------------------------------------------------------------------
+	;				Funct codes
+	;----------------------------------------------------------------------
+	.enum
+		KEY_FUNCT_A = $81
+		KEY_FUNCT_B
+		KEY_FUNCT_C
+		KEY_FUNCT_D
+		KEY_FUNCT_E
+		KEY_FUNCT_F
+		KEY_FUNCT_G
+		KEY_FUNCT_H
+		KEY_FUNCT_I
+		KEY_FUNCT_J
+		KEY_FUNCT_K
+		KEY_FUNCT_L
+		KEY_FUNCT_M
+		KEY_FUNCT_N
+		KEY_FUNCT_O
+		KEY_FUNCT_P
+		KEY_FUNCT_Q
+		KEY_FUNCT_R
+		KEY_FUNCT_S
+		KEY_FUNCT_T
+		KEY_FUNCT_U
+		KEY_FUNCT_V
+		KEY_FUNCT_W
+		KEY_FUNCT_X
+		KEY_FUNCT_Y
+		KEY_FUNCT_Z
+		KEY_FUNCT_LBRACKET
+		KEY_FUNCT_BACKSLASH
+		KEY_FUNCT_RBRACKET
+
+		KEY_FUNCT_DEL = $9f
+	.endenum
 
 	;----------------------------------------------------------------------
 	;				Scan codes
@@ -33,8 +108,8 @@
 	KEYCODE_8 = $87		; *
 	KEYCODE_9 = $8B		; (
 	KEYCODE_0 = $97		; )
-	KEYCODE_- = $9B		; £
-	KEYCODE_= = $BF		; +
+	KEYCODE_DASH = $9B		; £
+	KEYCODE_EQUAL = $BF		; +
 	KEYCODE_DEL = $AD
 
 	KEYCODE_A = $AE
@@ -93,5 +168,5 @@
 	;----------------------------------------------------------------------
 	;
 	;----------------------------------------------------------------------
-	SDK_KEYBOARD_INC
+	SDK_KEYBOARD_INC = 1
 .endif

@@ -80,17 +80,21 @@
 	; Call XFREAD function
 	;----------------------------------------------------------------------
 	.macro fread ptr, size, count, fp
-		; load X first in case of {address,y}
-		ldx fp
+		.if .paramcount = 4
+			; load X first in case of {address,y}
+			ldx fp
 
-		; TODO:Reject immediate mode for ptr
-		SDK_get_AY ptr
-		sta PTR_READ_DEST
-		sty PTR_READ_DEST+1
+			; TODO:Reject immediate mode for ptr
+			SDK_get_AY ptr
+			sta PTR_READ_DEST
+			sty PTR_READ_DEST+1
 
-		SDK_get_AY size
+			SDK_get_AY size
 
-		.byte $00, XFREAD
+			.byte $00, XFREAD
+		.else
+			.error "fread: missing parameters"
+		.endif
 	.endmacro
 
 	;----------------------------------------------------------------------
@@ -106,18 +110,21 @@
 	; Call XFWRITE function
 	;----------------------------------------------------------------------
 	.macro fwrite ptr, size, count, fp
+		.if .paramcount = 4
+			; load X first in case of {address,y}
+			ldx fp
 
-		; load X first in case of {address,y}
-		ldx fp
+			; TODO:Reject immediate mode for ptr
+			SDK_get_AY ptr
+			sta PTR_READ_DEST
+			sty PTR_READ_DEST+1
 
-		; TODO:Reject immediate mode for ptr
-		SDK_get_AY ptr
-		sta PTR_READ_DEST
-		sty PTR_READ_DEST+1
+			SDK_get_AY size
 
-		SDK_get_AY size
-
-		.byte $00, XFWRITE
+			.byte $00, XFWRITE
+		.else
+			.error "fwrite: missing parameters"
+		.endif
 	.endmacro
 
 	;----------------------------------------------------------------------
