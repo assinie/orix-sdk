@@ -130,7 +130,7 @@
 	;bne CAT_End
 	bcs CAT_End
 
-	print volume, NOSAVE
+	print volume
 	lda #>BUF_SECTOR
 	ldy #$f8
 	; Affiche le nom du volume
@@ -218,7 +218,7 @@ ZZ0013:
 
 	; Affiche le nombre de secteurs libres
 	BRK_KERNEL XCRLF
-	print margin, NOSAVE
+	print margin
 
 	sec
 	lda #<(1394-2)
@@ -230,7 +230,7 @@ ZZ0013:
 	pla
 	ldx #02
 	BRK_KERNEL XDECIM
-	print f_sectors_free, NOSAVE
+	print f_sectors_free
 
 	; Indique que tout s'est bien passe
 										; .A = #CH376_USB_INT_SUCCESS;
@@ -271,14 +271,14 @@ CAT_End:
 	iny
 	iny
 
-	print margin
+	print margin, SAVE
 
 	; Octet de verrouillage
 ;	tya
 ;	pha
 	lda BUF_SECTOR,y
 	BRK_KERNEL XWR0
-	print margin
+	print margin, SAVE
 ;	pla
 ;	tay
 	iny
@@ -295,7 +295,7 @@ CAT_End:
 	; Affiche le type de fichier
 ;	tya
 ;	pha
-	print margin
+	print margin, SAVE
 	lda BUF_SECTOR+12,y
 	BRK_KERNEL XWR0
 ;	pla
@@ -311,9 +311,9 @@ CAT_End:
 
 	tya
 	pha
-	print margin, NOSAVE
-	print margin, NOSAVE
-	print margin, NOSAVE
+	print margin
+	print margin
+	print margin
 	pla
 	tay
 
@@ -330,7 +330,7 @@ CAT_End:
 	pla
 	ldx #$02
 	BRK_KERNEL XDECIM
-	print sectors
+	print sectors, SAVE
 
 	rts
 .endproc

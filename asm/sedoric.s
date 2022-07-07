@@ -127,16 +127,16 @@
 	;bne sedoric_dir-1
 	bcs error
 
-	print drive, NOSAVE
+	print drive
 
 	; $00: Master
 	; $01: Slave
 	lda BUF_SECTOR+$16
 	bne _slave
-	print master, NOSAVE
+	print master
 	jmp suite
 _slave:
-	print master, NOSAVE
+	print master
 
 suite:
 	lda #>BUF_SECTOR
@@ -276,7 +276,7 @@ sedoric_dir_End:
 	; +---------------------+---------> Nom du fichier
 	; Ici .Y = I
 
-	print margin
+	print margin, SAVE
 
 	lda #>BUF_SECTOR
 
@@ -351,7 +351,7 @@ sedoric_dir_End:
 	;bne epilogue_end
 	jcs epilogue_end
 
-	print margin, NOSAVE
+	print margin
 
 	; Nombre de secteurs libres
 	lda #'*'
@@ -362,7 +362,7 @@ sedoric_dir_End:
 	ldx #$02
 	BRK_KERNEL XDECIM
 
-	print s_sectors_free, NOSAVE
+	print s_sectors_free
 
 	; Format: S ou D
 	ldy #'S'
@@ -395,7 +395,7 @@ _single:
 	ldx #$00
 	BRK_KERNEL XDECIM
 
-	print rparent, NOSAVE
+	print rparent
 
 	; Nombre de fichiers
 	lda #' '
@@ -406,7 +406,7 @@ _single:
 	ldx #$01
 	BRK_KERNEL XDECIM
 
-	print files, NOSAVE
+	print files
 
 epilogue_end:
 	rts

@@ -64,7 +64,7 @@ PrintHexByte := hexout1
     pla
     sta TR3
 
-    print msgPC, NOSAVE
+    print msgPC
     tsx
     lda $101,x
 
@@ -91,24 +91,24 @@ PrintHexByte := hexout1
     jsr PrintHexByte
 .endif
 
-    print msgRegA, NOSAVE
+    print msgRegA
 
     lda TR0
     jsr PrintHexByte
 
-    print msgRegX, NOSAVE
+    print msgRegX
     lda TR1
     jsr PrintHexByte
 
-    print msgRegY, NOSAVE
+    print msgRegY
     lda TR2
     jsr PrintHexByte
 
-    print msgRegP, NOSAVE
+    print msgRegP
 
     lda TR3
     jsr PrintHexByte
-    print #' ', NOSAVE
+    print #' '
 
     ; Adresse du buffer
     lda #<msgBuffer
@@ -206,7 +206,7 @@ nibo1
     lda RESB
     ldy RESB+1
 
-    print (RES)
+    print (RES), SAVE
     rts
 .endproc
 
