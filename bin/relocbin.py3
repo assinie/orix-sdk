@@ -169,13 +169,15 @@ def Createheader(header, version, size):
     # newheader.append(header['os'])
     # newheader += header['reserved']
     newheader += bytes([size % 256, size // 256])
-    newheader += header['reserved'][1:]
+    # newheader += header['reserved'][1:]
+    # newheader.append(header['type'])
+    newheader += header['reserved'][2:]
 
-    newheader.append(header['type'])
+    newheader += bytes([header['size'] % 256, header['size'] // 256])
     newheader += bytes([header['start'] % 256, header['start'] // 256])
     newheader += bytes([header['end'] % 256, header['end'] // 256])
-    newheader += bytes([header['size'] % 256, header['size'] // 256])
-
+    # newheader += bytes([header['size'] % 256, header['size'] // 256])
+    newheader += bytes([header['exec'] % 256, header['exec'] // 256])
     # print(header)
     # print(newheader)
 
@@ -312,7 +314,9 @@ def diff(file1, file2, output, formatversion, color, verbose):
                     print('____________________________________________________________________')
 
                 if formatversion in (None, 2):
-                    print("Format 2 overhead: ", header1['size']//8 + (1 if header1['size'] % 8 else 0), len(bitfieldmap))
+                    last_diff = header1['size']-offset_start
+                    map_size_mini = last_diff//8 + (1 if last_diff % 8 else 0)
+                    print("Format 2 overhead: ", header1['size']//8 + (1 if header1['size'] % 8 else 0), len(bitfieldmap), offset_start, last_diff, map_size_mini)
 
                 if formatversion in (None, 3):
                     print("Format 3 overhead: ", n, len(offsetmap))
@@ -329,8 +333,10 @@ def diff(file1, file2, output, formatversion, color, verbose):
                     if formatversion == 2:
                         with open(output, "wb") as orixbinary:
                             orixbinary.write(Createheader(header1, formatversion, len(bitfieldmap)))
+                            #orixbinary.write(Createheader(header1, formatversion, map_size_mini))
                             orixbinary.write(rawfile)
                             orixbinary.write(bitfieldmap)
+                            #orixbinary.write(bitfieldmap[:map_size_mini+1])
 
                     elif formatversion == 3:
                         with open(output, "wb") as orixbinary:
