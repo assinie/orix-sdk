@@ -29,7 +29,7 @@
 		;	- hors .struct reserve un octet avec la valeur 2
 		; .ident(.string(.left(1,{arg}))) .byte .mid(2,1,{arg})
 
-		.ident(.string(.left(1,{arg}))) .res .mid(2,1,{arg})
+		.ident(.string(.left(1,{arg}))) .res .mid(2,.tcount({arg})-3,{arg})
 	.else
 		; /!\ .byte sans argument est valide dans .struct mais
 		; nécessite un argument en dehors d'un .struct
@@ -47,7 +47,7 @@
 	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
 		; Cf remarque dans la macro char
 		; .ident(.string(.left(1,{arg}))) .word .mid(2,1,{arg})
-		.ident(.string(.left(1,{arg}))) .res 2*.mid(2,1,{arg})
+		.ident(.string(.left(1,{arg}))) .res 2*.mid(2,.tcount({arg})-3,{arg})
 	.else
 		; Cf remarque dans la macro char
 		; .ident(.string(arg)) .word
@@ -64,7 +64,7 @@
 	.if (.match(.mid(1,1,{arg}), [) .and .match(.right(1,{arg}), {]}))
 		; Cf remarque dans la macro char
 		; .ident(.string(.left(1,{arg}))) .dword .mid(2,1,{arg})
-		.ident(.string(.left(1,{arg}))) .res 4*.mid(2,1,{arg})
+		.ident(.string(.left(1,{arg}))) .res 4*.mid(2,.tcount({arg})-3,{arg})
 	.else
 		; Cf remarque dans la macro char
 		;.ident(.string(arg)) .dword

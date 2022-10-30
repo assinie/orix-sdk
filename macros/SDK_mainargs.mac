@@ -9,15 +9,22 @@
 	; initmainargs
 	;
 	; usage:
-	;	initmainargs [ptr_mainargs] [, value_address]
+	;	initmainargs [ptr_mainargs] [, value_address] [, mode]
 	;
 	; note:
 	;       ptr_mainargs : may be nothing, AY, address
 	;       value_address: may be nothing, X, address
+	;	mode         : 0 or 1  (default: 0)
 	;
         ; Call XMAINARGS function
 	;----------------------------------------------------------------------
-	.macro initmainargs ptr_mainargs, value_address
+	.macro initmainargs ptr_mainargs, value_address, mode
+
+		.ifblank mode
+			lda	#$00
+		.else
+			lda	#mode
+		.endif
 
 		.byte $00, XMAINARGS
 
