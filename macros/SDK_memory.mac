@@ -82,5 +82,77 @@
 		.byte $00, XFREE
 	.endmacro
 
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	memdecal ptr_dst, src_start, src_end
+	;
+	; exit:
+	;	X: unused
+	;	AY: ptr_dst (A=LSB)
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XDECAL function
+	;----------------------------------------------------------------------
+	.macro memdecal ptr_dst, src_start, src_end
+		SDK_get_AY src_start
+		sta	DECDEB
+		sty	DECDEB+1
+
+		SDK_get_AY src_end
+		sta	DECFIN
+		sty	DECFIN+1
+
+		SDK_get_AY ptr_dst
+		sta	DECCIB
+		sty	DECCIB+1
+
+		.byte $00, XDECAL
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	memmove ptr_dst, src_start, src_len
+	;
+	; exit:
+	;	X: unused
+	;	AY: ptr_dst (A=LSB)
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XDECAL function
+	;----------------------------------------------------------------------
+	.macro memmove ptr_dst, ptr_src, len
+		SDK_get_AY ptr_src
+		sta	DECDEB
+		sty	DECDEB+1
+
+		.if .match(.left(1, {ptr_src}), {(})
+			clc
+			adc	len
+			sta	DECFIN
+			tya
+			adc	len+1
+			sta	DECFIN
+		.else
+			clc
+			adc	len
+			sta	DECFIN
+			tya
+			adc	len+1
+			sta	DECFIN
+		.endif
+
+		SDK_get_AY ptr_dst
+		sta	DECCIB
+		sty	DECCIB+1
+
+		.byte $00, XDECAL
+	.endmacro
+
 	SDK_MEMORY_MAC = 1
 .endif

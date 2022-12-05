@@ -160,6 +160,44 @@
 
 	;----------------------------------------------------------------------
 	;
+	; usage:
+	;	print_int [ptr], [len], [char]
+	;
+	; note:
+	;	ptr may be: (ptr), address, <empty>
+	;	len: value
+	;	char: value (DEFAFF is not restored)
+	;
+	; Call XDECIM function
+	;----------------------------------------------------------------------
+	.macro print_int ptr, len, char
+
+		.if ( .not .blank({char}) )
+			.if (.blank({ptr}))
+				pha
+				lda	#char
+				sta	DEFAFF
+				pla
+			.else
+				lda	#char
+				sta	DEFAFF
+			.endif
+		.endif
+
+		.if (.not .blank({ptr}))
+			SDK_get_AY ptr
+		.endif
+
+		.if ( .not .blank({len}) )
+			ldx	#len
+		.endif
+
+		.byte $00, XDECIM
+
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
 	;----------------------------------------------------------------------
 	SDK_PRINT_MAC = 1
 .endif

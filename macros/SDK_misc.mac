@@ -1,0 +1,85 @@
+.ifndef SDK_MISC_MAC
+	.include "SDK_utils.mac"
+
+	;======================================================================
+	;			Bin <=> String
+	;======================================================================
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	atoi [ptr]
+	;
+	; sortie:
+	;	AY: value
+	;	X: number of digits (ie 10^X)
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XDECAY function
+	;----------------------------------------------------------------------
+	.macro atoi ptr
+		.if (.not .blank({ptr}))
+			SDK_get_AY ptr
+		.endif
+
+		.byte $00, XDECAY
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	itoa [ptr], [len], [char]
+	;
+	; note:
+	;	ptr may be: (ptr), address
+	;
+	; Call XBINDX function
+	;----------------------------------------------------------------------
+	.macro itoa ptr_dst, len, char
+		.if ( .not .blank({char}) )
+			.if (.blank({ptr_dst}))
+				pha
+				lda	#char
+				sta	DEFAFF
+				pla
+			.else
+				lda	#char
+				sta	DEFAFF
+			.endif
+		.endif
+
+		.if (.not .blank({ptr_dst}))
+			SDK_get_AY ptr_dst
+			sta	TR5
+			sty	TR5+1
+		.endif
+
+		.if ( .not .blank({len}) )
+			ldx	#len
+		.endif
+
+		.byte $00, XBINDX
+
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	tohex [address]
+	;
+	; note:
+	;
+	; Call XHEXA function
+	;----------------------------------------------------------------------
+	.macro tohex ptr
+		.if ( .not .blank({ptr}) )
+			lda ptr
+		.endif
+
+		.byte $00, XHEXA
+	.endmacro
+
+	SDK_MISC_MAC = 1
+.endif
