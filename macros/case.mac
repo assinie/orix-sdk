@@ -115,7 +115,7 @@
 				jsr	func
 			.endif
 
-				jmp	.ident(.sprintf("_end_case_%d",_case_::id))
+				; jmp	.ident(.sprintf("_end_case_%d",_case_::id))
 
 			;out_inf
 			;	c=0

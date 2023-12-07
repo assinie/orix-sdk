@@ -20,34 +20,38 @@
 */
 
 /*
-label { addr $2009; name "src"; size 10; };
-range { start $2009; end $2012; name "src"; type bytetable; };
+label { addr  $20f2; name"_str0"; size 12; };
+range { start $20f2; end $20fd; name "_str0"; type texttable; };
 
-label { addr $2013; name "dst"; size 10; };
-range { start $2013; end $201C; name "dst"; type bytetable; };
+label { addr  $20fe; name "src"; size 10; };
+range { start $20fe; end $2107; name "src"; type bytetable; };
 
-label { addr $201D; name "ptr1"; size 2; };
-range { start $201D; end $201E; name "ptr1"; type addrtable; };
+label { addr  $2108; name "dst"; size 10; };
+range { start $2108; end $2111; name "dst"; type bytetable; };
 
-label { addr $201F; name "ptr2"; size 2; };
-range { start $201F; end $2020; name "ptr2"; type addrtable; };
+label { addr  $2112; name "ptr1"; size 2; };
+range { start $2112; end $2113; name "ptr1"; type addrtable; };
 
-label { addr $2021; name "fp"; size 2; };
-range { start $2021; end $2022; name "fp"; type wordtable; };
+label { addr  $2114; name "ptr2"; size 2; };
+range { start $2114; end $2115; name "ptr2"; type addrtable; };
 
-label { addr $2023; name "msg"; size 6; };
-range { start $2023; end $2028; name "msg"; type texttable; };
+label { addr  $2116; name "fp"; size 2; };
+range { start $2116; end $2117; name "fp"; type wordtable; };
 
-label { addr $202A; name "_argc"; };
+label { addr  $2118; name "msg"; size 6; };
+range { start $2118; end $211e; name "msg"; type texttable; };
 
-label { addr $202B; name "_argv"; size 2; };
-range { start $202B; end $202C; name "_argv"; type addrtable; };
+label { addr  $211f; name "_argc"; };
+
+label { addr  $2120; name "_argv"; size 2; };
+range { start $2120; end $2121; name "_argv"; type addrtable; };
 */
 
 ;----------------------------------------------------------------------
 ;                       cc65 includes
 ;----------------------------------------------------------------------
 ;.include "telestrat.inc"
+;.include "fcntl.inc"
 
 ;----------------------------------------------------------------------
 ;			Orix SDK includes
@@ -60,6 +64,7 @@ range { start $202B; end $202C; name "_argv"; type addrtable; };
 ;----------------------------------------------------------------------
 ; Defines / Constants
 ;----------------------------------------------------------------------
+	XRDW0 = $0c
 	XWR0 = $10
 	XWSTR0 = $14
 	XCRLF = $25
@@ -77,6 +82,13 @@ range { start $202B; end $202C; name "_argv"; type addrtable; };
 	XMALLOC = $5b
 	XFREE = $62
 
+	; Sound
+	XOUPS = $42
+	XZAP = $46
+	XSHOOT = $47
+	XEXPLO = $9c
+	XPING = $9d
+
 	; Path Management
 	XGETCWD  = $48          ; Get current CWD
 	XPUTCWD  = $49          ; Chdir
@@ -84,6 +96,17 @@ range { start $202B; end $202C; name "_argv"; type addrtable; };
 	; Main args
 	XMAINARGS = $2c
 	XGETARGV = $2e
+
+	; ;Process
+	XEXEC = $63
+
+	; Screen modes
+	XTEXT = $19
+	XHIRES = $1a
+
+	; Print
+	XDECIM = $19
+
 
 	O_RDONLY = $01
 
@@ -97,6 +120,8 @@ range { start $202B; end $202C; name "_argv"; type addrtable; };
 	RESB: .res 2
 
 	zptr: .res 2
+
+	DEFAFF := $14
 
 	PTR_READ_DEST  := $2C
 
@@ -373,6 +398,72 @@ print24
 
 print25
 	print $1234, TELEMON
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	prints "string"
+;
+; Ajoute la chaîne "string" dans le segment RODATA et lui attribue un
+; label puis appelle XWSTR0 pour afficher la chaîne.
+;
+; Call XWSTR0
+;----------------------------------------------------------------------
+prints01
+	prints	"Test prints"
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	print_int [ptr], [len], [char]
+;
+; note:
+;	ptr may be: (ptr), address, <empty>
+;	len: value
+;	char: value (DEFAFF is not restored)
+;
+; Call XDECIM function
+;----------------------------------------------------------------------
+print_int01
+	print_int
+
+print_int10
+	print_int ,3
+
+print_int05
+	print_int ,,'*'
+
+print_int11
+	print_int ,3,'*'
+
+	;----------------------------------------------------------------------
+print_int02
+	print_int $1234
+
+print_int20
+	print_int $1234,3
+
+print_int21
+	print_int $1234,,'*'
+
+print_int22
+	print_int $1234,3,'*'
+
+	;----------------------------------------------------------------------
+print_int03
+	print_int (ptr1)
+
+print_int30
+	print_int (ptr1),3
+
+print_int31
+	print_int (ptr1),,'*'
+
+print_int32
+	print_int (ptr1),3,'*'
+
 
 ;======================================================================
 ;			Memory functions
@@ -1180,6 +1271,188 @@ scroll12
 
 scroll13
 	scroll down
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	setscreen [text|hires]
+;
+; Call XTEXT/XHIRES functions
+;----------------------------------------------------------------------
+setscreen01
+	setscreen text
+
+setscreen02
+	setscreen hires
+
+
+;======================================================================
+;				Process
+;======================================================================
+;----------------------------------------------------------------------
+;
+; usage:
+;	exec [command]
+;
+; note:
+;	command may be : (ptr), address
+;
+; Call XEXEC function with X=1 (replace)
+;----------------------------------------------------------------------
+exec01
+	exec
+
+exec02
+	exec $1234
+
+exec03
+	exec (ptr1)
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	system [command]
+;
+; note:
+;	command may be : (ptr), address
+;
+; Call XEXEC function with X=0 (fork)
+;----------------------------------------------------------------------
+system01
+	system
+
+system02
+	system $1234
+
+system03
+	system (ptr1)
+
+
+;======================================================================
+;				Sound Macros
+;======================================================================
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	oups
+;
+;
+; Call XOUPS function
+;
+;----------------------------------------------------------------------
+oups01
+	oups
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	ping
+;
+;
+; Call XPING function
+;
+;----------------------------------------------------------------------
+ping01
+	ping
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	shoot
+;
+;
+; Call XSHOOT function
+;
+;----------------------------------------------------------------------
+shhot01
+	shoot
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	explode
+;
+;
+; Call XEXPLO function
+;
+;----------------------------------------------------------------------
+
+explode01
+	explode
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	zap
+;
+;
+; Call XZAP function
+;
+;----------------------------------------------------------------------
+zap01
+	zap
+
+
+;======================================================================
+;				Console I/O
+;======================================================================
+
+;----------------------------------------------------------------------
+; usage:
+;	cgetc
+;	cgetc var
+;
+; note:
+;	- Keycode in A register and var if provided
+;
+; Call XWR0
+;----------------------------------------------------------------------
+cgetc01
+	cgetc
+
+cgetc02
+	cgetc var
+
+
+;----------------------------------------------------------------------
+; usage:
+;	cputc
+;	cputc n
+;	cputc 'c'
+;
+; note:
+;	- no parameter: use the value of A register
+;
+; Alias for: print #'c'
+;
+; Call XWR0
+;----------------------------------------------------------------------
+cputc01
+	cputc
+
+cputc02
+	cputc 65
+
+cputc03
+	cputc 'A'
+
+
+;----------------------------------------------------------------------
+;
+; usage:
+;	crlf [TELEMON]
+;
+; Option:
+;	- TELEMON: when used within TELEMON bank
+;
+; Call XCRLF function
+;
+;----------------------------------------------------------------------
+crlf01
+	crlf
 
 
 ;======================================================================

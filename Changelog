@@ -1,0 +1,14 @@
+Version 2023.3.0:
+   update:
+      relocbin: add check for header size (jede)
+      relocbin: reduce reloc map table size (format version 2 only)
+      macro print_int: check for parameter len
+      macro case_of: remove unneeded jmp
+      macros-tests.s
+
+   breaking changes: kernel 2023.3
+      macro exec: call XEXEC with X=1 (was X=0 in previous version)
+
+   new macro:
+      system call XEXEC with X=0 (was exec macro in previous version)
+

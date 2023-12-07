@@ -8,27 +8,69 @@
 	;----------------------------------------------------------------------
 	;
 	; usage:
-	;	exec command
+	;	exec [command]
 	;
 	; note:
 	;	command may be : (ptr), address
 	;
-	; Call XEXEC function
+	; Call XEXEC function with X=1 (replace)
 	;----------------------------------------------------------------------
 	.macro exec command
-		; 'command' must be an address in normal RAM
-		.if (.match (.left (1, {command}), #))
-			.assert .mid(1, .tcount({command})-1, {command}) < $c000-1, error, "exec() command must be < $C000"
+		.ifnblank command
+			; 'command' must be an address in normal RAM
+			.if (.match (.left (1, {command}), #))
+				.assert .mid(1, .tcount({command})-1, {command}) < $c000-1, error, "exec() command must be < $C000"
 
-		.elseif (.match (.left (1, {command}), {(}))
-			;.assert .mid(1,1,{command}) < $c000-1, warning, "exec() command must be < $C000"
-			;.assert * > *, warning, "fopen() command must be < $C000"
+			.elseif (.match (.left (1, {command}), {(}))
+				;.assert .mid(1,1,{command}) < $c000-1, warning, "exec() command must be < $C000"
+				;.assert * > *, warning, "exec() command must be < $C000"
+
+			.else
+				.assert command < $c000-1, error, "exec() command must be < $C000"
+			.endif
+
+			SDK_get_AY command
 
 		.else
-			.assert command < $c000-1, error, "exec() command must be < $C000"
+			.warning "exec: no parameter, assume AY set to command address"
 		.endif
 
-		SDK_get_AY command
+		ldx	#$01
+
+		.byte $00, XEXEC
+	.endmacro
+
+	;----------------------------------------------------------------------
+	;
+	; usage:
+	;	system [command]
+	;
+	; note:
+	;	command may be : (ptr), address
+	;
+	; Call XEXEC function with X=0 (fork)
+	;----------------------------------------------------------------------
+	.macro system command
+		.ifnblank command
+			; 'command' must be an address in normal RAM
+			.if (.match (.left (1, {command}), #))
+				.assert .mid(1, .tcount({command})-1, {command}) < $c000-1, error, "system() command must be < $C000"
+
+			.elseif (.match (.left (1, {command}), {(}))
+				;.assert .mid(1,1,{command}) < $c000-1, warning, "system() command must be < $C000"
+				;.assert * > *, warning, "system() command must be < $C000"
+
+			.else
+				.assert command < $c000-1, error, "system() command must be < $C000"
+			.endif
+
+			SDK_get_AY command
+
+		.else
+			.warning "system: no parameter, assume AY set to command address"
+		.endif
+
+		ldx	#$00
 
 		.byte $00, XEXEC
 	.endmacro

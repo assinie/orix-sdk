@@ -174,10 +174,15 @@
 
 		.if ( .not .blank({char}) )
 			.if (.blank({ptr}))
-				pha
-				lda	#char
-				sta	DEFAFF
-				pla
+				.if (.not .blank({len}))
+					ldx	#char
+					stx	DEFAFF
+				.else
+					pha
+					lda	#char
+					sta	DEFAFF
+					pla
+				.endif
 			.else
 				lda	#char
 				sta	DEFAFF

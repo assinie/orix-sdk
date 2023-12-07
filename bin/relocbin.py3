@@ -236,6 +236,9 @@ def diff(file1, file2, output, formatversion, color, verbose):
                     c1 = f1.read(1)
                     c2 = f2.read(1)
 
+                    if len(c1) == 0:
+                        raise EOFError("Error: Check header size, the size defined in the header is probably greater than the length of the code after the header")
+
                     rawfile += c1
 
                     if not color:
@@ -332,11 +335,18 @@ def diff(file1, file2, output, formatversion, color, verbose):
                     # Get header from first file
                     if formatversion == 2:
                         with open(output, "wb") as orixbinary:
-                            orixbinary.write(Createheader(header1, formatversion, len(bitfieldmap)))
-                            #orixbinary.write(Createheader(header1, formatversion, map_size_mini))
-                            orixbinary.write(rawfile)
-                            orixbinary.write(bitfieldmap)
-                            #orixbinary.write(bitfieldmap[:map_size_mini+1])
+                            if map_size_mini < len(bitfieldmap):
+                                print("-Truncate reloc table from %d to %d (%4.2f%%)" % (len(bitfieldmap), map_size_mini, -(len(bitfieldmap)-map_size_mini)/len(bitfieldmap)*100))
+                                orixbinary.write(Createheader(header1, formatversion, map_size_mini))
+                                orixbinary.write(rawfile)
+                                orixbinary.write(bitfieldmap[0:map_size_mini])
+
+                            else:
+                                orixbinary.write(Createheader(header1, formatversion, len(bitfieldmap)))
+                                #orixbinary.write(Createheader(header1, formatversion, map_size_mini))
+                                orixbinary.write(rawfile)
+                                orixbinary.write(bitfieldmap)
+                                #orixbinary.write(bitfieldmap[:map_size_mini+1])
 
                     elif formatversion == 3:
                         with open(output, "wb") as orixbinary:
